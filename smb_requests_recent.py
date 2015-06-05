@@ -58,5 +58,5 @@ class SteamBotHttp:
     def urlQueryRecent(self):
         steam_response = req.get(self.complete_url_recent)
         recent_temp = ujson.loads(steam_response.text)
-        recent_temp = decode_dict(recent_temp)
+        #recent_temp = decode_dict(recent_temp)
         return recent_temp
