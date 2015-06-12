@@ -1,0 +1,57 @@
+recent = todo o recent
+recent_parsed = assets + listinginfo do recent
+assets = todos os assets
+clean_assets = assets so com os params importantes
+listinginfo_list = listings do csgo
+listinginfo_clean_with_asset = listings do csgo so com os params importantes mas com o asset de cada um ainda
+                                por fazer parsed
+clean_listings = listings do csgo so com os params importantes
+
+-------------------------------------------########IT WORKS#########------------------------------------------
+
+OBJECTIVO FINAL:
+    DIcionario com KEY = NOME DO ITEM e VALUE = PRECO DO ITEM:
+
+        list1 = {'231342342':'2.45','432342342342':'12.76',...}
+        list2 = {'awp worm god':'231342342','ak47 redline':'432342342342',...}
+
+        for k in list1:
+            for k2 in list2:
+                if list2.get(k2) == k:
+                    self.final_list[k2] = list1.get(k)
+
+------------------------------------------#######################----------------------------------------------
+from smb_json_recent import SteamJsonRecent
+from smb_requests_recent import SteamBotHttp
+http = SteamBotHttp(1)
+js = SteamJsonRecent()
+recent = {}
+recent = http.urlQueryRecent()
+js.getRecentTotalReady(recent)
+js.getfinallist()
+
+------------------------------------------#######################----------------------------------------------
+
+
+1 - Start program
+2 - show the commands that the user can use
+    2.a - Login - lets the user login using chrome cookies - NOT DONE!
+    2.b - start INTERVAL(INT) - lets the user start the program - 40% DONE!
+        2.b.a - when the program is started only a ctrl+c will exit it - NOT DONE!
+    2.c - put MARKET_HASH_NAME - lets the user add an ITEM (market_hash_name) to the potencial buy list - NOT DONE!
+    2.d - show list - lets the user see the potencial buying list - NOT DONE!
+    2.e - delete MARKET_HASH_NAME - lets the user delete a MARKET_HASH_NAME from the potencial buy list - NOT DONE!
+    MORE COMING SOON.....
+
+USER ENTERS START:
+    1 - Requests to steam recents and item - DONE!
+    2 - Parsing steam recents to a final list of NAME:PRICE - DONE!
+    3 - See if the X item on the recent list is on the item list made by the user - NOT DONE!
+        3.a - if it is, make a request for that specific item
+        3.b - if its not, jump to next item and when its over, do 1 again
+    4 - Apply buying algo to see if the item is worth buying or not - NOT DONE!
+        4.a - if its worth buying, check to see if steam wallet has money for it
+            4.a.a - if yes, buy it
+            4.a.b - if not, dont buy it jump to 3 for the next item
+        4.b - if not jump to 3 for the next item
+    5 - when all item done, jump to step 1 to start all over again
