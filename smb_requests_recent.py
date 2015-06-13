@@ -39,8 +39,7 @@ def decode_dict(data):
 
 class SteamBotHttp:
 
-    def __init__(self, time):
-        self.interval = time
+    def __init__(self):
         self.host = 'http://steamcommunity.com'
         self.market = '/market'
         #currency=3 == euro

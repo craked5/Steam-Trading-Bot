@@ -38,7 +38,7 @@ js.getfinallist()
     2.a - Login - lets the user login using chrome cookies - NOT DONE!
     2.b - start INTERVAL(INT) - lets the user start the program - 40% DONE!
         2.b.a - when the program is started only a ctrl+c will exit it - NOT DONE!
-    2.c - put MARKET_HASH_NAME - lets the user add an ITEM (market_hash_name) to the potencial buy list - NOT DONE!
+    2.c - add MARKET_HASH_NAME - lets the user add an ITEM (market_hash_name) to the potencial buy list - NOT DONE!
     2.d - show list - lets the user see the potencial buying list - NOT DONE!
     2.e - delete MARKET_HASH_NAME - lets the user delete a MARKET_HASH_NAME from the potencial buy list - NOT DONE!
     MORE COMING SOON.....

@@ -5,7 +5,7 @@ from smb_requests_recent import SteamBotHttp
 import time
 
 i = 0
-http = SteamBotHttp(1)
+http = SteamBotHttp()
 js = SteamJsonRecent()
 times = []
 

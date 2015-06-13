@@ -132,6 +132,6 @@ class SteamJsonRecent:
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
 
     def exportJsonToFile(self,json):
-        with open('data.txt', 'w') as outfile:
+        with open('/Users/nunosilva/Desktop/steamutils/data.txt', 'w') as outfile:
             ujson.dump(json, outfile)
         return json

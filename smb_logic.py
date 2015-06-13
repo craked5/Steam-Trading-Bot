@@ -10,38 +10,55 @@ class Logic:
 
     def __init__(self):
         try:
-            self.f = open('items.txt', 'a+')
+            self.f = open('items.txt', 'r')
         except IOError:
             print "Error opening the list file"
+        print "file was opened ok"
+        print self.f
         #primeira leitura do ficheiro
-        self.list_items = [line.rstrip('\n') for line in self.f]
+        self.list_items_to_buy = [line.rstrip('\n') for line in self.f]
+        self.f.close()
+        print self.list_items_to_buy
 
     def writeInItemsTxt(self,item):
         try:
-            self.f.write(item)
-            self.f.flush()
-            os.fsync(self.f.fileno())
+            tempfile = open('items.txt', 'a')
+            tempfile.write(item+'\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
         except IOError:
+            print "Erro ao escrever no ficheiro"
             return False
-        self.list_items = [line.rstrip('\n') for line in self.f]
-        print 'New List: ' + self.list_items
+        tempfile2 = open('items.txt', 'r')
+        self.list_items_to_buy = [line.rstrip('\n') for line in tempfile2]
+        tempfile2.close()
+        print 'New List: '
+        print self.list_items_to_buy
         print item + " was added to the list!"
         return True
 
     def delInItemsTxt(self,item):
-        self.f.seek(0)
+        tempfile = open('items.txt', 'r')
+        lines = [line1.rstrip('\n') for line1 in tempfile]
+        print lines
+        tempfile.close()
         try:
-            for line in self.list_items:
-                if line != item:
-                    self.f.write(line)
-                    self.f.flush()
-                    os.fsync(self.f.fileno())
-            self.f.truncate()
-            self.list_items = [line.rstrip('\n') for line in self.f]
+            tempfile2 = open('items.txt', 'w')
+            for line2 in lines:
+                if line2.rstrip('\n')!=item:
+                    tempfile2.write(line2+'\n')
+                    tempfile2.flush()
+                    os.fsync(tempfile2.fileno())
+            tempfile2.close()
+            tempfile3 = open('items.txt', 'r')
+            self.list_items_to_buy = [line3.rstrip('\n') for line3 in tempfile3]
+            tempfile3.close()
         except IOError:
             print 'Error deleting item, try again please'
             return False
         print item + ' was removed from the list! YAY'
-        print 'New List: ' + self.list_items
+        print 'New List: '
+        print self.list_items_to_buy
         return True
 
