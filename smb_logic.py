@@ -14,11 +14,9 @@ class Logic:
         except IOError:
             print "Error opening the list file"
         print "file was opened ok"
-        print self.f
         #primeira leitura do ficheiro
         self.list_items_to_buy = [line.rstrip('\n') for line in self.f]
         self.f.close()
-        print self.list_items_to_buy
 
     def writeInItemsTxt(self,item):
         try:
@@ -61,4 +59,3 @@ class Logic:
         print 'New List: '
         print self.list_items_to_buy
         return True
-

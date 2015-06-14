@@ -7,6 +7,8 @@ import json
 import yaml
 import ujson
 import decimal
+from smb_logic import Logic
+from smb_requests_recent import SteamBotHttp
 
 
 class SteamJsonRecent:
@@ -27,6 +29,8 @@ class SteamJsonRecent:
         self.final_list_assets = {}
         self.final_list = {}
         self.float100 = float(100)
+        self.http = SteamBotHttp()
+        self.log = Logic()
 
     def getRecentTotalReady(self, recent_full):
         self.recent_parsed = {}
@@ -113,7 +117,7 @@ class SteamJsonRecent:
 
 #-------------------------------------------------------------------------------------------------------------------
 
-    def getfinallist(self):
+    def getfinalrecentlist(self):
         self.final_list = {}
         if self.getlistlistings() == False:
             print 'falha no parsing dos listings, try again'
@@ -128,6 +132,41 @@ class SteamJsonRecent:
                         self.final_list[k2] = self.final_list_listings.get(k)
         print self.final_list
         return self.final_list
+
+    def seeifrecentiteminlistbuy(self,item):
+        for temp in self.log.list_items_to_buy:
+            if item == temp:
+                return True
+
+    def seeifbuyinggood(self):
+        for key in self.final_list:
+            if self.seeifrecentiteminlistbuy(key) == True:
+                temp_item_priceover = self.http.urlQueryItem(key)
+                if temp_item_priceover['success'] == True:
+                    for key_in_priceover in temp_item_priceover:
+                        if isinstance(temp_item_priceover[key_in_priceover], basestring):
+                            temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].rstrip('&#8364; ')
+                            temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].replace(',','.')
+                            temp_item_priceover[key_in_priceover] = float(temp_item_priceover[key_in_priceover])
+                    if float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key])) == float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100))):
+                        print temp_item_priceover['median_price']
+                        print self.final_list[key]
+                        print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                        print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
+                        print "podia ter comprado " + key
+                        return True
+                        break
+                    else:
+                        print temp_item_priceover['median_price']
+                        print self.final_list[key]
+                        print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                        print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
+                        print "nao posso comprar " + key
+                        return False
+                        break
+
+    def buyitem(self):
+        pass
 
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
 

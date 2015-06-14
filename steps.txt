@@ -43,6 +43,10 @@ js.getfinallist()
     2.e - delete MARKET_HASH_NAME - lets the user delete a MARKET_HASH_NAME from the potencial buy list - NOT DONE!
     MORE COMING SOON.....
 
+CODE FOR EACH STEP:
+
+------------------------------------------#######################----------------------------------------------
+
 USER ENTERS START:
     1 - Requests to steam recents and item - DONE!
     2 - Parsing steam recents to a final list of NAME:PRICE - DONE!
@@ -55,3 +59,8 @@ USER ENTERS START:
             4.a.b - if not, dont buy it jump to 3 for the next item
         4.b - if not jump to 3 for the next item
     5 - when all item done, jump to step 1 to start all over again
+
+CODE FOR EACH STEP
+
+3:
+    for

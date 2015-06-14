@@ -23,7 +23,7 @@ while i is not 200:
     recent = {}
     recent = http.urlQueryRecent()
     js.getRecentTotalReady(recent)
-    js.getfinallist()
+    js.getfinalrecentlist()
     i += 1
     print i
     time.sleep(0.5)
