@@ -35,8 +35,9 @@ class SteamJsonRecent:
     def getRecentTotalReady(self, recent_full):
         self.recent_parsed = {}
         for key in self.recent_parsing_list:
-            if key in recent_full:
-                recent_full.pop(key)
+            if key != None:
+                if key in recent_full:
+                    recent_full.pop(key)
         #retorna um dict so com as keys assets e listinginfo
         self.recent_parsed = recent_full
 
@@ -148,22 +149,29 @@ class SteamJsonRecent:
                             temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].rstrip('&#8364; ')
                             temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].replace(',','.')
                             temp_item_priceover[key_in_priceover] = float(temp_item_priceover[key_in_priceover])
-                    if float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key])) == float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100))):
-                        print temp_item_priceover['median_price']
-                        print self.final_list[key]
-                        print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
-                        print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
-                        print "podia ter comprado " + key
-                        return True
-                        break
-                    else:
-                        print temp_item_priceover['median_price']
-                        print self.final_list[key]
-                        print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
-                        print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
-                        print "nao posso comprar " + key
-                        return False
-                        break
+                    print self.final_list[key]
+                    print temp_item_priceover['median_price']
+                    try:
+                        if float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key])) == float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100))):
+                            print temp_item_priceover['median_price']
+                            print self.final_list[key]
+                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                            print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
+                            print "podia ter comprado " + key
+                            return True
+                            break
+                        else:
+                            print temp_item_priceover['median_price']
+                            print self.final_list[key]
+                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                            print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
+                            print "nao posso comprar " + key
+                            return False
+                            break
+                    except ValueError:
+                        print "float not valid"
+                    except:
+                        print "error"
 
     def buyitem(self):
         pass
