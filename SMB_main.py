@@ -8,6 +8,8 @@ from smb_logic import Logic
 from smb_json_recent import SteamJsonRecent
 import time
 import sys
+import os
+import signal
 
 print 'HAI WELCOME TO THIS SHITTY BOT!!!!!!!!!!!!!! :D'
 print 'What time interval do you want the queries to be? (number only please)\n'
@@ -18,6 +20,7 @@ print "OK now time one of the following commands: start, showlist, add, delete, 
 log = Logic()
 http = SteamBotHttp()
 js = SteamJsonRecent()
+fork_list = []
 commands = ['start','add','login','showlist','delete','quit']
 
 def startbuying():
@@ -49,8 +52,14 @@ try:
         temp = temp.split(' ')
         if temp[0] == 'start':
             print "CTRL+C to stop!!!!!"
-            time.sleep(2)
-            startbuying()
+            newpid = os.fork()
+            fork_list.append(newpid)
+            if newpid == 0:
+                time.sleep(2)
+                startbuying()
+            else:
+                pids = (os.getpid(), newpid)
+                print "parent: %d, child: %d" % pids
         elif temp[0] == 'showlist':
             print 'This is the item list: '
             print log.list_items_to_buy
@@ -64,6 +73,8 @@ try:
             pass
         elif temp[0] == 'quit':
             print "User saiu"
+            for p in fork_list:
+                os.kill(p,signal.SIGKILL)
             sys.exit()
         else:
             print "Command not valid, please try again!"

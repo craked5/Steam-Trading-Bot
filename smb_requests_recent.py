@@ -9,6 +9,11 @@ import json
 import sys
 import yaml
 import ujson
+import cookielib
+
+def cookies():
+
+    pass
 
 def decode_list(data):
     rv = []

@@ -50,13 +50,13 @@ CODE FOR EACH STEP:
 USER ENTERS START:
     1 - Requests to steam recents and item - DONE!
     2 - Parsing steam recents to a final list of NAME:PRICE - DONE!
-    3 - See if the X item on the recent list is on the item list made by the user - NOT DONE!
-        3.a - if it is, make a request for that specific item
-        3.b - if its not, jump to next item and when its over, do 1 again
-    4 - Apply buying algo to see if the item is worth buying or not - NOT DONE!
-        4.a - if its worth buying, check to see if steam wallet has money for it
-            4.a.a - if yes, buy it
-            4.a.b - if not, dont buy it jump to 3 for the next item
+    3 - See if the X item on the recent list is on the item list made by the user - DONE!
+        3.a - if it is, make a request for that specific item - DONE!
+        3.b - if its not, jump to next item and when its over, do 1 again - DONE!
+    4 - Apply buying algo to see if the item is worth buying or not - DONE!
+        4.a - if its worth buying, check to see if steam wallet has money for it - NOT DONE!
+            4.a.a - if yes, buy it - NOT DONE!
+            4.a.b - if not, dont buy it jump to 3 for the next item - NOT DONE!
         4.b - if not jump to 3 for the next item
     5 - when all item done, jump to step 1 to start all over again
 

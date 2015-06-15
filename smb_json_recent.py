@@ -148,6 +148,7 @@ class SteamJsonRecent:
                         if isinstance(temp_item_priceover[key_in_priceover], basestring):
                             temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].rstrip('&#8364; ')
                             temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].replace(',','.')
+                            print temp_item_priceover[key_in_priceover]
                             temp_item_priceover[key_in_priceover] = float(temp_item_priceover[key_in_priceover])
                     print self.final_list[key]
                     print temp_item_priceover['median_price']
