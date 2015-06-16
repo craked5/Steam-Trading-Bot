@@ -11,6 +11,10 @@ import yaml
 import ujson
 import cookielib
 
+my_cookies = {}
+
+
+
 def cookies():
 
     pass
@@ -52,6 +56,37 @@ class SteamBotHttp:
         self.recent_listed = '/recent/?country=PT&language=english&currency=3'
         self.complete_url_item = self.host+self.market+self.item_price_viewer
         self.complete_url_recent = self.host+self.market+self.recent_listed
+        self.headers = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Encoding": "gzip,deflate,sdch",
+            "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
+            "Host": "steamcommunity.com",
+            "Cookie": "",
+            "Referer": "https://steamcommunity.com/id/craked5/inventory",
+            "Origin": "https://steamcommunity.com",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36",
+            "X-Requested-With": "XMLHttpRequest"
+        }
+        self.data_sell = {
+            "sessionid" : "",
+            "appid" : 730,
+            "contextid" : 2,
+            "assetid" : 2624120824,
+            "amount" : 1,
+            "price" : 1000
+        }
+        #subtotal = price without fee
+        #fee = a fee
+        #total = price com a fee
+        self.data_buy = {
+            'sessionid': "",
+            'currency': 3,
+            'subtotal': 0,
+            'fee': 0,
+            'total': 0
+        }
+        self.sell_item_url = self.host+self.market+'/sellitem/'
+        self.buy_item_url_without_listingid = self.host+self.market+'/buylisting/'
 
     def urlQueryItem(self,item):
         steam_response = req.get(self.complete_url_item + item)
@@ -64,3 +99,11 @@ class SteamBotHttp:
         recent_temp = ujson.loads(steam_response.text)
         #recent_temp = decode_dict(recent_temp)
         return recent_temp
+
+    def sellitem(self,assetid,price):
+        self.data_sell['assetid'] = assetid
+        self.data_sell['price'] = price
+        return req.post(self.sell_item_url, data=self.data_sell, headers=self.headers)
+
+    def buyitem(self):
+        pass

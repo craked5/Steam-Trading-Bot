@@ -33,7 +33,7 @@ def startbuying():
             recent = http.urlQueryRecent()
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
-            js.seeifbuyinggood()
+            js.seeifbuyinggoodnosell()
             i += 1
             print i
             time.sleep(http_interval)
@@ -48,36 +48,43 @@ def startbuying():
 
 try:
     while True:
-        temp = raw_input()
-        temp = temp.split(' ')
-        if temp[0] == 'start':
-            print "CTRL+C to stop!!!!!"
-            newpid = os.fork()
-            fork_list.append(newpid)
-            if newpid == 0:
-                time.sleep(2)
-                startbuying()
+        try:
+            temp = raw_input()
+            temp = temp.split(' ')
+            if temp[0] == 'start':
+                print "CTRL+C to stop!!!!!"
+                newpid = os.fork()
+                fork_list.append(newpid)
+                if newpid == 0:
+                    time.sleep(2)
+                    startbuying()
+                else:
+                    pids = (os.getpid(), newpid)
+                    print "parent: %d, child: %d" % pids
+            elif temp[0] == 'showlist':
+                print 'This is the item list: '
+                print log.list_items_to_buy
+            elif temp[0] == 'delete':
+                item_rem = raw_input('Item to remove from the list: ')
+                log.delInItemsTxt(item_rem)
+            elif temp[0] == 'add':
+                item_add = raw_input('Item to add to the list: ')
+                log.writeInItemsTxt(item_add)
+            elif temp[0] == 'login':
+                pass
+            elif temp[0] == 'quit':
+                print "User saiu"
+                for p in fork_list:
+                    os.kill(p,signal.SIGKILL)
+                sys.exit()
             else:
-                pids = (os.getpid(), newpid)
-                print "parent: %d, child: %d" % pids
-        elif temp[0] == 'showlist':
-            print 'This is the item list: '
-            print log.list_items_to_buy
-        elif temp[0] == 'delete':
-            item_rem = raw_input('Item to remove from the list: ')
-            log.delInItemsTxt(item_rem)
-        elif temp[0] == 'add':
-            item_add = raw_input('Item to add to the list: ')
-            log.writeInItemsTxt(item_add)
-        elif temp[0] == 'login':
-            pass
-        elif temp[0] == 'quit':
+                print "Command not valid, please try again!"
+        except KeyboardInterrupt:
+            print '\n'
             print "User saiu"
             for p in fork_list:
                 os.kill(p,signal.SIGKILL)
-            sys.exit()
-        else:
-            print "Command not valid, please try again!"
+                sys.exit()
 except KeyboardInterrupt:
     print '\n'
     print "user saiu"
