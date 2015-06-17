@@ -103,10 +103,11 @@ class SteamBotHttp:
         #recent_temp = decode_dict(recent_temp)
         return recent_temp
 
+    #price = ao preco que eu quero receber
     def sellitem(self,assetid,price):
         self.data_sell['assetid'] = assetid
         self.data_sell['price'] = price
-        return req.post(self.sell_item_url, data=self.data_sell, headers=self.headers)
+        print req.post(self.sell_item_url, data=self.data_sell, headers=self.headers)
 
     def buyitem(self):
         pass

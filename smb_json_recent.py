@@ -160,7 +160,7 @@ class SteamJsonRecent:
                         if float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]['converted_price'])) >= float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100))):
                             print temp_item_priceover['median_price']
                             print self.final_list[key]
-                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]['converted_price']))
                             print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
                             print "podia ter comprado " + key
                             return True
@@ -168,7 +168,7 @@ class SteamJsonRecent:
                         else:
                             print temp_item_priceover['median_price']
                             print self.final_list[key]
-                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]['converted_price']))
                             print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
                             print "nao posso comprar " + key
                             return False
@@ -197,7 +197,7 @@ class SteamJsonRecent:
                         if float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]['converted_price'])) >= float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100))):
                             print temp_item_priceover['median_price']
                             print self.final_list[key]
-                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]['converted_price']))
                             print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
                             print "podia ter comprado " + key
                             return True
@@ -205,7 +205,7 @@ class SteamJsonRecent:
                         else:
                             print temp_item_priceover['median_price']
                             print self.final_list[key]
-                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]))
+                            print float("{0:.2f}".format(temp_item_priceover['median_price'] - self.final_list[key]['converted_price']))
                             print float("{0:.2f}".format(((20*temp_item_priceover['median_price']) / 100)))
                             print "nao posso comprar " + key
                             return False

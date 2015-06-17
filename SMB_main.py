@@ -79,6 +79,7 @@ try:
                 print "User saiu"
                 for p in fork_list:
                     os.kill(p,signal.SIGKILL)
+                    sys.exit()
             else:
                 print "Command not valid, please try again!"
         except KeyboardInterrupt:
@@ -90,3 +91,4 @@ try:
 except KeyboardInterrupt:
     print '\n'
     print "user saiu"
+
