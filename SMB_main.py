@@ -31,6 +31,9 @@ def startbuying():
             start = time.clock()
             recent = {}
             recent = http.urlQueryRecent()
+            if recent == False:
+                print "CONN REFUSED, sleeping..."
+                time.sleep(30)
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
             js.seeifbuyinggoodnosell()
@@ -76,7 +79,6 @@ try:
                 print "User saiu"
                 for p in fork_list:
                     os.kill(p,signal.SIGKILL)
-                sys.exit()
             else:
                 print "Command not valid, please try again!"
         except KeyboardInterrupt:

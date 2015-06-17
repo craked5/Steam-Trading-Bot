@@ -61,8 +61,10 @@ class SteamJsonRecent:
         try:
             self.getCleanAssetList()
             for key_item in self.asset_list.keys():
-                self.final_list_assets[self.asset_list[key_item]['market_hash_name']] \
+                if self.asset_list[key_item].has_key('market_hash_name'):
+                    self.final_list_assets[self.asset_list[key_item]['market_hash_name']] \
                     = self.asset_list[key_item]['id']
+                    return True
         except:
             print "falha no parsing dos assets"
             return False

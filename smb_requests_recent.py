@@ -95,7 +95,10 @@ class SteamBotHttp:
         return item_temp
 
     def urlQueryRecent(self):
-        steam_response = req.get(self.complete_url_recent)
+        try:
+            steam_response = req.get(self.complete_url_recent)
+        except req.ConnectionError:
+            return False
         recent_temp = ujson.loads(steam_response.text)
         #recent_temp = decode_dict(recent_temp)
         return recent_temp
