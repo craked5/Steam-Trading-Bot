@@ -4,7 +4,6 @@
 __author__ = 'nunosilva'
 
 from smb_requests_recent import SteamBotHttp
-from smb_logic import Logic
 from smb_json_recent import SteamJsonRecent
 import time
 import sys
@@ -17,13 +16,12 @@ http_interval = raw_input()
 http_interval = float(http_interval)
 print '\n'
 print "OK now time one of the following commands: start, showlist, add, delete, login\n"
-log = Logic()
 http = SteamBotHttp()
 js = SteamJsonRecent()
 fork_list = []
-commands = ['start','add','login','showlist','delete','quit']
+commands = ['startnosell','startsell','add','login','showlist','delete','quit','sell']
 
-def startbuying():
+def startbuyingnosell():
     i = 0
     times = []
     while True:
@@ -34,52 +32,119 @@ def startbuying():
             if recent == False:
                 print "CONN REFUSED, sleeping..."
                 time.sleep(30)
-            js.getRecentTotalReady(recent)
-            js.getfinalrecentlist()
-            js.seeifbuyinggoodnosell()
-            i += 1
-            print i
-            time.sleep(http_interval)
-            elapsed = time.clock()
-            elapsed = elapsed - start
-            print elapsed
-            times.append(elapsed)
+                pass
+            try:
+                js.getRecentTotalReady(recent)
+                js.getfinalrecentlist()
+                js.seeifbuyinggood()
+                i += 1
+                print i
+                time.sleep(http_interval)
+                elapsed = time.clock()
+                elapsed = elapsed - start
+                print elapsed
+                times.append(elapsed)
+            except AttributeError:
+                print "error, a continuar"
         except KeyboardInterrupt:
             print '\n'
             print "User stopped searching"
             break
+
+#temp_resp e a resposta do seeifbuy
+#temp[0] = True
+#temp[1] = assetid
+#temp[2] = price
+def startbuyingsell():
+    i = 0
+    times = []
+    while True:
+        try:
+            start = time.clock()
+            recent = {}
+            recent = http.urlQueryRecent()
+            if recent == False:
+                print "CONN REFUSED, sleeping..."
+                time.sleep(30)
+                pass
+            try:
+                js.getRecentTotalReady(recent)
+                js.getfinalrecentlist()
+                temp_resp = js.seeifbuyinggood()
+                if temp_resp[0] == True:
+                    newpid = os.fork()
+                    if newpid == 0:
+                        http.sellitem(int(temp_resp[1]),temp_resp[2])
+                    else:
+                        pids = (os.getpid(), newpid)
+                        print "parent: %d, child: %d" % pids
+                i += 1
+                print i
+                time.sleep(http_interval)
+                elapsed = time.clock()
+                elapsed = elapsed - start
+                print elapsed
+                times.append(elapsed)
+            except AttributeError:
+                print "error, a continuar"
+        except KeyboardInterrupt:
+            print '\n'
+            print "User stopped searching"
+            break
+
 
 try:
     while True:
         try:
             temp = raw_input()
             temp = temp.split(' ')
-            if temp[0] == 'start':
+            if temp[0] == 'startnosell':
+                print "STARTING ONLY BUYING MODE"
                 print "CTRL+C to stop!!!!!"
                 newpid = os.fork()
                 fork_list.append(newpid)
                 if newpid == 0:
                     time.sleep(2)
-                    startbuying()
+                    startbuyingnosell()
+                else:
+                    pids = (os.getpid(), newpid)
+                    print "parent: %d, child: %d" % pids
+            elif temp[0] == 'startsell':
+                print "STARTING BUYING AND SELLING MODE"
+                print "CTRL+C to stop!!!!!"
+                newpid = os.fork()
+                fork_list.append(newpid)
+                if newpid == 0:
+                    time.sleep(2)
+                    startbuyingnosell()
                 else:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
             elif temp[0] == 'showlist':
                 print 'This is the item list: '
-                print log.list_items_to_buy
+                print js.getlistbuyitems()
             elif temp[0] == 'delete':
                 item_rem = raw_input('Item to remove from the list: ')
-                log.delInItemsTxt(item_rem)
+                js.delInItemsTxt(item_rem)
             elif temp[0] == 'add':
                 item_add = raw_input('Item to add to the list: ')
-                log.writeInItemsTxt(item_add)
+                js.writeInItemsTxt(item_add)
             elif temp[0] == 'login':
                 pass
+            elif temp[0] == 'sell':
+                print temp[1]
+                print temp[2]
+                http.sellitem(temp[1], temp[2])
+            elif temp[0] == 'buy':
+                print temp[1]
+                print temp[2]
+                print temp[3]
+                http.buyitem(temp[1],temp[2],temp[3])
             elif temp[0] == 'quit':
                 print "User saiu"
                 for p in fork_list:
                     os.kill(p,signal.SIGKILL)
-                    sys.exit()
+                sys.exit()
             else:
                 print "Command not valid, please try again!"
         except KeyboardInterrupt:
