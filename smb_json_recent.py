@@ -38,23 +38,29 @@ class SteamJsonRecent:
 
     def getRecentTotalReady(self, recent_full):
         self.recent_parsed = {}
-        for key in self.recent_parsing_list:
-            if recent_full.has_key(key):
-                recent_full.pop(key)
+        if type(recent_full) == dict:
+            for key in self.recent_parsing_list:
+                if recent_full.has_key(key):
+                    recent_full.pop(key)
+        else:
+            recent_full = {}
         #retorna um dict so com as keys assets e listinginfo
         self.recent_parsed = recent_full
 #-------------------------------------------ASSETS!!!!!!!!!!!!!!---------------------------------------------------
     #NAO EXECUTAR MANUALMENTE!!!!!!!!!!!!!!!!!!!!
     def getCleanAssetList(self):
         self.asset_list = {}
-        self.asset_list = self.recent_parsed['assets']
-        if self.asset_list.has_key('730'):
-            self.asset_list = self.asset_list['730']
-            self.asset_list = self.asset_list['2']
-            for key_item in self.asset_list:
-                for key in self.asset_parsing_list:
-                    if key in self.asset_list[key_item]:
-                        self.asset_list[key_item].pop(key)
+        if self.recent_parsed.has_key('assets'):
+            self.asset_list = self.recent_parsed['assets']
+            if self.asset_list.has_key('730'):
+                self.asset_list = self.asset_list['730']
+                self.asset_list = self.asset_list['2']
+                for key_item in self.asset_list:
+                    for key in self.asset_parsing_list:
+                        if key in self.asset_list[key_item]:
+                            self.asset_list[key_item].pop(key)
+            else:
+                return False
         else:
             return False
 
@@ -80,13 +86,16 @@ class SteamJsonRecent:
     #1 a ser executada
     def delNonCsgoListings(self):
         self.listinginfo_list = {}
-        temp_list = self.recent_parsed['listinginfo']
-        self.listinginfo_list = temp_list
-        for k in self.listinginfo_list.keys():
-            if self.listinginfo_list[k]['asset']['appid'] != 730:
-                self.listinginfo_list.pop(k)
-            elif self.listinginfo_list[k]['asset']['amount'] == 0:
-                self.listinginfo_list.pop(k)
+        if self.recent_parsed.has_key('listinginfo'):
+            temp_list = self.recent_parsed['listinginfo']
+            self.listinginfo_list = temp_list
+            for k in self.listinginfo_list.keys():
+                if self.listinginfo_list[k]['asset']['appid'] != 730:
+                    self.listinginfo_list.pop(k)
+                elif self.listinginfo_list[k]['asset']['amount'] == 0:
+                    self.listinginfo_list.pop(k)
+        else:
+            return False
 
     #2 a ser executada
     #NAO EXECUTAR MANUALMENTE!!!!!!!!!!!!!!!!!!!!
@@ -109,15 +118,19 @@ class SteamJsonRecent:
     def getlistlistings(self):
         self.final_list_listings = {}
 
-        self.delNonCsgoListings()
-        self.getCleanListinginfoListWithAsset()
-        self.getcleanlistings()
-        for key_item in self.listinginfo_list.keys():
-            if self.listinginfo_list[key_item].has_key('converted_price'):
-                self.listinginfo_list[key_item]['converted_price'] = float(self.listinginfo_list[key_item]['converted_price']) / self.float100
-                self.listinginfo_list[key_item]['converted_fee'] = float(self.listinginfo_list[key_item]['converted_fee']) / self.float100
-            else:
-                self.listinginfo_list.pop(key_item)
+        if self.delNonCsgoListings() != False:
+            self.getCleanListinginfoListWithAsset()
+            self.getcleanlistings()
+            for key_item in self.listinginfo_list.keys():
+                if self.listinginfo_list[key_item].has_key('converted_price'):
+                    print type(self.listinginfo_list[key_item]['converted_price'])
+                    print self.listinginfo_list[key_item]['converted_price']
+                    self.listinginfo_list[key_item]['converted_price']
+                    self.listinginfo_list[key_item]['converted_fee']
+                else:
+                    self.listinginfo_list.pop(key_item)
+        else:
+            return False
         #except:
             #print "falha no parsing da lista de listings"
             #return False
@@ -162,8 +175,14 @@ class SteamJsonRecent:
                                 except ValueError:
                                     print "erro ao por em float"
                     try:
-                        if float("{0:.2f}".format(temp_item_priceover['median_price'] - ((self.final_list[key]['converted_price'])+self.final_list[key]['converted_fee']))) >= (20*(self.final_list[key]['converted_price']+self.final_list[key]['converted_fee'])/100):
-                            if (self.final_list[key]['converted_price']+self.final_list[key]['converted_fee']) <= (75*self.getwalletbalance())/100:
+                        temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price']) / 100)
+                        temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
+                        print 'preco em int do ' + key + ' ' + str(self.final_list[key]['converted_price'])
+                        print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
+                        print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
+                        print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
+                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (20*(temp_converted_price_math+temp_converted_fee_math)/100):
+                            if (temp_converted_price_math+temp_converted_fee_math) <= (75*self.getwalletbalance())/100:
                                 temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],self.final_list[key]['converted_fee'])
                                 if temp[0] == 200:
                                     if temp[1]['wallet_info'].has_key('wallet_info'):
@@ -178,14 +197,14 @@ class SteamJsonRecent:
                                     print "erro ao comprar item"
                             else:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos"
-                                print "preco da arma: " + str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
+                                print "preco da arma: " + str(temp_converted_price_math+temp_converted_fee_math)
                                 print "saldo da wallet: " + str(self.log.wallet_balance)
                         else:
                             print "nao posso comprar " + key + " porque margens nao sao suficientes"
-                            print "preco da " + key + " : " + str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
+                            print "preco da " + key + " : " + str(temp_converted_price_math+temp_converted_fee_math)
                             print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
-                            print "margem necessaria: " + str((20*(self.final_list[key]['converted_price']+self.final_list[key]['converted_fee'])/100))
-                            print "margem obtida: " + str((temp_item_priceover['median_price'] - ((self.final_list[key]['converted_price'])+self.final_list[key]['converted_fee'])))
+                            print "margem necessaria: " + str(20*(temp_converted_price_math+temp_converted_fee_math)/100)
+                            print "margem obtida: " + str((temp_item_priceover['median_price'] - (temp_converted_price_math+temp_converted_fee_math)))
                     except ValueError:
                         print "float not valid"
                         temp_resp[0] = False

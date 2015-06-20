@@ -84,3 +84,5 @@ class Logic:
             print "Ultimo saldo disponivel: "
             print self.wallet_balance
             return False
+    def writetotempfile(self,subtotal,fee,data_buy,listingid,):
+        pass
