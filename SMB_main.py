@@ -67,26 +67,25 @@ def startbuyingsell():
                 print "CONN REFUSED, sleeping..."
                 time.sleep(30)
                 pass
-            try:
-                js.getRecentTotalReady(recent)
-                js.getfinalrecentlist()
-                temp_resp = js.seeifbuyinggood()
-                if temp_resp[0] == True:
-                    newpid = os.fork()
-                    if newpid == 0:
-                        http.sellitem(int(temp_resp[1]),temp_resp[2])
-                    else:
-                        pids = (os.getpid(), newpid)
-                        print "parent: %d, child: %d" % pids
-                i += 1
-                print i
-                time.sleep(http_interval)
-                elapsed = time.clock()
-                elapsed = elapsed - start
-                print elapsed
-                times.append(elapsed)
-            except AttributeError:
-                print "error, a continuar"
+
+            js.getRecentTotalReady(recent)
+            js.getfinalrecentlist()
+            temp_resp = js.seeifbuyinggood()
+            if temp_resp == True:
+                newpid = os.fork()
+                if newpid == 0:
+                    http.sellitem(int(temp_resp[1]),temp_resp[2])
+                else:
+                    pids = (os.getpid(), newpid)
+                    print "parent: %d, child: %d" % pids
+            i += 1
+            print i
+            time.sleep(http_interval)
+            elapsed = time.clock()
+            elapsed = elapsed - start
+            print elapsed
+            times.append(elapsed)
+
         except KeyboardInterrupt:
             print '\n'
             print "User stopped searching"
@@ -116,7 +115,7 @@ try:
                 fork_list.append(newpid)
                 if newpid == 0:
                     time.sleep(2)
-                    startbuyingnosell()
+                    startbuyingsell()
                 else:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids

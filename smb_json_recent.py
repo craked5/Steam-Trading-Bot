@@ -10,6 +10,7 @@ from smb_logic import Logic
 from smb_requests_recent import SteamBotHttp
 import sys
 import os
+import time
 
 
 class SteamJsonRecent:
@@ -145,6 +146,7 @@ class SteamJsonRecent:
                 return True
 
     def seeifbuyinggood(self):
+        temp_resp = []
         for key in self.final_list:
             if self.seeifrecentiteminlistbuy(key) == True:
                 temp_item_priceover = self.http.urlQueryItem(key)
@@ -161,37 +163,35 @@ class SteamJsonRecent:
                                     print "erro ao por em float"
                     try:
                         if float("{0:.2f}".format(temp_item_priceover['median_price'] - ((self.final_list[key]['converted_price'])+self.final_list[key]['converted_fee']))) >= (20*(self.final_list[key]['converted_price']+self.final_list[key]['converted_fee'])/100):
-                            if (self.final_list[key]['converted_price']+self.final_list[key]['converted_fee']) <= 0.75*self.getwalletbalance():
-                                newpid = os.fork()
-                                fork_list.append(newpid)
-                                if newpid == 0:
-                                    temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],self.final_list[key]['converted_fee'])
+                            if (self.final_list[key]['converted_price']+self.final_list[key]['converted_fee']) <= (75*self.getwalletbalance())/100:
+                                temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],self.final_list[key]['converted_fee'])
+                                if temp[0] == 200:
+                                    if temp[1]['wallet_info'].has_key('wallet_info'):
+                                        if self.log.writetowallet(temp['wallet_info']['wallet_balance']) == True:
+                                            print "Ok COMPREI A: " + key + " ao preco: " + str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
+                                            temp_resp.append(True)
+                                            temp_resp.append(self.final_list[key]['listingid'])
+                                            temp_resp.append(temp_item_priceover[key_in_priceover]['median_price'])
+                                            return temp_resp
                                 else:
-                                    pids = (os.getpid(), newpid)
-                                    print "funcao: %d, funcaoComprar: %d" % pids
-                                if temp.has_key('wallet_info'):
-                                    if self.log.writetowallet(temp['wallet_info']['wallet_balance']) == True:
-                                        print "Ok COMPREI A: " + key
-                                        temp_resp = []
-                                        temp_resp[0] = True
-                                        temp_resp[1] = self.final_list[key]['listingid']
-                                        temp_resp[2] = temp_item_priceover[key_in_priceover]['median_price']
-                                        return temp_resp
+                                    print "Nao pude comprar item " + key
+                                    print "erro ao comprar item"
                             else:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos"
                                 print "preco da arma: " + str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
                                 print "saldo da wallet: " + str(self.log.wallet_balance)
-                                return False
                         else:
                             print "nao posso comprar " + key + " porque margens nao sao suficientes"
                             print "preco da " + key + " : " + str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
                             print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
                             print "margem necessaria: " + str((20*(self.final_list[key]['converted_price']+self.final_list[key]['converted_fee'])/100))
                             print "margem obtida: " + str((temp_item_priceover['median_price'] - ((self.final_list[key]['converted_price'])+self.final_list[key]['converted_fee'])))
-                            return False
                     except ValueError:
                         print "float not valid"
-
+                        temp_resp[0] = False
+                        return temp_resp
+        temp_resp.append(False)
+        return temp_resp
 
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
 
