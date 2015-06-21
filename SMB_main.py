@@ -72,12 +72,7 @@ def startbuyingsell():
             js.getfinalrecentlist()
             temp_resp = js.seeifbuyinggood()
             if temp_resp[0] == True:
-                newpid = os.fork()
-                if newpid == 0:
-                    http.sellitem(int(temp_resp[1]),temp_resp[2])
-                else:
-                    pids = (os.getpid(), newpid)
-                    print "parent: %d, child: %d" % pids
+                http.sellitem(temp_resp[1],temp_resp[2])
             i += 1
             print i
             time.sleep(http_interval)
@@ -133,12 +128,13 @@ try:
             elif temp[0] == 'sell':
                 print temp[1]
                 print temp[2]
-                http.sellitem(temp[1], temp[2])
+                http.sellitem(temp[1], float(temp[2]))
             elif temp[0] == 'buy':
                 print temp[1]
                 print temp[2]
                 print temp[3]
-                http.buyitem(temp[1],temp[2],temp[3])
+                print temp[4]
+                http.buyitem(temp[1],int(temp[2]),int(temp[3]),int(temp[4]))
             elif temp[0] == 'quit':
                 print "User saiu"
                 for p in fork_list:

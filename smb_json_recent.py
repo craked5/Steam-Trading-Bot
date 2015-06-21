@@ -183,9 +183,10 @@ class SteamJsonRecent:
                         #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
                         if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (20*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= (75*self.getwalletbalance())/100:
-                                temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],self.final_list[key]['converted_fee'],key)
+                                temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],self.final_list[key]['converted_fee'])
+                                self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],self.http.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1])
                                 if temp[0] == 200:
-                                    if temp[1]['wallet_info'].has_key('wallet_info'):
+                                    if temp[1]['wallet_info'].has_key('wallet_balance'):
                                         if self.log.writetowallet(temp['wallet_info']['wallet_balance']) == True:
                                             print "Ok COMPREI A: " + key + " ao preco: " + str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
                                             temp_resp.append(True)
