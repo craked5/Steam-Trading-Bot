@@ -84,5 +84,23 @@ class Logic:
             print "Ultimo saldo disponivel: "
             print self.wallet_balance
             return False
-    def writetotempfile(self,subtotal,fee,data_buy,listingid,):
-        pass
+    def writetobuys(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
+        tempfile = open('buys.txt', 'a')
+        temp_string2 = 'A data buy foi ' + str(data_buy)
+        temp_string3 = 'A codigo de resposta foi ' + str(responsecode) + ' e o dict de resposta foi ' + str(responsedict)
+        if responsecode == 502:
+            temp_string = 'Tentei comprar ' + key + ' com a listingid ' + str(listingid) + ' ao preco de ' + str(subtotal+fee)
+            tempfile.write(temp_string+'\n')
+            tempfile.write(temp_string2+'\n')
+            tempfile.write(temp_string3+'\n\n\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
+        elif responsecode == 200:
+            temp_string = 'Comprei ' + key + ' com a listingid ' + str(listingid) + ' ao preco de ' + str(subtotal+fee)
+            tempfile.write(temp_string+'\n')
+            tempfile.write(temp_string2+'\n')
+            tempfile.write(temp_string3+'\n\n\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()

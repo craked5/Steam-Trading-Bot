@@ -123,8 +123,8 @@ class SteamJsonRecent:
             self.getcleanlistings()
             for key_item in self.listinginfo_list.keys():
                 if self.listinginfo_list[key_item].has_key('converted_price'):
-                    print type(self.listinginfo_list[key_item]['converted_price'])
-                    print self.listinginfo_list[key_item]['converted_price']
+                    #print type(self.listinginfo_list[key_item]['converted_price'])
+                    #print self.listinginfo_list[key_item]['converted_price']
                     self.listinginfo_list[key_item]['converted_price']
                     self.listinginfo_list[key_item]['converted_fee']
                 else:
@@ -177,13 +177,13 @@ class SteamJsonRecent:
                     try:
                         temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price']) / 100)
                         temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
-                        print 'preco em int do ' + key + ' ' + str(self.final_list[key]['converted_price'])
-                        print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
-                        print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
-                        print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
+                        #print 'preco em int do ' + key + ' ' + str(self.final_list[key]['converted_price'])
+                        #print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
+                        #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
+                        #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
                         if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (20*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= (75*self.getwalletbalance())/100:
-                                temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],self.final_list[key]['converted_fee'])
+                                temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],self.final_list[key]['converted_fee'],key)
                                 if temp[0] == 200:
                                     if temp[1]['wallet_info'].has_key('wallet_info'):
                                         if self.log.writetowallet(temp['wallet_info']['wallet_balance']) == True:
@@ -197,14 +197,14 @@ class SteamJsonRecent:
                                     print "erro ao comprar item"
                             else:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos"
-                                print "preco da arma: " + str(temp_converted_price_math+temp_converted_fee_math)
-                                print "saldo da wallet: " + str(self.log.wallet_balance)
+                                #print "preco da arma: " + str(temp_converted_price_math+temp_converted_fee_math)
+                                #print "saldo da wallet: " + str(self.log.wallet_balance)
                         else:
                             print "nao posso comprar " + key + " porque margens nao sao suficientes"
-                            print "preco da " + key + " : " + str(temp_converted_price_math+temp_converted_fee_math)
-                            print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
-                            print "margem necessaria: " + str(20*(temp_converted_price_math+temp_converted_fee_math)/100)
-                            print "margem obtida: " + str((temp_item_priceover['median_price'] - (temp_converted_price_math+temp_converted_fee_math)))
+                            #print "preco da " + key + " : " + str(temp_converted_price_math+temp_converted_fee_math)
+                            #print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
+                            #print "margem necessaria: " + str(20*(temp_converted_price_math+temp_converted_fee_math)/100)
+                            #print "margem obtida: " + str((temp_item_priceover['median_price'] - (temp_converted_price_math+temp_converted_fee_math)))
                     except ValueError:
                         print "float not valid"
                         temp_resp[0] = False

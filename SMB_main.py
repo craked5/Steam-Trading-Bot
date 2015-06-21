@@ -71,7 +71,7 @@ def startbuyingsell():
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
             temp_resp = js.seeifbuyinggood()
-            if temp_resp == True:
+            if temp_resp[0] == True:
                 newpid = os.fork()
                 if newpid == 0:
                     http.sellitem(int(temp_resp[1]),temp_resp[2])
