@@ -84,6 +84,7 @@ class Logic:
             print "Ultimo saldo disponivel: "
             print self.wallet_balance
             return False
+
     def writetobuys(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
         tempfile = open('buys.txt', 'a')
         temp_string2 = 'A data buy foi ' + str(data_buy)

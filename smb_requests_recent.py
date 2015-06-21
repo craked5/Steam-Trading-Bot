@@ -103,7 +103,7 @@ class SteamBotHttp:
     def urlQueryItem(self,item):
         steam_response = req.get(self.complete_url_item + item)
         item_temp = ujson.loads(steam_response.text)
-        item_temp = decode_dict(item_temp)
+        #item_temp = decode_dict(item_temp)
         return item_temp
 
     def urlQueryRecent(self):
@@ -128,7 +128,7 @@ class SteamBotHttp:
 
     def buyitem(self,listing,subtotal,fee,currency):
         temp_tuple = []
-        self.data_buy['currency'] = int(currency)
+        self.data_buy['currency'] = int(currency) - 2000
         self.data_buy['subtotal'] = int(subtotal)
         self.data_buy['fee'] = int(fee)
         self.data_buy['total'] = int(self.data_buy['subtotal'] + self.data_buy['fee'])
