@@ -33,6 +33,9 @@ def startbuyingnosell():
                 print "CONN REFUSED, sleeping..."
                 time.sleep(30)
                 pass
+            elif recent == -1:
+                print "LISTAS RECENTS IGUAIS, TENTANDO DE NOVO!!!!!!"
+                pass
             try:
                 js.getRecentTotalReady(recent)
                 js.getfinalrecentlist()
@@ -60,18 +63,17 @@ def startbuyingsell():
     times = []
     while True:
         try:
-            start = time.clock()
+            start = time.gmtime()
             recent = {}
             recent = http.urlQueryRecent()
-            if recent == False:
+            if recent is False:
                 print "CONN REFUSED, sleeping..."
                 time.sleep(30)
                 pass
-
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
             temp_resp = js.seeifbuyinggood()
-            if temp_resp[0] == True:
+            if temp_resp[0] is True:
                 http.sellitem(temp_resp[1],temp_resp[2])
             i += 1
             print i
@@ -80,7 +82,6 @@ def startbuyingsell():
             elapsed = elapsed - start
             print elapsed
             times.append(elapsed)
-
         except KeyboardInterrupt:
             print '\n'
             print "User stopped searching"

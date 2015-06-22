@@ -46,7 +46,10 @@ class SteamJsonRecent:
             recent_full = {}
         #retorna um dict so com as keys assets e listinginfo
         self.recent_parsed = recent_full
-#-------------------------------------------ASSETS!!!!!!!!!!!!!!---------------------------------------------------
+
+#-------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------ASSETS!!!!!!!!!!!!!!----------------------------------------------------
+
     #NAO EXECUTAR MANUALMENTE!!!!!!!!!!!!!!!!!!!!
     def getCleanAssetList(self):
         self.asset_list = {}
@@ -181,7 +184,7 @@ class SteamJsonRecent:
                         #print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
                         #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
                         #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
-                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (20*(temp_converted_price_math+temp_converted_fee_math)/100):
+                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (25*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= (75*self.getwalletbalance())/100:
                                 if int(self.final_list[key]['converted_currencyid']) == 2003:
                                     temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
@@ -212,7 +215,7 @@ class SteamJsonRecent:
                             #print "margem obtida: " + str((temp_item_priceover['median_price'] - (temp_converted_price_math+temp_converted_fee_math)))
                     except ValueError:
                         print "float not valid"
-                        temp_resp[0] = False
+                        temp_resp.append(False)
                         return temp_resp
         temp_resp.append(False)
         return temp_resp
