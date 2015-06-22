@@ -5,7 +5,8 @@ __author__ = 'nunosilva'
 
 import requests as req
 import ast
-import ujson
+import json
+
 
 def decode_list(data):
     rv = []
@@ -115,7 +116,7 @@ class SteamBotHttp:
 
     def urlQueryItem(self,item):
         steam_response = req.get(self.complete_url_item + item)
-        item_temp = ujson.loads(steam_response.text)
+        item_temp = json.loads(steam_response.text)
         #item_temp = decode_dict(item_temp)
         return item_temp
 
@@ -125,7 +126,7 @@ class SteamBotHttp:
         except req.ConnectionError:
             return False
         try:
-            recent_temp = ujson.loads(steam_response.text)
+            recent_temp = json.loads(steam_response.text)
         except ValueError:
             return False
         #recent_temp = decode_dict(recent_temp)
