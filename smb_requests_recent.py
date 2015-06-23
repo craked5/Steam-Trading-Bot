@@ -55,23 +55,6 @@ class SteamBotHttp:
             'Referer':'http://steamcommunity.com/market/',
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36'
         }
-        self.rsa_headers = {
-            'Accept':'text/javascript, text/html, application/xml, text/xml, */*',
-            'Accept-Encoding':'gzip, deflate',
-            'Accept-Language':'pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2',
-            'Connection':'keep-alive',
-            'Content-Length':44,
-            'Content-type':'application/x-www-form-urlencoded; charset=UTF-8',
-            'Cookie':'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; __utma=268881843.1944006538.1426348260.1426845397.1427022271.24; __utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); Steam_Language=english; 730_17workshopQueueTime=1432014476; recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; sessionid=5cfbd35e404358ce92d5aaa0; steamCountry=PT%7C90d987902b02ceec924245352748dc71; strInventoryLastContext=730_2; timezoneOffset=3600,0',
-            'CSP':'active',
-            'DNT':1,
-            'Host':'steamcommunity.com',
-            'Origin':'https://steamcommunity.com',
-            'Referer':'https://steamcommunity.com/login/home/?goto=0',
-            'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36',
-            'X-Prototype-Version':1.7,
-            'X-Requested-With':'XMLHttpRequest'
-        }
         #price = preco que eu quero receber = price+fee_price
         self.data_sell = {
             "sessionid" : self.sessionid,
@@ -92,16 +75,31 @@ class SteamBotHttp:
             'total': 0,
             'quantity': 1
         }
+        self.rsa_headers = {
+            'Accept':'text/javascript, text/html, application/xml, text/xml, */*',
+            'Accept-Encoding':'gzip, deflate',
+            'Accept-Language':'pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2',
+            'Connection':'keep-alive',
+            'Content-Length':44,
+            'Content-type':'application/x-www-form-urlencoded; charset=UTF-8',
+            'Cookie':'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; __utma=268881843.1944006538.1426348260.1426845397.1427022271.24; __utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); Steam_Language=english; 730_17workshopQueueTime=1432014476; recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; sessionid=5cfbd35e404358ce92d5aaa0; steamCountry=PT%7C90d987902b02ceec924245352748dc71; strInventoryLastContext=730_2; timezoneOffset=3600,0',
+            'CSP':'active',
+            'DNT':1,
+            'Host':'steamcommunity.com',
+            'Origin':'https://steamcommunity.com',
+            'Referer':'https://steamcommunity.com/login/home/?goto=0',
+            'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36',
+            'X-Prototype-Version':1.7,
+            'X-Requested-With':'XMLHttpRequest'
+        }
         self.password = 'Steamgresso1234567@'
-        self.encrypted_password = ''
         self.donotcache = 0
         self.rsa_data = {
             'username': 'freeman777',
-            'donotcache': self.donotcache
+            'donotcache': 0
         }
-
         self.login_data = {
-            'password':self.encrypted_password,
+            'password':'',
             'username':'freeman777',
             'twofactorcode':'',
             'emailauth':'',
@@ -111,22 +109,25 @@ class SteamBotHttp:
             'emailsteamid':'',
             'rsatimestamp': '',
             'remember_login':'true',
-            'donotcache': self.donotcache
+            'donotcache': 0
         }
 
     def login(self):
         self.donotcache = self.now_milliseconds()
+        self.rsa_data['donotcache'] = self.donotcache
+        self.login_data['donotcache'] = self.donotcache
         temp_rsa = req.post('https://steamcommunity.com/login/getrsakey/', headers=self.rsa_headers, data=self.rsa_data)
         print temp_rsa.content
         temp_ras_good = ujson.loads(temp_rsa.content)
-        self.login_data['rsatimestamp'] = temp_ras_good['rsatimestamp']
+        self.login_data['rsatimestamp'] = temp_ras_good['timestamp']
         mod = long(temp_ras_good['publickey_mod'], 16)
         exp = long(temp_ras_good['publickey_exp'], 16)
         rsa_key = RSA.construct((mod, exp))
         rsa = PKCS1_v1_5.PKCS115_Cipher(rsa_key)
         encrypted_password = rsa.encrypt(self.password)
         encrypted_password = base64.b64encode(encrypted_password)
-        self.encrypted_password = encrypted_password
+        self.login_data['password'] = encrypted_password
+        print self.login_data
         temp_dologin = req.post('https://steamcommunity.com/login/dologin/', headers=self.rsa_headers, data=self.login_data)
         print temp_dologin.content
         print temp_dologin.status_code
