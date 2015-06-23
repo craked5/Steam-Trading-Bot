@@ -92,6 +92,14 @@ class SteamBotHttp:
             'total': 0,
             'quantity': 1
         }
+        self.password = 'Steamgresso1234567@'
+        self.encrypted_password = ''
+        self.donotcache = 0
+        self.rsa_data = {
+            'username': 'freeman777',
+            'donotcache': self.donotcache
+        }
+
         self.login_data = {
             'password':self.encrypted_password,
             'username':'freeman777',
@@ -103,13 +111,6 @@ class SteamBotHttp:
             'emailsteamid':'',
             'rsatimestamp': '',
             'remember_login':'true',
-            'donotcache': self.donotcache
-        }
-        self.password = 'Steamgresso1234567@'
-        self.encrypted_password = ''
-        self.donotcache = 0
-        self.rsa_data = {
-            'username': 'freeman777',
             'donotcache': self.donotcache
         }
 
