@@ -105,6 +105,8 @@ try:
                 else:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
+            elif temp[0] == 'login':
+                http.login()
             elif temp[0] == 'startsell':
                 print "STARTING BUYING AND SELLING MODE"
                 print "CTRL+C to stop!!!!!"
