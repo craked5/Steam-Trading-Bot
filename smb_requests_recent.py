@@ -29,12 +29,24 @@ class SteamBotHttp:
         self.render_item_url_sencond_part = '/render/?currency=3'
         self.recent_compare = {}
         self.sessionid = "5cfbd35e404358ce92d5aaa0"
+        self.headers_recent = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Encoding": "gzip,deflate,sdch",
+            "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
+            'Cache-Control':'max-age=0',
+            'Connection':'keep-alive',
+            'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; __utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); Steam_Language=english; 730_17workshopQueueTime=1432014476; recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; sessionid=5cfbd35e404358ce92d5aaa0; steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; strInventoryLastContext=730_2; steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; timezoneOffset=3600,0; webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days%22%3A15%2C%22sales_this_year%22%3A133%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A0%2C%22new_device_cooldown_days%22%3A7%7D; tsTradeOffersLastRead=1435052082',
+            'DNT':1,
+            'Host':'steamcommunity.com',
+            'If-Modified-Since':'Tue, 23 Jun 2015 09:40:30 GMT',
+            'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36'
+        }
         self.headers_sell = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             "Host": "steamcommunity.com",
-            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; __utma=268881843.1944006538.1426348260.1426845397.1427022271.24; __utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); Steam_Language=english; 730_17workshopQueueTime=1432014476; steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; sessionid=9d8e0a5043cccddd6c430395; webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A0%2C%22new_device_cooldown_days%22%3A7%7D; steamCountry=PT%7C90d987902b02ceec924245352748dc71; steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; strInventoryLastContext=730_2; tsTradeOffersLastRead=1434610877; timezoneOffset=3600,0',
+            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; __utma=268881843.1944006538.1426348260.1426845397.1427022271.24; __utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); Steam_Language=english; 730_17workshopQueueTime=1432014476; steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; sessionid=5cfbd35e404358ce92d5aaa0; webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A0%2C%22new_device_cooldown_days%22%3A7%7D; steamCountry=PT%7C90d987902b02ceec924245352748dc71; steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; strInventoryLastContext=730_2; tsTradeOffersLastRead=1434610877; timezoneOffset=3600,0',
             "Referer": "https://steamcommunity.com/id/craked5/inventory",
             "Origin": "https://steamcommunity.com",
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36",
@@ -47,7 +59,7 @@ class SteamBotHttp:
             'Connection': 'keep-alive',
             'Content-Length': '83',
             'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
-            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; __utma=268881843.1944006538.1426348260.1426845397.1427022271.24; __utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); Steam_Language=english; 730_17workshopQueueTime=1432014476; steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; sessionid=9d8e0a5043cccddd6c430395; webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A0%2C%22new_device_cooldown_days%22%3A7%7D; steamCountry=PT%7C90d987902b02ceec924245352748dc71; steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; strInventoryLastContext=730_2; tsTradeOffersLastRead=1434610877; timezoneOffset=3600,0',
+            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; __utma=268881843.1944006538.1426348260.1426845397.1427022271.24; __utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); Steam_Language=english; 730_17workshopQueueTime=1432014476; steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; sessionid=5cfbd35e404358ce92d5aaa0; webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A0%2C%22new_device_cooldown_days%22%3A7%7D; steamCountry=PT%7C90d987902b02ceec924245352748dc71; steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; strInventoryLastContext=730_2; tsTradeOffersLastRead=1434610877; timezoneOffset=3600,0',
             'CSP':'active',
             'DNT':'1',
             'Host':'steamcommunity.com',
@@ -93,7 +105,6 @@ class SteamBotHttp:
             'X-Requested-With':'XMLHttpRequest'
         }
         self.password = 'Steamgresso1234567@'
-        self.donotcache = 0
         self.rsa_data = {
             'username': 'freeman777',
             'donotcache': 0
@@ -113,9 +124,9 @@ class SteamBotHttp:
         }
 
     def login(self):
-        self.donotcache = self.now_milliseconds()
-        self.rsa_data['donotcache'] = self.donotcache
-        self.login_data['donotcache'] = self.donotcache
+        donotcache = self.now_milliseconds()
+        self.rsa_data['donotcache'] = donotcache
+        self.login_data['donotcache'] = donotcache
         temp_rsa = req.post('https://steamcommunity.com/login/getrsakey/', headers=self.rsa_headers, data=self.rsa_data)
         print temp_rsa.content
         temp_ras_good = ujson.loads(temp_rsa.content)
@@ -143,15 +154,20 @@ class SteamBotHttp:
 
     def urlQueryRecent(self):
         try:
-            steam_response = req.get(self.complete_url_recent)
+            steam_response = req.get(self.complete_url_recent,headers=self.headers_recent)
+            if steam_response.status_code == 200:
+                timestamp = time.time()
+                time_temp = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(timestamp))
+                self.headers_recent['If-Modified-Since'] = time_temp
+                try:
+                    recent_temp = ujson.loads(steam_response.text)
+                except ValueError:
+                    return False
+                return recent_temp
+            elif steam_response.status_code == 304:
+                return -1
         except req.ConnectionError:
             return False
-        try:
-            recent_temp = ujson.loads(steam_response.text)
-        except ValueError:
-            return False
-        #recent_temp = decode_dict(recent_temp)
-        return recent_temp
 
     def urlqueryspecificitem(self,item):
         try:

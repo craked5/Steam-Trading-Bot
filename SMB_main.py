@@ -64,25 +64,36 @@ def startbuyingsell():
     times = []
     while True:
         try:
-            start = time.gmtime()
-            recent = {}
+            start = time.clock()
             recent = http.urlQueryRecent()
-            if recent is False:
+            if recent == False:
                 print "CONN REFUSED, sleeping..."
                 time.sleep(30)
                 pass
-            js.getRecentTotalReady(recent)
-            js.getfinalrecentlist()
-            temp_resp = js.seeifbuyinggood()
-            if temp_resp[0] is True:
-                http.sellitem(temp_resp[1],temp_resp[2])
-            i += 1
-            print i
-            time.sleep(http_interval)
-            elapsed = time.clock()
-            elapsed = elapsed - start
-            print elapsed
-            times.append(elapsed)
+            elif recent == -1:
+                time.sleep(0.4)
+                print "recent igual, trying again"
+            elif type(recent) == dict:
+                js.getRecentTotalReady(recent)
+                js.getfinalrecentlist()
+                temp_resp = js.seeifbuyinggood()
+                if temp_resp[0] is True:
+                    print "OK SELLING ITEM"
+                    http.sellitem(temp_resp[1],temp_resp[2])
+                i += 1
+                print i
+                time.sleep(http_interval)
+                elapsed = time.clock()
+                elapsed = elapsed - start
+                print elapsed
+                times.append(elapsed)
+            else:
+                i += 1
+                print i
+                elapsed = time.clock()
+                elapsed = elapsed - start
+                print elapsed
+                times.append(elapsed)
         except KeyboardInterrupt:
             print '\n'
             print "User stopped searching"
@@ -130,14 +141,8 @@ try:
             elif temp[0] == 'login':
                 pass
             elif temp[0] == 'sell':
-                print temp[1]
-                print temp[2]
                 http.sellitem(temp[1], float(temp[2]))
             elif temp[0] == 'buy':
-                print temp[1]
-                print temp[2]
-                print temp[3]
-                print temp[4]
                 http.buyitem(temp[1],int(temp[2]),int(temp[3]),int(temp[4]))
             elif temp[0] == 'quit':
                 print "User saiu"
