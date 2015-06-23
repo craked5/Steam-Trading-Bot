@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 __author__ = 'nunosilva'
+__author__ = 'github.com/craked5'
 
 from smb_requests_recent import SteamBotHttp
 from smb_json_recent import SteamJsonRecent
@@ -15,7 +16,7 @@ print 'What time interval do you want the queries to be? (number only please)\n'
 http_interval = raw_input()
 http_interval = float(http_interval)
 print '\n'
-print "OK now time one of the following commands: start, showlist, add, delete, login\n"
+print "OK now time one of the following commands: startsel,startnosell,buy,sell, showlist, add, delete, login\n"
 http = SteamBotHttp()
 js = SteamJsonRecent()
 fork_list = []

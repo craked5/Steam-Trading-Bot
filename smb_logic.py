@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 __author__ = 'nunosilva'
+__author__ = 'github.com/craked5'
 
 import os
 import decimal

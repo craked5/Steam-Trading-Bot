@@ -17,13 +17,13 @@ import time
 class SteamJsonRecent:
 
     def __init__(self):
-        self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
-                                    u'success',u'more',u'purchaseinfo']
+        self.recent_parsing_list = [u'results_html',u'hovers',u'app_data',u'currency',
+                                    u'success',u'start',u'pagesize',u'total_count']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
                                    'background_color','icon_url','icon_url_large','descriptions','name','name_color','type',
                                    'market_name','market_actions','commodity','app_icon','owner','actions','market_tradable_restriction']
         self.listinginfo_parsing_list = ['fee','publisher_fee_percent','currencyid','steam_fee','publisher_fee',
-                                         'converted_steam_fee','converted_publisher_fee','converted_price_per_unit',
+                                         'converted_steam_fee','converted_price_per_unit',
                                          'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
