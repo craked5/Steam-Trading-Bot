@@ -28,7 +28,7 @@ class SteamBotHttp:
         self.render_item_url_first_part = self.host_normal+self.market+'/listings/730/'
         self.render_item_url_sencond_part = '/render/?currency=3'
         self.recent_compare = {}
-        self.sessionid = "9d8e0a5043cccddd6c430395"
+        self.sessionid = "5cfbd35e404358ce92d5aaa0"
         self.headers_sell = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
