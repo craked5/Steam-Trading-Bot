@@ -22,7 +22,7 @@ class SteamJsonRecent:
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
                                    'background_color','icon_url','icon_url_large','descriptions','name','name_color','type',
                                    'market_name','market_actions','commodity','app_icon','owner','actions','market_tradable_restriction']
-        self.listinginfo_parsing_list = ['fee','publisher_fee_percent','currencyid','steam_fee','publisher_fee',
+        self.listinginfo_parsing_list = ['fee','publisher_fee_percent','steam_fee','publisher_fee',
                                          'converted_steam_fee','converted_publisher_fee','converted_price_per_unit',
                                          'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
@@ -181,6 +181,7 @@ class SteamJsonRecent:
                     try:
                         temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price']) / 100)
                         temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
+                        #print self.final_list[key]['converted_price']
                         #print 'preco em int do ' + key + ' ' + str(self.final_list[key]['converted_price'])
                         #print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
                         #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])

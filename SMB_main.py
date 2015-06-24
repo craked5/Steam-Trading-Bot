@@ -54,7 +54,7 @@ def startbuyingnosell():
             print '\n'
             print "User stopped searching"
             break
-
+'''
 #temp_resp e a resposta do seeifbuy
 #temp[0] = True
 #temp[1] = assetid
@@ -99,6 +99,50 @@ def startbuyingsell():
             print '\n'
             print "User stopped searching"
             break
+'''
+#STARTBUYINGSELL NUMBER 2 NO BULLSHIT CODES
+#temp_resp e a resposta do seeifbuy
+#temp[0] = True
+#temp[1] = assetid
+#temp[2] = price
+def startbuyingsell():
+    i = 0
+    times = []
+    while True:
+        try:
+            start = time.time()
+            recent = http.urlQueryRecent()
+            if recent == False:
+                print "CONN REFUSED, sleeping..."
+                time.sleep(30)
+                pass
+            elif type(recent) == dict:
+                js.getRecentTotalReady(recent)
+                js.getfinalrecentlist()
+                temp_resp = js.seeifbuyinggood()
+                print temp_resp[0]
+                if temp_resp[0] is True:
+                    print "OK SELLING ITEM"
+                    sell_response = http.sellitem(temp_resp[1],temp_resp[2])
+                    js.writetosellfile(sell_response[0],sell_response[1],temp_resp[3],temp_resp[2])
+                i += 1
+                print i
+                time.sleep(http_interval)
+                elapsed = time.time()
+                elapsed = elapsed - start
+                print elapsed
+            else:
+                time.sleep(http_interval)
+                i += 1
+                print i
+                elapsed = time.time()
+                elapsed = elapsed - start
+                print elapsed
+        except KeyboardInterrupt:
+            print '\n'
+            print "User stopped searching"
+            break
+
 
 
 try:

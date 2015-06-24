@@ -151,7 +151,7 @@ class SteamBotHttp:
         item_temp = ujson.loads(steam_response.text)
         #item_temp = decode_dict(item_temp)
         return item_temp
-
+    '''
     def urlQueryRecent(self):
         try:
             steam_response = req.get(self.complete_url_recent,headers=self.headers_recent)
@@ -166,6 +166,17 @@ class SteamBotHttp:
                 return recent_temp
             elif steam_response.status_code == 304:
                 return -1
+        except req.ConnectionError:
+            return False
+    '''
+    def urlQueryRecent(self):
+        try:
+            steam_response = req.get(self.complete_url_recent,headers=self.headers_recent)
+            try:
+                recent_temp = ujson.loads(steam_response.text)
+            except ValueError:
+                return False
+            return recent_temp
         except req.ConnectionError:
             return False
 
