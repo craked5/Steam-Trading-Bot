@@ -64,36 +64,37 @@ def startbuyingsell():
     times = []
     while True:
         try:
-            start = time.clock()
+            start = time.time()
             recent = http.urlQueryRecent()
             if recent == False:
                 print "CONN REFUSED, sleeping..."
                 time.sleep(30)
                 pass
             elif recent == -1:
-                time.sleep(0.4)
+                time.sleep(0.200)
                 print "recent igual, trying again"
             elif type(recent) == dict:
                 js.getRecentTotalReady(recent)
                 js.getfinalrecentlist()
                 temp_resp = js.seeifbuyinggood()
+                print temp_resp[0]
                 if temp_resp[0] is True:
                     print "OK SELLING ITEM"
-                    http.sellitem(temp_resp[1],temp_resp[2])
+                    sell_response = http.sellitem(temp_resp[1],temp_resp[2])
+                    js.writetosellfile(sell_response[0],sell_response[1],temp_resp[3],temp_resp[2])
                 i += 1
                 print i
                 time.sleep(http_interval)
-                elapsed = time.clock()
+                elapsed = time.time()
                 elapsed = elapsed - start
                 print elapsed
-                times.append(elapsed)
             else:
+                time.sleep(http_interval)
                 i += 1
                 print i
-                elapsed = time.clock()
+                elapsed = time.time()
                 elapsed = elapsed - start
                 print elapsed
-                times.append(elapsed)
         except KeyboardInterrupt:
             print '\n'
             print "User stopped searching"

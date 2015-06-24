@@ -73,12 +73,15 @@ class Logic:
     def writetowallet(self,balance):
         try:
             temp = decimal.Decimal(balance) / 100
-            self.wallet_balance = float(temp)
+            wallet_balance = float(temp)
             tempfile = open('wallet.txt','w')
-            tempfile.write(self.wallet_balance)
+            tempfile.write(wallet_balance)
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
+            self.wallet_balance = wallet_balance
+            print wallet_balance
+            print self.wallet_balance
             return True
         except:
             print "erro ao escrever no ficheiro wallet"
@@ -103,6 +106,25 @@ class Logic:
             tempfile.write(temp_string+'\n')
             tempfile.write(temp_string2+'\n')
             tempfile.write(temp_string3+'\n\n\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
+
+    def writetosells(self,status,content,item,price):
+        tempfile = open('sells.txt','a')
+        if status == 502:
+            temp_string = 'Tentei vender a ' + item + ' ao preco ' + str(price) + ' mas o codigo foi ' + str(status)
+            temp_string2 = 'O content foi: ' + content
+            tempfile.write(temp_string+'\n')
+            tempfile.write(temp_string2+'\n\n\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
+        elif status == 200:
+            temp_string = 'Vendi a ' + item + ' ao preco ' + str(price) + ' e o codigo foi ' + str(status)
+            temp_string2 = 'O content foi: ' + content
+            tempfile.write(temp_string+'\n')
+            tempfile.write(temp_string2+'\n\n\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()

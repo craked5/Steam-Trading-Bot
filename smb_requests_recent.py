@@ -182,12 +182,14 @@ class SteamBotHttp:
 
     #price = ao preco que eu quero receber
     def sellitem(self,assetid,price):
+        list_return = []
         price_temp = price * 100
         self.data_sell['assetid'] = int(assetid)
         self.data_sell['price'] = int(price_temp)
         temp = req.post(self.sell_item_url, data=self.data_sell, headers=self.headers_sell)
-        print temp.status_code
-        return temp
+        list_return.append(temp.status_code)
+        list_return.append(temp.content)
+        return list_return
 
     def buyitem(self,listing,subtotal,fee,currency):
         temp_tuple = []
@@ -204,7 +206,7 @@ class SteamBotHttp:
         temp = req.post(self.buy_item_url_without_listingid+listing, data=self.data_buy, headers=self.headers_buy)
         print temp.content
         print temp.status_code
-        temp_tuple.append(temp.status_code)
+        temp_tuple.append(int(temp.status_code))
         temp_tuple.append(ast.literal_eval(temp.content))
         return temp_tuple
 

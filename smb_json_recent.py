@@ -200,6 +200,7 @@ class SteamJsonRecent:
                                                 temp_resp.append(True)
                                                 temp_resp.append(self.final_list[key]['listingid'])
                                                 temp_resp.append(temp_item_priceover[key_in_priceover]['median_price'])
+                                                temp_resp.append(key)
                                                 return temp_resp
                                     else:
                                         print "Nao pude comprar item " + key
@@ -239,3 +240,6 @@ class SteamJsonRecent:
 
     def getwalletbalance(self):
         return self.log.wallet_balance
+
+    def writetosellfile(self,status,content,item,price):
+        return self.log.writetosells(status,content,item,price)
