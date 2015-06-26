@@ -4,19 +4,16 @@
 __author__ = 'nunosilva'
 __author__ = 'github.com/craked5'
 
-import json
 import ujson
 import decimal
 from smb_logic import Logic
 from smb_requests_recent import SteamBotHttp
-import sys
-import os
-import time
 
 
-class SteamJsonRecent:
 
-    def __init__(self):
+class SteamJsonItem:
+
+    def __init__(self,list_items):
         self.recent_parsing_list = [u'results_html',u'hovers',u'app_data',u'currency',
                                     u'success',u'start',u'pagesize',u'total_count']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
@@ -27,26 +24,27 @@ class SteamJsonRecent:
                                          'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
+        self.list_items = list_items
         self.listinginfo_list = {}
         self.final_list_listings = {}
         self.final_list_assets = {}
         self.final_list = {}
         self.float100 = float(100)
         self.http = SteamBotHttp()
-        self.log = Logic()
+        self.log = Logic('item')
         self.contaSim = 0
         self.contaNao = 0
 
-    def getRecentTotalReady(self, recent_full):
+    def getitemtotalready(self, item_full):
         self.recent_parsed = {}
-        if type(recent_full) == dict:
+        if type(item_full) == dict:
             for key in self.recent_parsing_list:
-                if recent_full.has_key(key):
-                    recent_full.pop(key)
+                if item_full.has_key(key):
+                    item_full.pop(key)
         else:
-            recent_full = {}
+            item_full = {}
         #retorna um dict so com as keys assets e listinginfo
-        self.recent_parsed = recent_full
+        self.recent_parsed = item_full
 
 #-------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------ASSETS!!!!!!!!!!!!!!----------------------------------------------------
@@ -141,7 +139,7 @@ class SteamJsonRecent:
 
 #-------------------------------------------------------------------------------------------------------------------
 
-    def getfinalrecentlist(self):
+    def getfinalitemlist(self):
         self.final_list = {}
         if self.getlistlistings() == False:
             print 'falha no parsing dos listings, try again'
@@ -154,18 +152,17 @@ class SteamJsonRecent:
                 for k2 in self.final_list_assets:
                     if self.final_list_assets.get(k2) == self.listinginfo_list[k]['asset']['id']:
                         self.final_list[k2] = self.listinginfo_list.get(k)
-        print self.final_list
         return self.final_list
 
-    def seeifrecentiteminlistbuy(self,item):
-        for temp in self.log.list_items_to_buy:
+    def seeifindividualiteminlistbuy(self,item):
+        for temp in self.list_items:
             if item == temp:
                 return True
 
     def seeifbuyinggood(self):
         temp_resp = []
         for key in self.final_list:
-            if self.seeifrecentiteminlistbuy(key) == True:
+            if self.seeifindividualiteminlistbuy(key) == True:
                 temp_item_priceover = self.http.urlQueryItem(key)
                 if temp_item_priceover['success'] == True:
                     for key_in_priceover in temp_item_priceover:
@@ -239,3 +236,6 @@ class SteamJsonRecent:
 
     def getwalletbalance(self):
         return self.log.wallet_balance
+
+    def writetosellfile(self,status,content,item,price):
+        return self.log.writetosells(status,content,item,price)

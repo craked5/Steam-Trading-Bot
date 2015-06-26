@@ -4,14 +4,11 @@
 __author__ = 'nunosilva'
 __author__ = 'github.com/craked5'
 
-import json
 import ujson
 import decimal
 from smb_logic import Logic
 from smb_requests_recent import SteamBotHttp
-import sys
-import os
-import time
+
 
 
 class SteamJsonRecent:
@@ -33,7 +30,9 @@ class SteamJsonRecent:
         self.final_list = {}
         self.float100 = float(100)
         self.http = SteamBotHttp()
-        self.log = Logic()
+        #logic mode recent
+        #logic mode item
+        self.log = Logic('recent')
         self.contaSim = 0
         self.contaNao = 0
 
