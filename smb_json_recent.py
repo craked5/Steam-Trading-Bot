@@ -186,7 +186,7 @@ class SteamJsonRecent:
                         #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
                         #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
                         if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (30*(temp_converted_price_math+temp_converted_fee_math)/100):
-                            if (temp_converted_price_math+temp_converted_fee_math) <= (75*self.getwalletbalance())/100:
+                            if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance())/100:
                                 if int(self.final_list[key]['converted_currencyid']) == 2003:
                                     temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
                                                              self.final_list[key]['converted_fee'],self.final_list[key]['converted_currencyid'])
