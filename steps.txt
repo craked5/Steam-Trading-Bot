@@ -190,3 +190,12 @@ Traceback (most recent call last):
   File "/home/ubuntu/Steam/smb_json_recent.py", line 202, in seeifbuyinggood
     temp_resp.append(temp_item_priceover[key_in_priceover]['median_price'])
 TypeError: 'bool' object has no attribute '__getitem__'
+
+Traceback (most recent call last):
+  File "SMB_main.py", line 114, in <module>
+    startbuyingsell()
+  File "SMB_main.py", line 44, in startbuyingsell
+    resp = js.seeifbuyinggood()
+  File "/home/ubuntu/Steam/smb_json_recent.py", line 189, in seeifbuyinggood
+    if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance())/100:
+TypeError: unsupported operand type(s) for /: 'str' and 'int'
