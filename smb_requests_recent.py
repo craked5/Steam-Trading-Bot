@@ -322,7 +322,7 @@ class SteamBotHttp:
     def sellitem(self,assetid,price):
         list_return = []
         price_temp = price * 100
-        price_temp = (0.96*price_temp)
+        price_temp = (0.93*price_temp)
         price_temp = round(price_temp)
         self.data_sell['assetid'] = int(assetid)
         self.data_sell['price'] = int(price_temp)

@@ -41,13 +41,14 @@ def startbuyingsell():
         elif type(recent) == dict:
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
-            temp_resp = js.seeifbuyinggood()
-            if temp_resp[0] is True:
+            resp = js.seeifbuyinggood()
+            print resp
+            if resp[0] is True:
                 print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
-                sell_response = http.sellitem(temp_one,temp_resp[1])
-                js.writetosellfile(sell_response[0],sell_response[1],temp_resp[2],temp_resp[1])
-                js.writetowalletadd(temp_resp[1])
+                sell_response = http.sellitem(temp_one,resp[1])
+                js.writetosellfile(sell_response[0],sell_response[1],resp[2],resp[1])
+                js.writetowalletadd(resp[1])
             i += 1
             print i
             time.sleep(http_interval)

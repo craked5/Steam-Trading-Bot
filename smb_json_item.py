@@ -182,7 +182,7 @@ class SteamJsonItem:
                         #print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
                         #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
                         #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
-                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (25*(temp_converted_price_math+temp_converted_fee_math)/100):
+                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (30*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= (75*self.getwalletbalance())/100:
                                 if int(self.final_list[key]['converted_currencyid']) == 2003:
                                     temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
@@ -196,7 +196,7 @@ class SteamJsonItem:
                                                       str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
                                                 temp_resp.append(True)
                                                 #temp_resp.append(self.final_list[key]['listingid'])
-                                                temp_resp.append(temp_item_priceover[key_in_priceover]['median_price'])
+                                                temp_resp.append(temp_item_priceover['median_price'])
                                                 temp_resp.append(key)
                                                 return temp_resp
                                     else:

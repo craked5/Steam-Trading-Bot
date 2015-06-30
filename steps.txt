@@ -181,3 +181,12 @@ def startbuyingnosell():
             print "error, a continuar"
 
 =-----------------------------------------------------------------------------------------------
+
+Traceback (most recent call last):
+  File "SMB_main.py", line 113, in <module>
+    startbuyingsell()
+  File "SMB_main.py", line 44, in startbuyingsell
+    temp_resp = js.seeifbuyinggood()
+  File "/home/ubuntu/Steam/smb_json_recent.py", line 202, in seeifbuyinggood
+    temp_resp.append(temp_item_priceover[key_in_priceover]['median_price'])
+TypeError: 'bool' object has no attribute '__getitem__'
