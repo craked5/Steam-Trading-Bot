@@ -195,8 +195,9 @@ class SteamJsonItem:
                                                 print "Ok COMPREI A: " + key + " ao preco: " + \
                                                       str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
                                                 temp_resp.append(True)
-                                                temp_resp.append(self.final_list[key]['listingid'])
+                                                #temp_resp.append(self.final_list[key]['listingid'])
                                                 temp_resp.append(temp_item_priceover[key_in_priceover]['median_price'])
+                                                temp_resp.append(key)
                                                 return temp_resp
                                     else:
                                         print "Nao pude comprar item " + key
@@ -231,6 +232,9 @@ class SteamJsonItem:
     def delInItemsTxt(self,item):
         return self.log.delInItemsTxt(item)
 
+    def getpositiononeiteminv(self):
+        return self.http.getpositiononeiteminv()
+
     def getlistbuyitems(self):
         return self.log.list_items_to_buy
 
@@ -239,3 +243,27 @@ class SteamJsonItem:
 
     def writetosellfile(self,status,content,item,price):
         return self.log.writetosells(status,content,item,price)
+
+    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
+        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict)
+
+    def sellitemtest(self,assetid,price):
+        return self.http.sellitem(assetid,price)
+
+    def writetowalletadd(self,amount_add):
+        temp = amount_add + float(self.getwalletbalance())
+        temp = temp*100
+        return self.log.writetowallet(int(temp))
+
+    def buyitemtest(self,name,listing,subtotal,fee,currency):
+        temp =  self.http.buyitem(listing,subtotal,fee,currency)
+        self.writetobuyfile(subtotal,fee,self.http.data_buy,listing,name,temp[0],temp[1])
+        self.log.writetowallet(temp[1]['wallet_info']['wallet_balance'])
+        temp_id = self.getpositiononeiteminv()
+        temp_sell = self.sellitem(temp_id,0.01)
+        if temp_sell[0] == 200:
+            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01)
+            self.writetowalletadd(0.01)
+            print "balance esperado depois desta sale: " + str(self.getwalletbalance())
+        elif temp_sell[0] == 502:
+            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01)

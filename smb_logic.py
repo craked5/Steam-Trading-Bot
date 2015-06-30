@@ -83,24 +83,26 @@ class Logic:
         print self.list_items_to_buy
         return True
 
+    #balance - int
     def writetowallet(self,balance):
+        temp = decimal.Decimal(balance) / 100
+        wallet_balance = float(temp)
+        wallet_balance = str(wallet_balance)
         try:
-            temp = decimal.Decimal(balance) / 100
-            wallet_balance = float(temp)
             tempfile = open('wallet.txt','w')
             tempfile.write(wallet_balance)
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
             self.wallet_balance = wallet_balance
-            print wallet_balance
-            print self.wallet_balance
-            return True
-        except:
-            print "erro ao escrever no ficheiro wallet"
-            print "Ultimo saldo disponivel: "
-            print self.wallet_balance
+        except IOError:
+            print "Error doing stuff"
             return False
+        except TypeError:
+            print "erro ao escrever stuff na wallet"
+            return False
+        return True
+
 
     def writetobuys(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
         tempfile = open('buys.txt', 'a')

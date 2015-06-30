@@ -88,7 +88,7 @@ def decode_dict(data):
         rv[key] = value
     return rv
 '''
-
+=-----------------------------------------------------------------------------------------------
 '''
 #temp_resp e a resposta do seeifbuy
 #temp[0] = True
@@ -135,3 +135,49 @@ def startbuyingsell():
             print "User stopped searching"
             break
 '''
+
+=-----------------------------------------------------------------------------------------------
+STARTBUYINGNOSELL SAMPLE::
+=-----------------------------------------------------------------------------------------------
+
+if temp[0] == 'startnosell':
+                print "STARTING ONLY BUYING MODE"
+                print "CTRL+C to stop!!!!!"
+                newpid = os.fork()
+                fork_list.append(newpid)
+                if newpid == 0:
+                    time.sleep(2)
+                    startbuyingnosell()
+                else:
+                    pids = (os.getpid(), newpid)
+                    print "parent: %d, child: %d" % pids
+
+def startbuyingnosell():
+    i = 0
+    times = []
+    while True:
+        start = time.clock()
+        recent = {}
+        recent = http.urlQueryRecent()
+        if recent == False:
+            print "CONN REFUSED, sleeping..."
+            time.sleep(30)
+            pass
+        elif recent == -1:
+            print "LISTAS RECENTS IGUAIS, TENTANDO DE NOVO!!!!!!"
+            pass
+        try:
+            js.getRecentTotalReady(recent)
+            js.getfinalrecentlist()
+            js.seeifbuyinggood()
+            i += 1
+            print i
+            time.sleep(http_interval)
+            elapsed = time.clock()
+            elapsed = elapsed - start
+            print elapsed
+            times.append(elapsed)
+        except AttributeError:
+            print "error, a continuar"
+
+=-----------------------------------------------------------------------------------------------

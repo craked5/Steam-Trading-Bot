@@ -310,15 +310,26 @@ class SteamBotHttp:
             return False
         return recent_temp
 
+    def getpositiononeiteminv(self):
+        temp_inv = req.get('http://steamcommunity.com/id/craked5/inventory/json/730/2/')
+        array = ujson.loads(temp_inv.content)
+        for key in array['rgInventory']:
+            if array['rgInventory'][key]['pos'] == 1:
+                temp_id = array['rgInventory'][key]['id']
+        return temp_id
+
     #price = ao preco que eu quero receber
     def sellitem(self,assetid,price):
         list_return = []
         price_temp = price * 100
+        price_temp = (0.96*price_temp)
+        price_temp = round(price_temp)
         self.data_sell['assetid'] = int(assetid)
         self.data_sell['price'] = int(price_temp)
         temp = req.post(self.sell_item_url, data=self.data_sell, headers=self.headers_sell)
         list_return.append(temp.status_code)
         list_return.append(temp.content)
+        list_return.append(int(price_temp))
         return list_return
 
     def buyitem(self,listing,subtotal,fee,currency):
@@ -327,15 +338,7 @@ class SteamBotHttp:
         self.data_buy['subtotal'] = int(subtotal)
         self.data_buy['fee'] = int(fee)
         self.data_buy['total'] = int(self.data_buy['subtotal'] + self.data_buy['fee'])
-        print "currency " + str(self.data_buy['currency'])
-        print "subtotal " + str(self.data_buy['subtotal'])
-        print 'fee ' + str(self.data_buy['fee'])
-        print 'total' + str(self.data_buy['total'])
-        print self.data_buy
-        print self.buy_item_url_without_listingid+listing
         temp = req.post(self.buy_item_url_without_listingid+listing, data=self.data_buy, headers=self.headers_buy)
-        print temp.content
-        print temp.status_code
         temp_tuple.append(int(temp.status_code))
         temp_tuple.append(ast.literal_eval(temp.content))
         return temp_tuple
