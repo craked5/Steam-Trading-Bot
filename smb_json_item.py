@@ -260,7 +260,7 @@ class SteamJsonItem:
         self.writetobuyfile(subtotal,fee,self.http.data_buy,listing,name,temp[0],temp[1])
         self.log.writetowallet(temp[1]['wallet_info']['wallet_balance'])
         temp_id = self.getpositiononeiteminv()
-        temp_sell = self.sellitem(temp_id,0.01)
+        temp_sell = self.sellitemtest(temp_id,0.01)
         if temp_sell[0] == 200:
             self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01)
             self.writetowalletadd(0.01)

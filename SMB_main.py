@@ -131,7 +131,7 @@ try:
                 http.login()
 
             elif temp[0] == 'sell':
-                http.sellitem(temp[1], float(temp[2]))
+                js.sellitemtest(temp[1], float(temp[2]))
 
             elif temp[0] == 'balance':
                 print js.getwalletbalance()
