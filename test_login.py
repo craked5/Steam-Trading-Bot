@@ -3,7 +3,7 @@ __author__ = 'nunosilva'
 import base64
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
-import requests
+import httputil
 import ujson
 import time, datetime
 
@@ -54,7 +54,7 @@ transfer_headers = {
 }
 
 
-temp_rsa = requests.post('https://steamcommunity.com/login/getrsakey/', headers=rsa_headers, data=rsa_data)
+temp_rsa = httputil.post('https://steamcommunity.com/login/getrsakey/', headers=rsa_headers, data=rsa_data)
 print temp_rsa.content
 temp_ras_good = ujson.loads(temp_rsa.content)
 
@@ -84,7 +84,7 @@ login_data = {
 
 print encrypted_password
 
-temp_dologin = requests.post('https://steamcommunity.com/login/dologin/', headers=rsa_headers, data=login_data)
+temp_dologin = httputil.post('https://steamcommunity.com/login/dologin/', headers=rsa_headers, data=login_data)
 
 print temp_dologin.content
 print temp_dologin.status_code
@@ -107,6 +107,6 @@ transfer_data['auth'] = temp_dologin_good['transfer_parameters']['auth']
 transfer_data['remember_login'] = temp_dologin_good['transfer_parameters']['remember_login']
 transfer_data['token_secure'] = temp_dologin_good['transfer_parameters']['token_secure']
 
-temp_transfer = requests.post('https://store.steampowered.com/login/transfer', headers=transfer_headers,data=transfer_data)
+temp_transfer = httputil.post('https://store.steampowered.com/login/transfer', headers=transfer_headers,data=transfer_data)
 print temp_transfer.content
 print temp_transfer.status_code

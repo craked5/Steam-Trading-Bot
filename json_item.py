@@ -7,7 +7,7 @@ __author__ = 'github.com/craked5'
 import ujson
 import decimal
 from logic import Logic
-from requests import SteamBotHttp
+from httputil import SteamBotHttp
 
 
 
