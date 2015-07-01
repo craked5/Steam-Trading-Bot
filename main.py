@@ -4,9 +4,9 @@
 __author__ = 'nunosilva'
 __author__ = 'github.com/craked5'
 
-from smb_requests_recent import SteamBotHttp
-from smb_json_recent import SteamJsonRecent
-from smb_json_item import SteamJsonItem
+from requests import SteamBotHttp
+from json_recent import SteamJsonRecent
+from json_item import SteamJsonItem
 import time
 import sys
 import os
@@ -47,8 +47,11 @@ def startbuyingsell():
                 print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
                 sell_response = http.sellitem(temp_one,resp[1])
-                js.writetosellfile(sell_response[0],sell_response[1],resp[2],resp[1])
-                js.writetowalletadd(resp[1])
+                if sell_response[0] == 200:
+                    js.writetowalletadd(resp[1])
+                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],resp[1],js.getwalletbalance())
+                elif sell_response[0] == 502:
+                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],resp[1],js.getwalletbalance())
             i += 1
             print i
             time.sleep(http_interval)

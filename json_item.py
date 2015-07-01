@@ -6,46 +6,45 @@ __author__ = 'github.com/craked5'
 
 import ujson
 import decimal
-from smb_logic import Logic
-from smb_requests_recent import SteamBotHttp
+from logic import Logic
+from requests import SteamBotHttp
 
 
 
-class SteamJsonRecent:
+class SteamJsonItem:
 
-    def __init__(self):
-        self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
-                                    u'success',u'more',u'purchaseinfo']
+    def __init__(self,list_items):
+        self.recent_parsing_list = [u'results_html',u'hovers',u'app_data',u'currency',
+                                    u'success',u'start',u'pagesize',u'total_count']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
                                    'background_color','icon_url','icon_url_large','descriptions','name','name_color','type',
                                    'market_name','market_actions','commodity','app_icon','owner','actions','market_tradable_restriction']
-        self.listinginfo_parsing_list = ['fee','publisher_fee_percent','steam_fee','publisher_fee',
-                                         'converted_steam_fee','converted_publisher_fee','converted_price_per_unit',
+        self.listinginfo_parsing_list = ['fee','publisher_fee_percent','currencyid','steam_fee','publisher_fee',
+                                         'converted_steam_fee','converted_price_per_unit',
                                          'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
+        self.list_items = list_items
         self.listinginfo_list = {}
         self.final_list_listings = {}
         self.final_list_assets = {}
         self.final_list = {}
         self.float100 = float(100)
         self.http = SteamBotHttp()
-        #logic mode recent
-        #logic mode item
-        self.log = Logic('recent')
+        self.log = Logic('item')
         self.contaSim = 0
         self.contaNao = 0
 
-    def getRecentTotalReady(self, recent_full):
+    def getitemtotalready(self, item_full):
         self.recent_parsed = {}
-        if type(recent_full) == dict:
+        if type(item_full) == dict:
             for key in self.recent_parsing_list:
-                if recent_full.has_key(key):
-                    recent_full.pop(key)
+                if item_full.has_key(key):
+                    item_full.pop(key)
         else:
-            recent_full = {}
+            item_full = {}
         #retorna um dict so com as keys assets e listinginfo
-        self.recent_parsed = recent_full
+        self.recent_parsed = item_full
 
 #-------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------ASSETS!!!!!!!!!!!!!!----------------------------------------------------
@@ -140,7 +139,7 @@ class SteamJsonRecent:
 
 #-------------------------------------------------------------------------------------------------------------------
 
-    def getfinalrecentlist(self):
+    def getfinalitemlist(self):
         self.final_list = {}
         if self.getlistlistings() == False:
             print 'falha no parsing dos listings, try again'
@@ -153,18 +152,17 @@ class SteamJsonRecent:
                 for k2 in self.final_list_assets:
                     if self.final_list_assets.get(k2) == self.listinginfo_list[k]['asset']['id']:
                         self.final_list[k2] = self.listinginfo_list.get(k)
-        print self.final_list
         return self.final_list
 
-    def seeifrecentiteminlistbuy(self,item):
-        for temp in self.log.list_items_to_buy:
+    def seeifindividualiteminlistbuy(self,item):
+        for temp in self.list_items:
             if item == temp:
                 return True
 
     def seeifbuyinggood(self):
         temp_resp = []
         for key in self.final_list:
-            if self.seeifrecentiteminlistbuy(key) == True:
+            if self.seeifindividualiteminlistbuy(key) == True:
                 temp_item_priceover = self.http.urlQueryItem(key)
                 if temp_item_priceover['success'] == True:
                     for key_in_priceover in temp_item_priceover:
@@ -180,13 +178,12 @@ class SteamJsonRecent:
                     try:
                         temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price']) / 100)
                         temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
-                        #print self.final_list[key]['converted_price']
                         #print 'preco em int do ' + key + ' ' + str(self.final_list[key]['converted_price'])
                         #print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
                         #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
                         #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
-                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (32*(temp_converted_price_math+temp_converted_fee_math)/100):
-                            if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
+                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (30*(temp_converted_price_math+temp_converted_fee_math)/100):
+                            if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
                                 if int(self.final_list[key]['converted_currencyid']) == 2003:
                                     temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
                                                              self.final_list[key]['converted_fee'],self.final_list[key]['converted_currencyid'])
@@ -244,8 +241,8 @@ class SteamJsonRecent:
     def getwalletbalance(self):
         return self.log.wallet_balance
 
-    def writetosellfile(self,status,content,item,price):
-        return self.log.writetosells(status,content,item,price)
+    def writetosellfile(self,status,content,item,price,balance):
+        return self.log.writetosells(status,content,item,price,balance)
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
         return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict)
@@ -270,4 +267,3 @@ class SteamJsonRecent:
             print "balance esperado depois desta sale: " + str(self.getwalletbalance())
         elif temp_sell[0] == 502:
             self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01)
-
