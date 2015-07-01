@@ -44,10 +44,11 @@ def startbuyingsell():
             resp = js.seeifbuyinggood()
             print resp
             if resp[0] is True:
-                price_sell = float("{0:.2f}".format(temp[1]*0.91))
+                price_sell = float(temp[1]*0.90)
+                price_sell = "{0:.2f}".format(price_sell)
                 print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
-                sell_response = http.sellitem(temp_one,price_sell)
+                sell_response = http.sellitem(temp_one,temp[1])
                 if sell_response[0] == 200:
                     js.writetowalletadd(price_sell)
                     js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
@@ -79,23 +80,26 @@ def startbuyinditem(list_items,proc_name):
         elif type(item) == dict:
             jsind.getitemtotalready(item)
             jsind.getfinalitemlist()
-            temp_resp = jsind.seeifbuyinggood()
-            print temp_resp[0]
-            if temp_resp[0] is True:
+            resp = jsind.seeifbuyinggood()
+            if resp[0] is True:
+                price_sell = float("{0:.2f}".format(temp[1]*0.90))
                 print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
-                sell_response = http.sellitem(temp_one,temp_resp[1])
-                jsind.writetosellfile(sell_response[0],sell_response[1],temp_resp[2],temp_resp[1])
-                js.writetowalletadd(temp_resp[1])
+                sell_response = http.sellitem(temp_one,temp[1])
+                if sell_response[0] == 200:
+                    js.writetowalletadd(price_sell)
+                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
+                elif sell_response[0] == 502:
+                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
             time.sleep(http_interval)
             elapsed = time.time()
             elapsed = elapsed - start
-            #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
+            print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
         else:
             time.sleep(http_interval)
             elapsed = time.time()
             elapsed = elapsed - start
-            #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
+            print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
 
 
 try:
@@ -154,11 +158,14 @@ try:
                 proctokill = raw_input('Insira o nome do processo para matar (faca showlistproc se nao souber): ')
                 for proc in process_items.keys():
                     if proc == proctokill:
-                        os.kill(int(process_items[proc]),signal.SIGKILL)
-                        fork_list.pop(process_items[proc])
-                        process_items[proc].pop()
-                        print "MATOU O PROCESSO PARA COMPRAR e VENDER O ITEM " + proc
-                        break
+                        try:
+                            os.kill(int(process_items[proc]),signal.SIGKILL)
+                            fork_list.pop(process_items[proc])
+                            process_items[proc].pop()
+                            print "MATOU O PROCESSO PARA COMPRAR e VENDER O ITEM " + proc
+                            break
+                        except:
+                            print "Erro ao matar processo" + proc
 
             elif temp[0] == 'howmanyprocs':
                 print 'EXISTEM ' + str(len(process_items.keys())) + ' PROCESSOS A FUNCIONAR\n'
