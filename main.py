@@ -44,7 +44,8 @@ def startbuyingsell():
             resp = js.seeifbuyinggood()
             print resp
             if resp[0] is True:
-                price_sell = float(temp[1]*0.90)
+                price_sell = temp[1]
+                price_sell = float(price_sell*0.90)
                 price_sell = "{0:.2f}".format(price_sell)
                 print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
