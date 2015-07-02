@@ -7,6 +7,7 @@ __author__ = 'github.com/craked5'
 from httputil import SteamBotHttp
 from json_recent import SteamJsonRecent
 from json_item import SteamJsonItem
+import numpy
 import time
 import sys
 import os
@@ -44,12 +45,12 @@ def startbuyingsell():
             resp = js.seeifbuyinggood()
             print resp
             if resp[0] is True:
-                price_sell = temp[1]
+                price_sell = resp[1]
                 price_sell = float(price_sell*0.90)
                 price_sell = "{0:.2f}".format(price_sell)
                 print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
-                sell_response = http.sellitem(temp_one,temp[1])
+                sell_response = http.sellitem(temp_one,resp[1])
                 if sell_response[0] == 200:
                     js.writetowalletadd(price_sell)
                     js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
@@ -60,6 +61,7 @@ def startbuyingsell():
             time.sleep(http_interval)
             elapsed = time.time()
             elapsed = elapsed - start
+            times.append(elapsed)
             print elapsed
         else:
             time.sleep(http_interval)
@@ -67,7 +69,10 @@ def startbuyingsell():
             print i
             elapsed = time.time()
             elapsed = elapsed - start
+            times.append(elapsed)
             print elapsed
+    print numpy.median(times)
+    return numpy.median(times)
 
 def startbuyinditem(item_buy,proc_name):
     jsind = SteamJsonItem(item_buy)
