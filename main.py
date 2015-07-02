@@ -73,7 +73,7 @@ def startbuyinditem(item_buy,proc_name):
     jsind = SteamJsonItem(item_buy)
     while True:
         start = time.time()
-        item = http.urlqueryspecificitemind()
+        item = http.urlqueryspecificitemind(item_buy)
         if item == False:
             print "CONN REFUSED, sleeping..."
             time.sleep(30)
@@ -90,10 +90,10 @@ def startbuyinditem(item_buy,proc_name):
                 temp_one = http.getpositiononeiteminv()
                 sell_response = http.sellitem(temp_one,temp[1])
                 if sell_response[0] == 200:
-                    js.writetowalletadd(price_sell)
-                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
+                    jsind.writetowalletadd(price_sell)
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
                 elif sell_response[0] == 502:
-                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
             time.sleep(http_interval)
             elapsed = time.time()
             elapsed = elapsed - start
@@ -109,7 +109,7 @@ try:
     process_items = {}
     while True:
         try:
-            temp = raw_input()
+            temp = raw_input('Insira o comando que pretende usar: ')
             temp = temp.split(' ')
 
             if temp[0] == 'login':
@@ -153,44 +153,40 @@ try:
 
             elif temp[0] == 'showlistproc':
                 for n_proc in process_items:
-                    print n_proc + '\n'
-                    print str(process_items[n_proc]) + '\n'
+                    print n_proc + '  ' + str(process_items[n_proc])
                     print fork_list
 
             elif temp[0] == 'killproc':
                 proctokill = raw_input('Insira o nome do processo para matar (faca showlistproc se nao souber): ')
                 for proc in process_items.keys():
                     if proc == proctokill:
-                        try:
-                            os.kill(int(process_items[proc]),signal.SIGKILL)
-                            fork_list.pop(process_items[proc])
-                            process_items[proc].pop()
-                            print "MATOU O PROCESSO PARA COMPRAR e VENDER O ITEM " + proc
-                            break
-                        except:
-                            print "Erro ao matar processo" + proc
+                        os.kill(int(process_items[proc]),signal.SIGKILL)
+                        fork_list.remove(process_items[proc])
+                        process_items.pop(proc)
+                        print "MATOU O PROCESSO PARA COMPRAR e VENDER O ITEM " + proc
+                        break
 
             elif temp[0] == 'howmanyprocs':
                 print 'EXISTEM ' + str(len(process_items.keys())) + ' PROCESSOS A FUNCIONAR\n'
 
             elif temp[0] == 'buyinditem':
-                temp_items = raw_input("Insira o item: \n")
-                temp_items = temp_items.split(',')
-                print temp_items
-                process_items[temp[1]] = os.fork()
-                fork_list.append(process_items[temp[1]])
+                proc_name = raw_input("Insira o nome do processo (normalmente algo relacionado com a arma: \n")
+                item_name = raw_input('Insira o nome da arma a comprar: \n')
+                process_items[proc_name] = os.fork()
+                fork_list.append(process_items[proc_name])
                 print process_items
-                if process_items[temp[1]] == 0:
+                if process_items[proc_name] == 0:
                     time.sleep(2)
-                    startbuyinditem(temp_items,temp[1])
+                    startbuyinditem(item_name,proc_name)
                 else:
-                    pids = (os.getpid(), process_items[temp[1]])
+                    pids = (os.getpid(), process_items[proc_name])
                     print "parent: %d, child: %d" % pids
 
             elif temp[0] == 'quit':
                 print "User saiu"
                 for p in fork_list:
                     os.kill(p,signal.SIGKILL)
+                    print 'MATEI O PROCESSO ' + str(p)
                 sys.exit()
             else:
                 print "Command not valid, please try again!"

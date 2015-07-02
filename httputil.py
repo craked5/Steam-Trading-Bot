@@ -302,8 +302,7 @@ class SteamBotHttp:
 
     def urlqueryspecificitemind(self,item):
         try:
-            steam_response = req.get(self.render_item_url_first_part+item+self.render_item_url_sencond_part,
-                                     self.headers_item_list_ind)
+            steam_response = req.get(self.render_item_url_first_part+item+self.render_item_url_sencond_part,self.headers_item_list_ind)
         except req.ConnectionError:
             return False
         if steam_response.status_code == 429:
