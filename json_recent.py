@@ -254,7 +254,7 @@ class SteamJsonRecent:
         return self.http.sellitem(assetid,price)
 
     def writetowalletadd(self,amount_add):
-        temp = amount_add + float(self.getwalletbalance())
+        temp = float(amount_add) + float(self.getwalletbalance())
         temp = temp*100
         return self.log.writetowallet(int(temp))
 

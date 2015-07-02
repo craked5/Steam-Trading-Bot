@@ -52,6 +52,7 @@ def startbuyingsell():
                 temp_one = http.getpositiononeiteminv()
                 sell_response = http.sellitem(temp_one,resp[1])
                 if sell_response[0] == 200:
+                    print price_sell
                     js.writetowalletadd(price_sell)
                     js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
                 elif sell_response[0] == 502:
