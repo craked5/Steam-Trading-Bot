@@ -289,12 +289,14 @@ class SteamBotHttp:
     def urlQueryRecent(self):
         try:
             steam_response = req.get(self.complete_url_recent,headers=self.headers_recent_anditem)
-            try:
-                recent_temp = ujson.loads(steam_response.text)
-            except ValueError:
+            if steam_response.status_code == 439:
                 return False
-            print steam_response.status_code
-            return recent_temp
+            else:
+                try:
+                    recent_temp = ujson.loads(steam_response.text)
+                except ValueError:
+                    return False
+                return recent_temp
         except req.ConnectionError:
             return False
 
@@ -304,10 +306,13 @@ class SteamBotHttp:
                                      self.headers_item_list_ind)
         except req.ConnectionError:
             return False
-        try:
-            recent_temp = ujson.loads(steam_response.text)
-        except ValueError:
+        if steam_response.status_code == 429:
             return False
+        else:
+            try:
+                recent_temp = ujson.loads(steam_response.text)
+            except ValueError:
+                return False
         return recent_temp
 
     def getpositiononeiteminv(self):

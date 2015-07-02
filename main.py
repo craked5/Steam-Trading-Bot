@@ -69,11 +69,11 @@ def startbuyingsell():
             elapsed = elapsed - start
             print elapsed
 
-def startbuyinditem(list_items,proc_name):
-    jsind = SteamJsonItem(list_items)
+def startbuyinditem(item_buy,proc_name):
+    jsind = SteamJsonItem(item_buy)
     while True:
         start = time.time()
-        item = http.urlQueryRecent()
+        item = http.urlqueryspecificitemind()
         if item == False:
             print "CONN REFUSED, sleeping..."
             time.sleep(30)
@@ -83,7 +83,9 @@ def startbuyinditem(list_items,proc_name):
             jsind.getfinalitemlist()
             resp = jsind.seeifbuyinggood()
             if resp[0] is True:
-                price_sell = float("{0:.2f}".format(temp[1]*0.90))
+                price_sell = temp[1]
+                price_sell = float(price_sell*0.90)
+                price_sell = "{0:.2f}".format(price_sell)
                 print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
                 sell_response = http.sellitem(temp_one,temp[1])
@@ -172,7 +174,7 @@ try:
                 print 'EXISTEM ' + str(len(process_items.keys())) + ' PROCESSOS A FUNCIONAR\n'
 
             elif temp[0] == 'buyinditem':
-                temp_items = raw_input("Insira o item e as suas vertentes que quer comprar (separados por ,): \n")
+                temp_items = raw_input("Insira o item: \n")
                 temp_items = temp_items.split(',')
                 print temp_items
                 process_items[temp[1]] = os.fork()

@@ -212,7 +212,7 @@ class SteamJsonItem:
                             #print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
                             #print "margem necessaria: " + str(20*(temp_converted_price_math+temp_converted_fee_math)/100)
                             #print "margem obtida: " + str((temp_item_priceover['median_price'] - (temp_converted_price_math+temp_converted_fee_math)))
-                    except ValueError:
+                    except ValueError, KeyError:
                         print "float not valid"
                         temp_resp.append(False)
                         return temp_resp
