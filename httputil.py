@@ -183,6 +183,37 @@ class SteamBotHttp:
             'Referer':'https://steamcommunity.com/login/home/?goto=0',
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36',
         }
+        self.headers_logout = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2',
+            'Cache-Control':'max-age=0',
+            'Connection': 'keep-alive',
+            'Content-Length': '34',
+            'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; '
+                      '__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
+                      '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
+                      'Steam_Language=english; '
+                      '730_17workshopQueueTime=1432014476; '
+                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
+                      'sessionid=5cfbd35e404358ce92d5aaa0; '
+                      'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A0%2C%22new_device_cooldown_days%22%3A7%7D; '
+                      'steamCountry=PT%7C90d987902b02ceec924245352748dc71; '
+                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
+                      'steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; '
+                      'strInventoryLastContext=730_2; '
+                      'tsTradeOffersLastRead=1434610877; '
+                      'timezoneOffset=3600,0',
+            'DNT':'1',
+            'Host':'steamcommunity.com',
+            'Origin':'http://steamcommunity.com',
+            'Referer':'http://steamcommunity.com/market/',
+            'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36'
+        }
+        self.logout_data = {
+            'sessionid' : self.sessionid
+        }
         #price = preco que eu quero receber = price+fee_price
         self.data_sell = {
             "sessionid" : self.sessionid,
@@ -235,7 +266,7 @@ class SteamBotHttp:
         self.login_data['donotcache'] = donotcache
         temp_rsa = req.post('https://steamcommunity.com/login/getrsakey/', headers=self.rsa_headers, data=self.rsa_data)
         print temp_rsa.content
-        print temp_rsa.status_code
+        print 'O status code do GETRSA foi ' + str(temp_rsa.status_code)
         temp_ras_good = ujson.loads(temp_rsa.content)
         self.login_data['rsatimestamp'] = temp_ras_good['timestamp']
         mod = long(temp_ras_good['publickey_mod'], 16)
@@ -247,7 +278,7 @@ class SteamBotHttp:
         self.login_data['password'] = encrypted_password
         temp_dologin = req.post('https://steamcommunity.com/login/dologin/', headers=self.rsa_headers, data=self.login_data)
         print temp_dologin.content
-        print temp_dologin.status_code
+        print 'O status code do DOLOGIN foi ' + str(temp_dologin.status_code)
         temp_dologin_good = ujson.loads(temp_dologin.content)
         self.transfer_data['steamid'] = temp_dologin_good['transfer_parameters']['steamid']
         self.transfer_data['token'] = temp_dologin_good['transfer_parameters']['token']
@@ -256,8 +287,11 @@ class SteamBotHttp:
         self.transfer_data['token_secure'] = temp_dologin_good['transfer_parameters']['token_secure']
         temp_transfer = req.post('https://store.steampowered.com/login/transfer', headers=self.transfer_headers,data=self.transfer_data)
         print temp_transfer.status_code
-        print temp_transfer.content
+        print 'O status code do LOGINTRANSFER foi ' + str(temp_transfer.content)
 
+    def logout(self):
+        temp_logout = req.post('https://steamcommunity.com/login/logout/', headers= self.headers_logout, data= self.logout_data)
+        print 'O status code do LOGOUT FOR ' + str(temp_logout.status_code)
 
 
     def now_milliseconds(self):
