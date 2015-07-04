@@ -121,6 +121,9 @@ try:
             if temp[0] == 'login':
                 http.login()
 
+            elif temp[0] == 'logout':
+                http.logout()
+
             elif temp[0] == 'startsell':
                 print "STARTING BUYING AND SELLING MODE"
                 print "CTRL+C to stop!!!!!"

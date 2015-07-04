@@ -262,8 +262,8 @@ class SteamJsonItem:
         temp_id = self.getpositiononeiteminv()
         temp_sell = self.sellitemtest(temp_id,0.01)
         if temp_sell[0] == 200:
-            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01)
+            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalance())
             self.writetowalletadd(0.01)
             print "balance esperado depois desta sale: " + str(self.getwalletbalance())
         elif temp_sell[0] == 502:
-            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01)
+            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalance())
