@@ -286,8 +286,7 @@ class SteamBotHttp:
         self.transfer_data['remember_login'] = temp_dologin_good['transfer_parameters']['remember_login']
         self.transfer_data['token_secure'] = temp_dologin_good['transfer_parameters']['token_secure']
         temp_transfer = req.post('https://store.steampowered.com/login/transfer', headers=self.transfer_headers,data=self.transfer_data)
-        print temp_transfer.status_code
-        print 'O status code do LOGINTRANSFER foi ' + str(temp_transfer.content)
+        print 'O status code do LOGINTRANSFER foi ' + str(temp_transfer.status_code)
 
     def logout(self):
         temp_logout = req.post('https://steamcommunity.com/login/logout/', headers= self.headers_logout, data= self.logout_data)
@@ -323,6 +322,7 @@ class SteamBotHttp:
     def urlQueryRecent(self):
         try:
             steam_response = req.get(self.complete_url_recent,headers=self.headers_recent_anditem)
+            print steam_response.status_code
             if steam_response.status_code == 439:
                 return False
             else:
@@ -380,6 +380,8 @@ class SteamBotHttp:
         temp = req.post(self.buy_item_url_without_listingid+listing, data=self.data_buy, headers=self.headers_buy)
         temp_tuple.append(int(temp.status_code))
         temp_tuple.append(ast.literal_eval(temp.content))
+        print temp.status_code
+        print temp.content
         return temp_tuple
 
 

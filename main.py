@@ -43,16 +43,15 @@ def startbuyingsell():
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
             resp = js.seeifbuyinggood()
+            print "A resposta do seeifbuyinggood() foi "
             print resp
             if resp[0] is True:
                 price_sell = resp[1]
                 price_sell = float(price_sell*0.90)
                 price_sell = "{0:.2f}".format(price_sell)
-                print "OK SELLING ITEM"
                 temp_one = http.getpositiononeiteminv()
                 sell_response = http.sellitem(temp_one,resp[1])
                 if sell_response[0] == 200:
-                    print price_sell
                     js.writetowalletadd(price_sell)
                     js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
                 elif sell_response[0] == 502:

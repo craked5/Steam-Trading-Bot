@@ -153,7 +153,7 @@ class SteamJsonRecent:
                 for k2 in self.final_list_assets:
                     if self.final_list_assets.get(k2) == self.listinginfo_list[k]['asset']['id']:
                         self.final_list[k2] = self.listinginfo_list.get(k)
-        print self.final_list
+        #print self.final_list
         return self.final_list
 
     def seeifrecentiteminlistbuy(self,item):
@@ -165,6 +165,7 @@ class SteamJsonRecent:
         temp_resp = []
         for key in self.final_list:
             if self.seeifrecentiteminlistbuy(key) == True:
+                temp_item_priceover = {}
                 temp_item_priceover = self.http.urlQueryItem(key)
                 if temp_item_priceover['success'] == True:
                     for key_in_priceover in temp_item_priceover:
