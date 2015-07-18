@@ -22,7 +22,7 @@ def test_renderitem():
     i = 0
 
     req.get('http://steamcommunity.com/market/listings/730/Tec-9%20%7C%20Urban%20DDPAT%20(Field-Tested)/render/?currency=3&start=0')
-    time.sleep(0.400)
+
 
 t = timeit.Timer(test_renderitem)
 i = 0

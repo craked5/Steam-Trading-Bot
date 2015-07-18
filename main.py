@@ -39,6 +39,9 @@ def startbuyingsell():
             print "CONN REFUSED, sleeping..."
             time.sleep(30)
             pass
+        elif recent == -1:
+                print "recent igual, trying again"
+                time.sleep(http_interval)
         elif type(recent) == dict:
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
@@ -71,7 +74,6 @@ def startbuyingsell():
             #elapsed = elapsed - start
             #times.append(elapsed)
             #print elapsed
-    print numpy.median(times)
     return numpy.median(times)
 
 def startbuyinditem(item_buy,proc_name):
