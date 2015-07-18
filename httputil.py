@@ -304,7 +304,7 @@ class SteamBotHttp:
             return steam_response.status_code, steam_response.text
         #item_temp = decode_dict(item_temp)
         return item_temp
-    '''
+
     def urlQueryRecent(self):
         try:
             steam_response = req.get(self.complete_url_recent,headers=self.headers_recent)
@@ -336,11 +336,11 @@ class SteamBotHttp:
                 return recent_temp
         except req.ConnectionError:
             return False
-
+    '''
     def urlqueryspecificitemind(self,item):
         try:
             steam_response = req.get(self.render_item_url_first_part+item+self.render_item_url_sencond_part,
-                                     self.headers_item_list_ind)
+                                     headers = self.headers_item_list_ind)
         except req.ConnectionError:
             return False
         except req.Timeout, req.ReadTimeout:

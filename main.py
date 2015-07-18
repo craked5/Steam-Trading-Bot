@@ -22,7 +22,7 @@ print "OK now time one of the following commands: startsell ,startnosell ,buy ,s
 http = SteamBotHttp()
 js = SteamJsonRecent()
 fork_list = []
-commands = ['startsell','buyinditem','howmanyprocs','showlistproc','killproc','add','login','showlist','delete','quit','sell']
+commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','add','login','showlist','delete','quit','sell']
 
 #STARTBUYINGSELL NUMBER 2 NO BULLSHIT CODES
 #temp_resp e a resposta do seeifbuy
@@ -100,7 +100,7 @@ def startbuyinditem(item_buy,proc_name):
                     jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
                 elif sell_response[0] == 502:
                     jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
-            if i % 5 == 0:
+            if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
             i += 1
             time.sleep(http_interval)
@@ -108,7 +108,7 @@ def startbuyinditem(item_buy,proc_name):
             #elapsed = elapsed - start
             #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
         else:
-            if i % 5 == 0:
+            if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
             i += 1
             time.sleep(http_interval)
@@ -166,10 +166,10 @@ try:
             elif temp[0] == 'buy':
                 js.buyitemtest(temp[1],temp[2],int(temp[3]),int(temp[4]),int(temp[5]))
 
-            elif temp[0] == 'showlistproc':
+            elif temp[0] == 'procs':
                 for n_proc in process_items:
                     print n_proc + '  ' + str(process_items[n_proc])
-                    print fork_list
+                print fork_list
 
             elif temp[0] == 'killproc':
                 proctokill = raw_input('Insira o nome do processo para matar (faca showlistproc se nao souber): ')

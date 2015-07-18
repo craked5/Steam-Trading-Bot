@@ -174,10 +174,7 @@ class SteamJsonItem:
                     try:
                         temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price']) / 100)
                         temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
-                        #print 'preco em int do ' + key + ' ' + str(self.final_list[key]['converted_price'])
-                        #print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
-                        #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
-                        #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
+
                         if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
                                 if int(self.final_list[key]['converted_currencyid']) == 2003:
