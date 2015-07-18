@@ -324,7 +324,7 @@ class SteamBotHttp:
     '''
     def urlQueryRecent(self):
         try:
-            steam_response = req.get(self.complete_url_recent,headers=self.headers_recent_anditem)
+            steam_response = req.get(self.complete_url_recent, headers=self.headers_recent_anditem)
             print steam_response.status_code
             if steam_response.status_code == 439:
                 return False
@@ -339,7 +339,8 @@ class SteamBotHttp:
 
     def urlqueryspecificitemind(self,item):
         try:
-            steam_response = req.get(self.render_item_url_first_part+item+self.render_item_url_sencond_part,self.headers_item_list_ind)
+            steam_response = req.get(self.render_item_url_first_part+item+self.render_item_url_sencond_part,
+                                     self.headers_item_list_ind)
         except req.ConnectionError:
             return False
         except req.Timeout, req.ReadTimeout:
