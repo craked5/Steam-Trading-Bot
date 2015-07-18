@@ -298,7 +298,10 @@ class SteamBotHttp:
 
     def urlQueryItem(self,item):
         steam_response = req.get(self.complete_url_item + item,headers=self.headers_recent_anditem)
-        item_temp = ujson.loads(steam_response.text)
+        try:
+            item_temp = ujson.loads(steam_response.text)
+        except ValueError:
+            return steam_response.status_code, steam_response.text
         #item_temp = decode_dict(item_temp)
         return item_temp
     '''
@@ -338,6 +341,9 @@ class SteamBotHttp:
         try:
             steam_response = req.get(self.render_item_url_first_part+item+self.render_item_url_sencond_part,self.headers_item_list_ind)
         except req.ConnectionError:
+            return False
+        except req.Timeout, req.ReadTimeout:
+            print "shit i got a timeout"
             return False
         if steam_response.status_code == 429:
             return False

@@ -13,7 +13,7 @@ from httputil import SteamBotHttp
 
 class SteamJsonItem:
 
-    def __init__(self,list_items):
+    def __init__(self,item):
         self.recent_parsing_list = [u'results_html',u'hovers',u'app_data',u'currency',
                                     u'success',u'start',u'pagesize',u'total_count']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
@@ -24,7 +24,7 @@ class SteamJsonItem:
                                          'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
-        self.list_items = list_items
+        self.item = item
         self.listinginfo_list = {}
         self.final_list_listings = {}
         self.final_list_assets = {}
@@ -124,12 +124,7 @@ class SteamJsonItem:
             self.getCleanListinginfoListWithAsset()
             self.getcleanlistings()
             for key_item in self.listinginfo_list.keys():
-                if self.listinginfo_list[key_item].has_key('converted_price'):
-                    #print type(self.listinginfo_list[key_item]['converted_price'])
-                    #print self.listinginfo_list[key_item]['converted_price']
-                    self.listinginfo_list[key_item]['converted_price']
-                    self.listinginfo_list[key_item]['converted_fee']
-                else:
+                if self.listinginfo_list[key_item].has_key('converted_price') is False:
                     self.listinginfo_list.pop(key_item)
         else:
             return False
@@ -155,16 +150,17 @@ class SteamJsonItem:
         return self.final_list
 
     def seeifindividualiteminlistbuy(self,item):
-        for temp in self.list_items:
-            if item == temp:
-                return True
+        if item == self.item:
+            return True
+        else:
+            return False
 
     def seeifbuyinggood(self):
         temp_resp = []
         for key in self.final_list:
-            if self.seeifindividualiteminlistbuy(key) == True:
+            if self.seeifindividualiteminlistbuy(key) is True:
                 temp_item_priceover = self.http.urlQueryItem(key)
-                if temp_item_priceover['success'] == True:
+                if temp_item_priceover['success'] is True:
                     for key_in_priceover in temp_item_priceover:
                         if isinstance(temp_item_priceover[key_in_priceover], basestring):
                             temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].rstrip('&#8364; ')
@@ -206,8 +202,8 @@ class SteamJsonItem:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos"
                                 #print "preco da arma: " + str(temp_converted_price_math+temp_converted_fee_math)
                                 #print "saldo da wallet: " + str(self.log.wallet_balance)
-                        else:
-                            print "nao posso comprar " + key + " porque margens nao sao suficientes"
+                        #else:
+                            #print "nao posso comprar " + key + " porque margens nao sao suficientes"
                             #print "preco da " + key + " : " + str(temp_converted_price_math+temp_converted_fee_math)
                             #print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
                             #print "margem necessaria: " + str(20*(temp_converted_price_math+temp_converted_fee_math)/100)

@@ -153,7 +153,7 @@ class SteamJsonRecent:
                 for k2 in self.final_list_assets:
                     if self.final_list_assets.get(k2) == self.listinginfo_list[k]['asset']['id']:
                         self.final_list[k2] = self.listinginfo_list.get(k)
-        #print self.final_list
+        print self.final_list
         return self.final_list
 
     def seeifrecentiteminlistbuy(self,item):
@@ -179,16 +179,13 @@ class SteamJsonRecent:
                                 except ValueError:
                                     print "erro ao por em float"
                     try:
-                        temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price']) / 100)
+                        temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price'])/100)
                         temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
-                        #print self.final_list[key]['converted_price']
-                        #print 'preco em int do ' + key + ' ' + str(self.final_list[key]['converted_price'])
-                        #print 'preco em float do ' + key + ' ' + str(temp_converted_price_math)
-                        #print 'preco em int da fee do ' + key + ' ' + str(self.final_list[key]['converted_fee'])
-                        #print 'preco em float da fee do ' + key + ' ' + str(temp_converted_fee_math)
-                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                        if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                                (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                                 if int(self.final_list[key]['converted_currencyid']) == 2003:
+                                    temp = {}
                                     temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
                                                              self.final_list[key]['converted_fee'],self.final_list[key]['converted_currencyid'])
                                     self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],

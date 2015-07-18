@@ -22,7 +22,7 @@ print "OK now time one of the following commands: startsell ,startnosell ,buy ,s
 http = SteamBotHttp()
 js = SteamJsonRecent()
 fork_list = []
-commands = ['startnosell','startsell','buyinditem','howmanyprocs','showlistproc','killproc','add','login','showlist','delete','quit','sell']
+commands = ['startsell','buyinditem','howmanyprocs','showlistproc','killproc','add','login','showlist','delete','quit','sell']
 
 #STARTBUYINGSELL NUMBER 2 NO BULLSHIT CODES
 #temp_resp e a resposta do seeifbuy
@@ -33,7 +33,7 @@ def startbuyingsell():
     i = 0
     times = []
     while True:
-        start = time.time()
+        #start = time.time()
         recent = http.urlQueryRecent()
         if recent == False:
             print "CONN REFUSED, sleeping..."
@@ -42,42 +42,43 @@ def startbuyingsell():
         elif type(recent) == dict:
             js.getRecentTotalReady(recent)
             js.getfinalrecentlist()
-            resp = js.seeifbuyinggood()
-            print "A resposta do seeifbuyinggood() foi "
-            print resp
-            if resp[0] is True:
-                price_sell = resp[1]
+            buygoodresp = js.seeifbuyinggood()
+            #print "A resposta do seeifbuyinggood() foi "
+            #print buygoodresp
+            if buygoodresp[0] is True:
+                price_sell = buygoodresp[1]
                 price_sell = float(price_sell*0.90)
                 price_sell = "{0:.2f}".format(price_sell)
-                temp_one = http.getpositiononeiteminv()
-                sell_response = http.sellitem(temp_one,resp[1])
+                temp_item_one = http.getpositiononeiteminv()
+                sell_response = http.sellitem(temp_item_one,buygoodresp[1])
                 if sell_response[0] == 200:
                     js.writetowalletadd(price_sell)
-                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
+                    js.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,js.getwalletbalance())
                 elif sell_response[0] == 502:
-                    js.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
-            i += 1
-            print i
+                    js.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,js.getwalletbalance())
+            #i += 1
+            #print i
             time.sleep(http_interval)
-            elapsed = time.time()
-            elapsed = elapsed - start
-            times.append(elapsed)
-            print elapsed
+            #elapsed = time.time()
+            #elapsed = elapsed - start
+            #times.append(elapsed)
+            #print elapsed
         else:
             time.sleep(http_interval)
             i += 1
-            print i
-            elapsed = time.time()
-            elapsed = elapsed - start
-            times.append(elapsed)
-            print elapsed
+            #print i
+            #elapsed = time.time()
+            #elapsed = elapsed - start
+            #times.append(elapsed)
+            #print elapsed
     print numpy.median(times)
     return numpy.median(times)
 
 def startbuyinditem(item_buy,proc_name):
     jsind = SteamJsonItem(item_buy)
+    i = 0
     while True:
-        start = time.time()
+        #start = time.time()
         item = http.urlqueryspecificitemind(item_buy)
         if item == False:
             print "CONN REFUSED, sleeping..."
@@ -99,15 +100,21 @@ def startbuyinditem(item_buy,proc_name):
                     jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
                 elif sell_response[0] == 502:
                     jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
+            if i % 5 == 0:
+                print proc_name + ' is still kicking ass, let me work please! ty<3'
+            i += 1
             time.sleep(http_interval)
-            elapsed = time.time()
-            elapsed = elapsed - start
-            print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
+            #elapsed = time.time()
+            #elapsed = elapsed - start
+            #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
         else:
+            if i % 5 == 0:
+                print proc_name + ' is still kicking ass, let me work please! ty<3'
+            i += 1
             time.sleep(http_interval)
-            elapsed = time.time()
-            elapsed = elapsed - start
-            print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
+            #elapsed = time.time()
+            #elapsed = elapsed - start
+            #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
 
 
 try:
