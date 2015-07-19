@@ -34,7 +34,7 @@ def startbuyingsell():
     times = []
     while True:
         #start = time.time()
-        recent = http.urlQueryRecent()
+        recent = js.urlQueryRecent()
         if recent == False:
             print "CONN REFUSED, sleeping..."
             time.sleep(30)
@@ -52,8 +52,8 @@ def startbuyingsell():
                 price_sell = buygoodresp[1]
                 price_sell = float(price_sell*0.90)
                 price_sell = "{0:.2f}".format(price_sell)
-                temp_item_one = http.getpositiononeiteminv()
-                sell_response = http.sellitem(temp_item_one,buygoodresp[1])
+                temp_item_one = js.getpositiononeiteminv()
+                sell_response = js.sellitem(temp_item_one,buygoodresp[1])
                 if sell_response[0] == 200:
                     js.writetowalletadd(price_sell)
                     js.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,js.getwalletbalance())
@@ -81,7 +81,7 @@ def startbuyinditem(item_buy,proc_name):
     i = 0
     while True:
         #start = time.time()
-        item = http.urlqueryspecificitemind(item_buy)
+        item = jsind.urlqueryspecificitemind(item_buy)
         if item == False:
             print "CONN REFUSED, sleeping..."
             time.sleep(30)
@@ -95,8 +95,8 @@ def startbuyinditem(item_buy,proc_name):
                 price_sell = float(price_sell*0.90)
                 price_sell = "{0:.2f}".format(price_sell)
                 print "OK SELLING ITEM"
-                temp_one = http.getpositiononeiteminv()
-                sell_response = http.sellitem(temp_one,temp[1])
+                temp_one = jsind.getpositiononeiteminv()
+                sell_response = jsind.sellitem(temp_one,temp[1])
                 if sell_response[0] == 200:
                     jsind.writetowalletadd(price_sell)
                     jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance())
@@ -129,7 +129,7 @@ try:
             if temp[0] == 'login':
                 http.login()
 
-            elif temp[0] == 'logout':
+            if temp[0] == 'logout':
                 http.logout()
 
             elif temp[0] == 'startsell':
@@ -155,9 +155,6 @@ try:
             elif temp[0] == 'add':
                 item_add = raw_input('Item to add to the list: ')
                 js.writeInItemsTxt(item_add)
-
-            elif temp[0] == 'login':
-                http.login()
 
             elif temp[0] == 'sell':
                 js.sellitemtest(temp[1], float(temp[2]))

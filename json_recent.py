@@ -221,6 +221,14 @@ class SteamJsonRecent:
         return temp_resp
 
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
+    def urlQueryRecent(self):
+        return self.http.urlQueryRecent()
+
+    def getpositiononeiteminv(self):
+        return self.http.getpositiononeiteminv()
+
+    def sellitem(self,assetid,price):
+        return self.http.sellitem(assetid,price)
 
     def exportJsonToFile(self,json):
         with open('/Users/nunosilva/Desktop/steamutils/data.txt', 'w') as outfile:
@@ -232,9 +240,6 @@ class SteamJsonRecent:
 
     def delInItemsTxt(self,item):
         return self.log.delInItemsTxt(item)
-
-    def getpositiononeiteminv(self):
-        return self.http.getpositiononeiteminv()
 
     def getlistbuyitems(self):
         return self.log.list_items_to_buy

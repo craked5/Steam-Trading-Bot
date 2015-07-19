@@ -7,38 +7,43 @@ __author__ = 'github.com/craked5'
 import os
 import decimal
 import time
+from random import shuffle
 class Logic:
 
     def __init__(self,mode):
         if mode == 'recent':
             try:
-                self.f = open('items_pobre.txt', 'r')
+                self.f_items_pobre = open('items_pobre.txt', 'r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
             #primeira leitura do ficheiro
-            self.list_items_to_buy = [line.rstrip('\n') for line in self.f]
+            self.list_items_to_buy = [line.rstrip('\n') for line in self.f_items_pobre]
             self.wallet_balance = 0
-            self.f.close()
+            self.f_items_pobre.close()
             try:
-                self.f2 = open('wallet.txt', 'r')
+                self.f_wallet = open('wallet.txt', 'r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
-            self.wallet_balance = self.f2.readlines()
+            self.wallet_balance = self.f_wallet.readlines()
             self.wallet_balance = float(self.wallet_balance[0])
-            self.f2.close()
+            self.f_wallet.close()
             print self.wallet_balance
         elif mode == 'item':
             self.wallet_balance = 0
             try:
-                self.f2 = open('wallet.txt', 'r')
+                self.f_wallet = open('wallet.txt', 'r')
+                self.f_hosts = open('hosts.txt','r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
-            self.wallet_balance = self.f2.readlines()
+            self.list_hosts = [line.rstrip('\n') for line in self.f_hosts]
+            shuffle(self.list_hosts)
+            self.wallet_balance = self.f_wallet.readlines()
             self.wallet_balance = float(self.wallet_balance[0])
-            self.f2.close()
+            self.f_wallet.close()
+            self.f_hosts.close()
             print self.wallet_balance
 
     def writeInItemsTxt(self,item):

@@ -6,6 +6,7 @@ __author__ = 'github.com/craked5'
 
 import ujson
 import decimal
+import random
 from logic import Logic
 from httputil import SteamBotHttp
 
@@ -147,6 +148,7 @@ class SteamJsonItem:
                 for k2 in self.final_list_assets:
                     if self.final_list_assets.get(k2) == self.listinginfo_list[k]['asset']['id']:
                         self.final_list[k2] = self.listinginfo_list.get(k)
+        print self.final_list
         return self.final_list
 
     def seeifindividualiteminlistbuy(self,item):
@@ -213,6 +215,15 @@ class SteamJsonItem:
         return temp_resp
 
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
+    def urlqueryspecificitemind(self,item):
+        host = random.choice(self.log.list_hosts)
+        return self.http.urlqueryspecificitemind(host,item)
+
+    def getpositiononeiteminv(self):
+        return self.http.getpositiononeiteminv()
+
+    def sellitem(self,assetid,price):
+        return self.http.sellitem(assetid,price)
 
     def exportJsonToFile(self,json):
         with open('/Users/nunosilva/Desktop/steamutils/data.txt', 'w') as outfile:

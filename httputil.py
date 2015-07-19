@@ -15,17 +15,18 @@ from Crypto.Cipher import PKCS1_v1_5
 class SteamBotHttp:
 
     def __init__(self):
-        self.host_normal = 'http://steamcommunity.com'
-        self.host_https = 'https://steamcommunity.com'
+        self.host = 'steamcommunity.com'
+        self.pre_host_normal = 'http://'
+        self.pre_host_https = 'https://'
         self.market = '/market'
         #currency=3 == euro
         self.item_price_viewer = '/priceoverview/?currency=3&appid=730&market_hash_name='
         self.recent_listed = '/recent/?country=PT&language=english&currency=3'
-        self.complete_url_item = self.host_normal+self.market+self.item_price_viewer
-        self.complete_url_recent = self.host_normal+self.market+self.recent_listed
-        self.sell_item_url = self.host_https+self.market+'/sellitem/'
-        self.buy_item_url_without_listingid = self.host_https+self.market+'/buylisting/'
-        self.render_item_url_first_part = self.host_normal+self.market+'/listings/730/'
+        self.complete_url_item = self.pre_host_normal+self.host+self.market+self.item_price_viewer
+        self.complete_url_recent = self.pre_host_normal+self.host+self.market+self.recent_listed
+        self.sell_item_url = self.pre_host_https+self.host+self.market+'/sellitem/'
+        self.buy_item_url_without_listingid = self.pre_host_https+self.host+self.market+'/buylisting/'
+        self.render_item_url_first_part = self.pre_host_normal+self.host+self.market+'/listings/730/'
         self.render_item_url_sencond_part = '/render/?currency=3'
         self.recent_compare = {}
         self.sessionid = "5cfbd35e404358ce92d5aaa0"
@@ -360,10 +361,12 @@ class SteamBotHttp:
         except req.ConnectionError:
             return False
     '''
-    def urlqueryspecificitemind(self,item):
+    def urlqueryspecificitemind(self,host,item):
         try:
-            steam_response = req.get(self.render_item_url_first_part+item+self.render_item_url_sencond_part,
+            steam_response = req.get(self.render_item_url_first_part.replace(self.host,host)+item+self.render_item_url_sencond_part,
                                      headers = self.headers_item_list_ind)
+            print steam_response.status_code
+            print steam_response.url
         except req.ConnectionError:
             return False
         except req.Timeout, req.ReadTimeout:
@@ -384,7 +387,8 @@ class SteamBotHttp:
         for key in array['rgInventory']:
             if array['rgInventory'][key]['pos'] == 1:
                 temp_id = array['rgInventory'][key]['id']
-        return temp_id
+                return temp_id
+        return False
 
     #price = ao preco que eu quero receber
     #price vem em float
