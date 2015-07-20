@@ -211,3 +211,24 @@ TypeError: unsupported operand type(s) for /: 'str' and 'int'
 CZ75-Auto | Tigris (Field-Tested)
 AK-47 | Elite Build (Field-Tested)
 AK-47 | Elite Build (Minimal Wear)
+
+------------------------------------------DISCOVER MIN PRICe ITEM!!!!----------------------------------------------
+
+def minpriceitem(self):
+    temp_simple = {}
+    for keys in temp:
+        temp_simple[keys] = temp[keys][converted_price]
+    return min(temp_simple,key=temp_simple.get)
+
+def getfinalitem(self):
+    self.final_item = {}
+    if self.getlistlistings() == False:
+        print 'falha no parsing dos listings, try again'
+        return False
+    else:
+        min_price_key = self.minpriceitem()
+        for k in self.listinginfo_list:
+            if k == min_price_key
+                self.final_item[k] = self.listinginfo_list[k]
+    print self.final_item
+    return self.final_item

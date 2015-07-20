@@ -159,6 +159,3 @@ class Logic:
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
-
-    def writetoerrors(self,error,content):
-        pass

@@ -419,3 +419,14 @@ class SteamBotHttp:
         return temp_tuple
 
 
+#-----------------------------------------AUX FUNCTIONS------------------------------------------------------------------
+
+    def queryitemtest(self):
+
+        steam_response = req.get(self.render_item_url_first_part+'AWP%20%7C%20Asiimov%20%28Field-Tested%29'+self.render_item_url_sencond_part,
+                                 headers = self.headers_item_list_ind)
+        print steam_response.status_code
+        print steam_response.url
+
+        recent_temp = ujson.loads(steam_response.text)
+        return recent_temp

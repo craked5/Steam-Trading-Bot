@@ -88,7 +88,7 @@ def startbuyinditem(item_buy,proc_name):
             pass
         elif type(item) == dict:
             jsind.getitemtotalready(item)
-            jsind.getfinalitemlist()
+            jsind.getfinalitem()
             resp = jsind.seeifbuyinggood()
             if resp[0] is True:
                 price_sell = temp[1]
@@ -129,8 +129,12 @@ try:
             if temp[0] == 'login':
                 http.login()
 
-            if temp[0] == 'logout':
+            elif temp[0] == 'logout':
                 http.logout()
+
+            elif temp[0] == 'dump':
+                temp = http.queryitemtest()
+                js.exportJsonToFile(temp)
 
             elif temp[0] == 'startsell':
                 print "STARTING BUYING AND SELLING MODE"
