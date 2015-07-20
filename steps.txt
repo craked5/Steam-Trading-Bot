@@ -232,3 +232,13 @@ def getfinalitem(self):
                 self.final_item[k] = self.listinginfo_list[k]
     print self.final_item
     return self.final_item
+
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install git
+sudo apt-get install python-dev
+sudo apt-get install python-pip
+sudo pip install ujson
+sudo pip install requests[security]
+sudo pip install numpy

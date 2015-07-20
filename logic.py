@@ -34,7 +34,7 @@ class Logic:
             self.wallet_balance = 0
             try:
                 self.f_wallet = open('wallet.txt', 'r')
-                self.f_hosts = open('hosts.txt','r')
+                self.f_hosts = open('hosts_world.txt','r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"

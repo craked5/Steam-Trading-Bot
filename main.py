@@ -83,7 +83,7 @@ def startbuyinditem(item_buy,proc_name):
         #start = time.time()
         item = jsind.urlqueryspecificitemind(item_buy)
         if item == False:
-            print "CONN REFUSED, sleeping..."
+            print "CONN REFUSED" + ' on item ' + item_buy + ' at try ' + str(i)+ ', sleeping...'
             time.sleep(30)
             pass
         elif type(item) == dict:
