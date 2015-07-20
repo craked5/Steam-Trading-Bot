@@ -152,7 +152,7 @@ class SteamJsonItem:
             for k in self.listinginfo_list:
                 if k == min_price_key:
                     self.final_item[k] = self.listinginfo_list[k]
-        print self.final_item
+        #print self.final_item
         return self.final_item
 
     def seeifindividualiteminlistbuy(self,item):
