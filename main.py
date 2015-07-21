@@ -68,13 +68,13 @@ def startbuyingsell():
                     js.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,js.getwalletbalance())
             #i += 1
             #print i
-            time.sleep(http_interval_item)
+            time.sleep(http_interval)
             #elapsed = time.time()
             #elapsed = elapsed - start
             #times.append(elapsed)
             #print elapsed
         else:
-            time.sleep(http_interval_item)
+            time.sleep(http_interval)
             i += 1
             #print i
             #elapsed = time.time()
