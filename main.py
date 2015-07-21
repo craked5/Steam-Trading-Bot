@@ -25,17 +25,23 @@ js = SteamJsonRecent()
 fork_list = []
 commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','add','login','showlist','delete','quit','sell']
 
+'''
 #STARTBUYINGSELL NUMBER 2 NO BULLSHIT CODES
 #temp_resp e a resposta do seeifbuy
 #temp[0] = True
 #temp[1] = assetid
 #temp[2] = price
+'''
 def startbuyingsell():
     i = 0
     times = []
     while True:
         #start = time.time()
-        recent = js.urlQueryRecent()
+        if js.dif_hosts == 'yes':
+            recent = js.urlQueryRecentdifhosts()
+        elif js.dif_hosts == 'no':
+            recent = js.urlqueryrecent()
+
         if recent == False:
             print "CONN REFUSED, sleeping..."
             time.sleep(30)

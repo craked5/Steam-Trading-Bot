@@ -34,6 +34,7 @@ class SteamJsonRecent:
         #logic mode recent
         #logic mode item
         self.log = Logic('recent')
+        self.dif_hosts = self.log.dif_hosts_recent
         self.contaSim = 0
         self.contaNao = 0
 
@@ -222,7 +223,10 @@ class SteamJsonRecent:
         return temp_resp
 
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
-    def urlQueryRecent(self):
+    def urlqueryrecent(self):
+        return self.http.urlQueryRecent('steamcommunity.com')
+
+    def urlQueryRecentdifhosts(self):
         host = random.choice(self.log.list_hosts)
         return self.http.urlQueryRecent(host)
 
