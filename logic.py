@@ -14,7 +14,7 @@ class Logic:
         self.list_hosts = []
         if mode == 'recent':
             host_mode = raw_input('Quer mudar as hosts de cada querie no RECENT (n/y)? \n')
-            if host_mode is 'y':
+            if host_mode == 'y':
                 what_hosts = raw_input('Qual as hosts que pretende (eu/us/world)? \n')
                 print what_hosts
                 if what_hosts == 'eu':
@@ -33,7 +33,7 @@ class Logic:
                     shuffle(self.list_hosts)
                     print self.list_hosts
             try:
-                self.f_items_pobre = open('items_pobre.txt', 'r')
+                self.f_items_pobre = open('itemstest.txt', 'r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
