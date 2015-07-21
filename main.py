@@ -14,9 +14,10 @@ import os
 import signal
 
 print 'HAI WELCOME TO THIS SHITTY BOT!!!!!!!!!!!!!! :D'
-print 'What time interval do you want the queries to be? (number only please)\n'
-http_interval = raw_input()
+http_interval = raw_input('What time interval do you want the queries to be on RECENT? (number only please)\n')
 http_interval = float(http_interval)
+http_interval_item = raw_input('And on an individual item: \n')
+http_interval_item = float(http_interval_item)
 print '\n'
 print "OK now time one of the following commands: startsell ,startnosell ,buy ,sell , showlist, add, delete, login\n"
 http = SteamBotHttp()
@@ -61,13 +62,13 @@ def startbuyingsell():
                     js.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,js.getwalletbalance())
             #i += 1
             #print i
-            time.sleep(http_interval)
+            time.sleep(http_interval_item)
             #elapsed = time.time()
             #elapsed = elapsed - start
             #times.append(elapsed)
             #print elapsed
         else:
-            time.sleep(http_interval)
+            time.sleep(http_interval_item)
             i += 1
             #print i
             #elapsed = time.time()

@@ -163,6 +163,7 @@ class SteamJsonItem:
 
     def seeifbuyinggood(self):
         temp_resp = []
+        print 'ESTOU NO BUYGOOD 1'
         try:
             id = self.final_item.keys()[0]
         except:
@@ -170,6 +171,7 @@ class SteamJsonItem:
             return temp_resp
         temp_item_priceover = self.http.urlQueryItem(self.item)
         if temp_item_priceover['success'] is True:
+            print 'ESTOU NO BUYGOOD 2'
             for key_in_priceover in temp_item_priceover:
                 if isinstance(temp_item_priceover[key_in_priceover], basestring):
                     temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].rstrip('&#8364; ')
@@ -181,11 +183,14 @@ class SteamJsonItem:
                         except ValueError:
                             print "erro ao por em float"
             try:
+                print 'ESTOU NO BUYGOOD 3'
                 temp_converted_price_math = float(decimal.Decimal(self.final_item[id]['converted_price']) / 100)
                 temp_converted_fee_math = float(decimal.Decimal(self.final_item[id]['converted_fee'])/100)
-
+                print 'ESTOU NO BUYGOOD 4'
                 if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                    print 'ESTOU NO BUYGOOD 5'
                     if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
+                        print 'ESTOU NO BUYGOOD 6'
                         if int(self.final_item[id]['converted_currencyid']) == 2003:
                             temp = self.http.buyitem(self.final_item[id]['listingid'],self.final_item[id]['converted_price'],
                                                      self.final_item[id]['converted_fee'],self.final_item[id]['converted_currencyid'])

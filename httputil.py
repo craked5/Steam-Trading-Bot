@@ -328,9 +328,10 @@ class SteamBotHttp:
         #item_temp = decode_dict(item_temp)
         return item_temp
 
-    def urlQueryRecent(self):
+    def urlQueryRecent(self,host):
         try:
-            steam_response = req.get(self.complete_url_recent,headers=self.headers_recent)
+            steam_response = req.get(self.complete_url_recent.replace(self.host,host),headers=self.headers_recent)
+            print steam_response.url
             if steam_response.status_code == 200:
                 timestamp = time.time()
                 time_temp = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(timestamp))

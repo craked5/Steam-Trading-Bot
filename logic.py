@@ -11,7 +11,27 @@ from random import shuffle
 class Logic:
 
     def __init__(self,mode):
+        self.list_hosts = []
         if mode == 'recent':
+            host_mode = raw_input('Quer mudar as hosts de cada querie no RECENT (n/y)? \n')
+            if host_mode is 'y':
+                what_hosts = raw_input('Qual as hosts que pretende (eu/us/world)? \n')
+                print what_hosts
+                if what_hosts == 'eu':
+                    f_hosts = open('hosts_eu.txt','r')
+                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
+                    shuffle(self.list_hosts)
+                    print self.list_hosts
+                elif what_hosts == 'us':
+                    f_hosts = open('hosts_us.txt','r')
+                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
+                    shuffle(self.list_hosts)
+                    print self.list_hosts
+                elif what_hosts == 'world':
+                    f_hosts = open('hosts_world.txt','r')
+                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
+                    shuffle(self.list_hosts)
+                    print self.list_hosts
             try:
                 self.f_items_pobre = open('items_pobre.txt', 'r')
             except IOError:

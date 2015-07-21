@@ -6,6 +6,7 @@ __author__ = 'github.com/craked5'
 
 import ujson
 import decimal
+import random
 from logic import Logic
 from httputil import SteamBotHttp
 
@@ -222,7 +223,8 @@ class SteamJsonRecent:
 
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
     def urlQueryRecent(self):
-        return self.http.urlQueryRecent()
+        host = random.choice(self.log.list_hosts)
+        return self.http.urlQueryRecent(host)
 
     def getpositiononeiteminv(self):
         return self.http.getpositiononeiteminv()
