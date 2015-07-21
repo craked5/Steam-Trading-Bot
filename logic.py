@@ -36,7 +36,7 @@ class Logic:
             elif host_mode == 'n':
                 self.dif_hosts_recent = 'no'
             try:
-                self.f_items_pobre = open('itemtest.txt', 'r')
+                self.f_items_pobre = open('items_pobre.txt', 'r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
@@ -57,11 +57,12 @@ class Logic:
             self.wallet_balance = 0
             try:
                 self.f_wallet = open('wallet.txt', 'r')
-                self.f_hosts = open('hosts_world.txt','r')
+                self.f_hosts = open('hosts_eu.txt','r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
             self.list_hosts = [line.rstrip('\n') for line in self.f_hosts]
+            print len(self.list_hosts)
             shuffle(self.list_hosts)
             self.wallet_balance = self.f_wallet.readlines()
             self.wallet_balance = float(self.wallet_balance[0])

@@ -112,7 +112,7 @@ def startbuyinditem(item_buy,proc_name):
             if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
             i += 1
-            time.sleep(http_interval)
+            time.sleep(http_interval_item)
             #elapsed = time.time()
             #elapsed = elapsed - start
             #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
@@ -120,7 +120,7 @@ def startbuyinditem(item_buy,proc_name):
             if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
             i += 1
-            time.sleep(http_interval)
+            time.sleep(http_interval_item)
             #elapsed = time.time()
             #elapsed = elapsed - start
             #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)

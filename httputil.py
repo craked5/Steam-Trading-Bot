@@ -366,6 +366,7 @@ class SteamBotHttp:
         try:
             steam_response = req.get(self.render_item_url_first_part.replace(self.host,host)+item+self.render_item_url_sencond_part,
                                      headers = self.headers_item_list_ind)
+            print steam_response.url
         except req.ConnectionError:
             return False
         except req.Timeout, req.ReadTimeout:
