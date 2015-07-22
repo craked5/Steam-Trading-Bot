@@ -228,6 +228,12 @@ class SteamJsonItem:
         return temp_resp
 
 #--------------------------------------AUX FUNCTIONS------------------------------------------------
+    def getdownstate(self):
+        return self.http.down_state
+
+    def setdownstate(self,state):
+        self.http.down_state = state
+
     def urlqueryspecificitemind(self,item):
         if self.host_counter < len(self.log.list_hosts):
             host = self.log.list_hosts[self.host_counter]

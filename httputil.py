@@ -15,6 +15,7 @@ from Crypto.Cipher import PKCS1_v1_5
 class SteamBotHttp:
 
     def __init__(self):
+        self.down_state = 0
         self.host = 'steamcommunity.com'
         self.pre_host_normal = 'http://'
         self.pre_host_https = 'https://'

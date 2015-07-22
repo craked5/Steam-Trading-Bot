@@ -86,14 +86,20 @@ def startbuyingsell():
 def startbuyinditem(item_buy,proc_name):
     jsind = SteamJsonItem(item_buy)
     i = 0
+    sleep_time_down = 0
     while True:
         #start = time.time()
         item = jsind.urlqueryspecificitemind(item_buy)
         if item == False:
-            print "CONN REFUSED" + ' on item ' + item_buy + ' at try ' + str(i)+ ', sleeping...'
-            time.sleep(30)
+            jsind.setdownstate(1)
+            if jsind.getdownstate() == 1:
+                sleep_time_down += 15
+                print "CONN REFUSED" + ' on item ' + item_buy + ' at try ' + str(i)+ ', sleeping for ' + str(sleep_time_down)
+                time.sleep(sleep_time_down)
             pass
         elif type(item) == dict:
+            jsind.setdownstate(0)
+            sleep_time_down = 0
             jsind.getitemtotalready(item)
             jsind.getfinalitem()
             resp = jsind.seeifbuyinggood()
