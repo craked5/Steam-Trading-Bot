@@ -335,11 +335,9 @@ class SteamBotHttp:
     def urlQueryRecent(self,host):
         try:
             steam_response = req.get(self.complete_url_recent.replace(self.host,host),headers=self.headers_recent)
-            print steam_response.url
             if steam_response.status_code == 200:
                 timestamp = time.time()
                 time_temp = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(timestamp))
-                print time_temp
                 self.headers_recent['If-Modified-Since'] = time_temp
                 try:
                     recent_temp = ujson.loads(steam_response.text)

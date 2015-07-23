@@ -7,6 +7,7 @@ __author__ = 'github.com/craked5'
 from httputil import SteamBotHttp
 from json_recent import SteamJsonRecent
 from json_item import SteamJsonItem
+from json_recent_thread import SteamJsonRecentThreading
 import numpy
 import time
 import sys
@@ -18,6 +19,7 @@ http_interval = raw_input('What time interval do you want the queries to be on R
 http_interval = float(http_interval)
 http_interval_item = raw_input('And on an individual item: \n')
 http_interval_item = float(http_interval_item)
+n_threads = raw_input('How many threads do you wish to run? \n')
 print '\n'
 print "OK now time one of the following commands: startsell ,startnosell ,buy ,sell , showlist, add, delete, login\n"
 http = SteamBotHttp()
@@ -113,6 +115,19 @@ try:
                 if newpid == 0:
                     time.sleep(2)
                     js.startbuyingsell(http_interval)
+                else:
+                    pids = (os.getpid(), newpid)
+                    print "parent: %d, child: %d" % pids
+
+            elif temp[0] == 'startsellt':
+                print "STARTING BUYING AND SELLING MODE"
+                print "CTRL+C to stop!!!!!"
+                jst = SteamJsonRecentThreading()
+                newpid = os.fork()
+                fork_list.append(newpid)
+                if newpid == 0:
+                    time.sleep(2)
+                    jst.executethreads(n_threads,http_interval)
                 else:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
