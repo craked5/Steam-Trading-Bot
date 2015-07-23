@@ -322,12 +322,15 @@ class SteamBotHttp:
 
     def urlQueryItem(self,item):
         steam_response = req.get(self.complete_url_item + item,headers=self.headers_recent_anditem)
-        try:
-            item_temp = ujson.loads(steam_response.text)
-        except ValueError:
-            return steam_response.status_code, steam_response.text
-        #item_temp = decode_dict(item_temp)
-        return item_temp
+        if steam_response.status_code == 200:
+            try:
+                item_temp = ujson.loads(steam_response.content)
+            except ValueError:
+                return steam_response.status_code, steam_response.content
+            #item_temp = decode_dict(item_temp)
+            return item_temp
+        else:
+            return False
 
     def urlQueryRecent(self,host):
         try:

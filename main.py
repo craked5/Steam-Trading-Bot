@@ -32,61 +32,11 @@ commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','
 #temp[1] = assetid
 #temp[2] = price
 '''
-def startbuyingsell():
-    i = 0
-    times = []
-    while True:
-        #start = time.time()
-        if js.dif_hosts == 'yes':
-            recent = js.urlQueryRecentdifhosts()
-        elif js.dif_hosts == 'no':
-            recent = js.urlqueryrecent()
-
-        if recent == False:
-            print "CONN REFUSED, sleeping..."
-            time.sleep(30)
-            pass
-        elif recent == -1:
-                print "recent igual, trying again"
-                time.sleep(http_interval)
-        elif type(recent) == dict:
-            js.getRecentTotalReady(recent)
-            js.getfinalrecentlist()
-            buygoodresp = js.seeifbuyinggood()
-            #print "A resposta do seeifbuyinggood() foi "
-            #print buygoodresp
-            if buygoodresp[0] is True:
-                price_sell = buygoodresp[1]
-                price_sell = float(price_sell*0.90)
-                price_sell = "{0:.2f}".format(price_sell)
-                temp_item_one = js.getpositiononeiteminv()
-                sell_response = js.sellitem(temp_item_one,buygoodresp[1])
-                if sell_response[0] == 200:
-                    js.writetowalletadd(price_sell)
-                    js.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,js.getwalletbalance())
-                elif sell_response[0] == 502:
-                    js.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,js.getwalletbalance())
-            #i += 1
-            #print i
-            time.sleep(http_interval)
-            #elapsed = time.time()
-            #elapsed = elapsed - start
-            #times.append(elapsed)
-            #print elapsed
-        else:
-            time.sleep(http_interval)
-            i += 1
-            #print i
-            #elapsed = time.time()
-            #elapsed = elapsed - start
-            #times.append(elapsed)
-            #print elapsed
-    return numpy.median(times)
 
 def startbuyinditem(item_buy,proc_name):
     jsind = SteamJsonItem(item_buy)
     i = 0
-    sleep_time_down = 0
+    sleep_time_down = 165
     while True:
         #start = time.time()
         item = jsind.urlqueryspecificitemind(item_buy)
@@ -99,7 +49,7 @@ def startbuyinditem(item_buy,proc_name):
             pass
         elif type(item) == dict:
             jsind.setdownstate(0)
-            sleep_time_down = 0
+            sleep_time_down = 165
             jsind.getitemtotalready(item)
             jsind.getfinalitem()
             resp = jsind.seeifbuyinggood()
@@ -145,9 +95,15 @@ try:
             elif temp[0] == 'logout':
                 http.logout()
 
+            elif temp[0] == 'medianpricestest':
+                js.getmedianitemlist()
+
+            elif temp[0] == 'loadmedianprices':
+                js.loadmedianpricesfromfile()
+                print js.median_price_list
+
             elif temp[0] == 'dump':
-                temp = http.queryitemtest()
-                js.exportJsonToFile(temp)
+                js.exportJsonToFile(js.median_price_list)
 
             elif temp[0] == 'startsell':
                 print "STARTING BUYING AND SELLING MODE"
@@ -156,7 +112,7 @@ try:
                 fork_list.append(newpid)
                 if newpid == 0:
                     time.sleep(2)
-                    startbuyingsell()
+                    js.startbuyingsell(http_interval)
                 else:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
