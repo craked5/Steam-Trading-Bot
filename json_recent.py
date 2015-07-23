@@ -26,7 +26,7 @@ class SteamJsonRecent:
                                          'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
-        self.median_price_list = {}
+        self.list_median_prices = {}
         self.listinginfo_list = {}
         self.final_list_listings = {}
         self.final_list_assets = {}
@@ -165,12 +165,12 @@ class SteamJsonRecent:
         for key in self.final_list:
             if key in self.log.list_items_to_buy:
                 print key
-                if self.median_price_list.has_key(key):
-                    print self.median_price_list[key]
+                if self.list_median_prices.has_key(key):
+                    print self.list_median_prices[key]
                     #try:
                     temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price'])/100)
                     temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
-                    if float(float("{0:.2f}".format(self.median_price_list[key])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                    if float(float("{0:.2f}".format(self.list_median_prices[key])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
                             (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                         if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                             if int(self.final_list[key]['converted_currencyid']) == 2003:
@@ -185,7 +185,7 @@ class SteamJsonRecent:
                                             print "Ok COMPREI A: " + key + " ao preco: " + \
                                                   str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
                                             temp_resp.append(True)
-                                            temp_resp.append(self.median_price_list[key])
+                                            temp_resp.append(self.list_median_prices[key])
                                             temp_resp.append(key)
                                             return temp_resp
                                 else:
@@ -236,8 +236,9 @@ class SteamJsonRecent:
 
     def loadmedianpricesfromfile(self):
         file = open('median_prices.json','r')
-        self.median_price_list = ujson.load(file)
+        self.list_median_prices = ujson.load(file)
         file.close()
+        return self.list_median_prices
 
     def writetosellfile(self,status,content,item,price,balance):
         return self.log.writetosells(status,content,item,price,balance)
@@ -267,7 +268,7 @@ class SteamJsonRecent:
             self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalance())
 
     def getmedianitemlist(self):
-        self.median_price_list = {}
+        self.list_median_prices = {}
         for key in self.log.list_items_to_buy:
             temp_item_priceover = {}
             temp_item_priceover = self.http.urlQueryItem(key)
@@ -278,13 +279,11 @@ class SteamJsonRecent:
                 if isinstance(temp_median_price, basestring):
                     temp_median_price = temp_median_price.replace('&#8364; ','').replace(',','.').replace('-','0')
                     temp_median_price = "{0:.2f}".format(float(temp_median_price))
-                self.median_price_list[key] = float(temp_median_price)
-            if self.median_price_list.has_key(key):
-                print 'O preco medio de ' + key + ' e: ' + str(self.median_price_list[key])
+                self.list_median_prices[key] = float(temp_median_price)
+            if self.list_median_prices.has_key(key):
+                print 'O preco medio de ' + key + ' e: ' + str(self.list_median_prices[key])
             time.sleep(0)
-        print self.median_price_list
-        print len(self.median_price_list)
-        print len(self.log.list_items_to_buy)
+        return self.list_median_prices
 
 #----------------------------------------FUNCAO QUE EXECUTA AS OUTRAS TODAS---------------------------------------------
 

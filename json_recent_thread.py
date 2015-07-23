@@ -16,7 +16,7 @@ from httputil import SteamBotHttp
 
 class SteamJsonRecentThreading:
 
-    def __init__(self):
+    def __init__(self,list_median_prices):
         self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
                                     u'success',u'more',u'purchaseinfo']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
@@ -35,6 +35,8 @@ class SteamJsonRecentThreading:
         self.dif_hosts = self.log.dif_hosts_recent
         self.contaSim = 0
         self.contaNao = 0
+        self.list_median_prices = list_median_prices
+        print len(self.list_median_prices)
         self.tLock = threading.Lock()
         self.dLock = threading.Lock()
 
@@ -180,60 +182,43 @@ class SteamJsonRecentThreading:
         else:
             final_list_this = final_list
             for key in final_list_this:
-                if self.seeifrecentiteminlistbuy(key) == True:
-                    temp_item_priceover = {}
-                    temp_item_priceover = self.http.urlQueryItem(key)
-                    if temp_item_priceover['success'] == True:
-                        for key_in_priceover in temp_item_priceover:
-                            if isinstance(temp_item_priceover[key_in_priceover], basestring):
-                                temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].rstrip('&#8364; ')
-                                temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].replace(',','.')
-                                temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].replace('-','0')
-                                if temp_item_priceover[key_in_priceover] != bool:
-                                    try:
-                                        temp_item_priceover[key_in_priceover] = float(temp_item_priceover[key_in_priceover])
-                                    except ValueError:
-                                        print "erro ao por em float"
-                        try:
-                            temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
-                            temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
-                            if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
-                                    (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
-                                if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
-                                    if int(final_list_this[key]['converted_currencyid']) == 2003:
-                                        self.tLock.acquire()
-                                        temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
-                                                                 final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
-                                        self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],
-                                                             self.http.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1])
-                                        if temp[0] == 200:
-                                            if temp[1]['wallet_info'].has_key('wallet_balance'):
-                                                if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
-                                                    print "Ok COMPREI A: " + key + " ao preco: " + \
-                                                          str(final_list_this[key]['converted_price'] + final_list_this[key]['converted_fee'])
-                                                    temp_resp.append(True)
-                                                    #temp_resp.append(self.final_list[key]['listingid'])
-                                                    temp_resp.append(temp_item_priceover['median_price'])
-                                                    temp_resp.append(key)
-                                                    return temp_resp
-                                        else:
-                                            print "Nao pude comprar item " + key
-                                            print "erro ao comprar item"
-                                        self.tLock.release()
-                                else:
-                                    print "Nao pude comprar: " + key +" porque nao tenho fundos"
-                                    #print "preco da arma: " + str(temp_converted_price_math+temp_converted_fee_math)
-                                    #print "saldo da wallet: " + str(self.log.wallet_balance)
+                if key in self.log.list_items_to_buy:
+                    print key
+                    if self.list_median_prices.has_key(key):
+                        print self.list_median_prices[key]
+                        #try:
+                        temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
+                        temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
+                        if float(float("{0:.2f}".format(self.list_median_prices[key])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                                (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                            if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
+                                if int(final_list_this[key]['converted_currencyid']) == 2003:
+                                    self.tLock.acquire()
+                                    temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
+                                                             final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
+                                    self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],
+                                                         self.http.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1])
+                                    if temp[0] == 200:
+                                        if temp[1]['wallet_info'].has_key('wallet_balance'):
+                                            if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
+                                                print "Ok COMPREI A: " + key + " ao preco: " + \
+                                                      str(final_list_this[key]['converted_price'] + final_list_this[key]['converted_fee'])
+                                                temp_resp.append(True)
+                                                temp_resp.append(self.list_median_prices[key])
+                                                temp_resp.append(key)
+                                                return temp_resp
+                                    else:
+                                        print "Nao pude comprar item " + key
+                                        print "erro ao comprar item"
+                                    self.tLock.release()
                             else:
-                                print "nao posso comprar " + key + " porque margens nao sao suficientes"
-                                #print "preco da " + key + " : " + str(temp_converted_price_math+temp_converted_fee_math)
-                                #print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
-                                #print "margem necessaria: " + str(20*(temp_converted_price_math+temp_converted_fee_math)/100)
-                                #print "margem obtida: " + str((temp_item_priceover['median_price'] - (temp_converted_price_math+temp_converted_fee_math)))
-                        except ValueError, KeyError:
-                            print "float not valid, or some key does not exist"
-                            temp_resp.append(False)
-                            return temp_resp
+                                print "Nao pude comprar: " + key +" porque nao tenho fundos"
+                        else:
+                            print "nao posso comprar " + key + " porque margens nao sao suficientes"
+                        #except ValueError, KeyError:
+                            #print "float not valid, or some key does not exist"
+                            #temp_resp.append(False)
+                            #return temp_resp
         temp_resp.append(False)
         return temp_resp
 
@@ -274,6 +259,7 @@ class SteamJsonRecentThreading:
         self.median_price_list = ujson.load(file)
         file.close()
 
+    '''
     def getmedianitemlist(self):
         self.median_price_list = {}
         for key in self.log.list_items_to_buy:
@@ -293,6 +279,7 @@ class SteamJsonRecentThreading:
         print self.median_price_list
         print len(self.median_price_list)
         print len(self.log.list_items_to_buy)
+    '''
 
     def writetosellfile(self,status,content,item,price,balance):
         return self.log.writetosells(status,content,item,price,balance)
@@ -392,6 +379,6 @@ class SteamJsonRecentThreading:
         i = 0
         while i < n_threads:
             name = i
-            t = threading.Thread(target=self.onerecentthread,args=(http_interval,name))
+            t = threading.Thread(target=self.onerecentthread, args=(http_interval,name))
             i += 1
             t.start()

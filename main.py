@@ -14,6 +14,7 @@ import sys
 import os
 import signal
 
+list_median_prices = {}
 print 'HAI WELCOME TO THIS SHITTY BOT!!!!!!!!!!!!!! :D'
 http_interval = raw_input('What time interval do you want the queries to be on RECENT? (number only please)\n')
 http_interval = float(http_interval)
@@ -98,14 +99,15 @@ try:
                 http.logout()
 
             elif temp[0] == 'medianpricestest':
-                js.getmedianitemlist()
+                list_median_prices = js.getmedianitemlist()
+                print list_median_prices
 
             elif temp[0] == 'loadmedianprices':
-                js.loadmedianpricesfromfile()
-                print js.median_price_list
+                list_median_prices = js.loadmedianpricesfromfile()
+                print list_median_prices
 
             elif temp[0] == 'dump':
-                js.exportJsonToFile(js.median_price_list)
+                js.exportJsonToFile(js.list_median_prices)
 
             elif temp[0] == 'startsell':
                 print "STARTING BUYING AND SELLING MODE"
@@ -122,7 +124,8 @@ try:
             elif temp[0] == 'startsellt':
                 print "STARTING BUYING AND SELLING MODE"
                 print "CTRL+C to stop!!!!!"
-                jst = SteamJsonRecentThreading()
+                jst = SteamJsonRecentThreading(list_median_prices)
+                jst.list_median_prices
                 newpid = os.fork()
                 fork_list.append(newpid)
                 if newpid == 0:
