@@ -193,9 +193,9 @@ class SteamJsonRecentThreading:
                                 (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
-                                    print 'Estou prestes a entrar no acquire dos buys' + str(t_name)
+                                    print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(t_name)
                                     self.buy_lock.acquire()
-                                    print 'Entrey no acquire dos buys'
+                                    print 'Entrey no acquire dos buys ON THREAD '  + str(t_name)
                                     temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
                                                              final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
                                     self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],
@@ -213,11 +213,11 @@ class SteamJsonRecentThreading:
                                         print "Nao pude comprar item " + key
                                         print "erro ao comprar item"
                                     self.buy_lock.release()
-                                    print 'sai do lock dos buys' + str(t_name)
+                                    print 'sai do lock dos buys ON THREAD ' + str(t_name)
                             else:
-                                print "Nao pude comprar: " + key +" porque nao tenho fundos"
+                                print "Nao pude comprar: " + key +" porque nao tenho fundos On THREAD " + str(t_name)
                         else:
-                            print "nao posso comprar " + key + " porque margens nao sao suficientes"
+                            print "nao posso comprar " + key + " porque margens nao sao suficientes ON THREAD " + str(t_name)
                         #except ValueError, KeyError:
                             #print "float not valid, or some key does not exist"
                             #temp_resp.append(False)
@@ -336,11 +336,10 @@ class SteamJsonRecentThreading:
                 recent = self.urlqueryrecent()
 
             if recent == False:
-                print "CONN REFUSED, sleeping..."
+                print "CONN REFUSED ON THREAD " + str(name) +", sleeping..."
                 time.sleep(30)
                 pass
             elif recent == -1:
-                    print "recent igual, trying again"
                     time.sleep(http_interval)
             elif type(recent) == dict:
                 final = self.callfuncs(recent)
@@ -353,7 +352,7 @@ class SteamJsonRecentThreading:
                     price_sell = "{0:.2f}".format(price_sell)
                     temp_item_one = self.getpositiononeiteminv()
                     sell_response = self.sellitem(temp_item_one,buygoodresp[1])
-                    print 'Estou prestes a entrar no acquire dos sells' + str(name)
+                    print 'Estou prestes a entrar no acquire dos sells on THREAD ' + str(name)
                     self.sell_lock.acquire()
                     print 'entrei no lock dos sells'
                     if sell_response[0] == 200:
@@ -362,7 +361,7 @@ class SteamJsonRecentThreading:
                     elif sell_response[0] == 502:
                         self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
                     self.sell_lock.release()
-                    print 'sai do lock dos sells' + str(name)
+                    print 'sai do lock dos sells ON THREAD ' + str(name)
                 i += 1
                 if i % 10 == 0:
                     print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
