@@ -37,8 +37,10 @@ class SteamJsonRecentThreading:
         self.contaNao = 0
         self.list_median_prices = list_median_prices
         print len(self.list_median_prices)
+        self.timestamp_lock = threading.Lock()
         self.buy_lock = threading.Lock()
         self.sell_lock = threading.Lock()
+        self.timestamp = ''
 
     def getRecentTotalReady(self, recent_full):
         self.recent_parsed = {}
@@ -262,28 +264,6 @@ class SteamJsonRecentThreading:
         self.median_price_list = ujson.load(file)
         file.close()
 
-    '''
-    def getmedianitemlist(self):
-        self.median_price_list = {}
-        for key in self.log.list_items_to_buy:
-            temp_item_priceover = {}
-            temp_item_priceover = self.http.urlQueryItem(key)
-            if temp_item_priceover == False:
-                print "Erro ao obter preco medio de " + key
-            elif temp_item_priceover.has_key('median_price'):
-                temp_median_price = temp_item_priceover['median_price']
-                if isinstance(temp_median_price, basestring):
-                    temp_median_price = temp_median_price.replace('&#8364; ','').replace(',','.').replace('-','0')
-                    temp_median_price = "{0:.2f}".format(float(temp_median_price))
-                self.median_price_list[key] = float(temp_median_price)
-            if self.median_price_list.has_key(key):
-                print 'O preco medio de ' + key + ' e: ' + str(self.median_price_list[key])
-            time.sleep(0)
-        print self.median_price_list
-        print len(self.median_price_list)
-        print len(self.log.list_items_to_buy)
-    '''
-
     def writetosellfile(self,status,content,item,price,balance):
         return self.log.writetosells(status,content,item,price,balance)
 
@@ -332,17 +312,25 @@ class SteamJsonRecentThreading:
             #start = time.time()
             if self.dif_hosts == 'yes':
                 recent = self.urlQueryRecentdifhosts()
+                #if type(recent) == list:
+                    #self.timestamp_lock.acquire()
+                    #self.timestamp = recent[0]
+                    #self.timestamp_lock.release()
             elif self.dif_hosts == 'no':
                 recent = self.urlqueryrecent()
-
+                #if type(recent) == list:
+                    #self.timestamp_lock.acquire()
+                    #self.timestamp = recent[0]
+                    #self.timestamp_lock.release()
             if recent == False:
                 print "CONN REFUSED ON THREAD " + str(name) +", sleeping..."
                 time.sleep(30)
                 pass
             elif recent == -1:
                     time.sleep(http_interval)
-            elif type(recent) == dict:
-                final = self.callfuncs(recent)
+            elif type(recent[1]) == dict:
+
+                final = self.callfuncs(recent[1])
                 buygoodresp = self.seeifbuyinggood(final,name)
                 #print "A resposta do seeifbuyinggood() foi "
                 #print buygoodresp

@@ -59,6 +59,7 @@ class SteamBotHttp:
             "Accept-Encoding": "gzip,deflate,sdch",
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             'Connection':'keep-alive',
+            'Cache-Control':'max-age=0',
             'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
                      '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
                      'Steam_Language=english; '
@@ -333,6 +334,7 @@ class SteamBotHttp:
             return False
 
     def urlQueryRecent(self,host):
+        list_return = []
         try:
             steam_response = req.get(self.complete_url_recent.replace(self.host,host),headers=self.headers_recent)
             if steam_response.status_code == 200:
@@ -343,7 +345,9 @@ class SteamBotHttp:
                     recent_temp = ujson.loads(steam_response.text)
                 except ValueError:
                     return False
-                return recent_temp
+                list_return.append(time_temp)
+                list_return.append(recent_temp)
+                return list_return
             elif steam_response.status_code == 304:
                 return -1
         except req.ConnectionError:

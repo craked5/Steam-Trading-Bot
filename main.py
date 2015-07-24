@@ -26,7 +26,7 @@ print "OK now time one of the following commands: startsell ,startnosell ,buy ,s
 http = SteamBotHttp()
 js = SteamJsonRecent()
 fork_list = []
-commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','add','login','showlist','delete','quit','sell']
+commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','add','login','showlist','delete','quit','sell','loadmedianprices','getmedianprices']
 
 '''
 #STARTBUYINGSELL NUMBER 2 NO BULLSHIT CODES
@@ -98,7 +98,7 @@ try:
             elif temp[0] == 'logout':
                 http.logout()
 
-            elif temp[0] == 'medianpricestest':
+            elif temp[0] == 'getmedianprices':
                 list_median_prices = js.getmedianitemlist()
                 print list_median_prices
 
