@@ -8,7 +8,6 @@ from httputil import SteamBotHttp
 from json_recent import SteamJsonRecent
 from json_item import SteamJsonItem
 from json_recent_thread import SteamJsonRecentThreading
-import numpy
 import time
 import sys
 import os
