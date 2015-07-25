@@ -134,6 +134,7 @@ class SteamJsonRecentThreading:
     #lista final dos listings: list1 = {'231342342':'2.45','432342342342':'12.76',...
     #nao executar, so no getfinallist()
     def getlistlistings(self,listinginfo_list):
+
         final_list_listings = listinginfo_list
 
         if final_list_listings != False:
@@ -224,16 +225,19 @@ class SteamJsonRecentThreading:
                             #print "float not valid, or some key does not exist"
                             #temp_resp.append(False)
                             #return temp_resp
+                    else:
+                        temp_resp.append(False)
+                        return temp_resp
         temp_resp.append(False)
         return temp_resp
 
 #----------------------------------------------AUX FUNCTIONS-----------------------------------------------------------
-    def urlqueryrecent(self):
-        return self.http.urlQueryRecent('steamcommunity.com')
+    def urlqueryrecent(self,thread):
+        return self.http.urlQueryRecent('steamcommunity.com',thread)
 
-    def urlQueryRecentdifhosts(self):
+    def urlQueryRecentdifhosts(self,thread):
         host = random.choice(self.log.list_hosts)
-        return self.http.urlQueryRecent(host)
+        return self.http.urlQueryRecent(host,thread)
 
     def getpositiononeiteminv(self):
         return self.http.getpositiononeiteminv()
@@ -310,26 +314,31 @@ class SteamJsonRecentThreading:
         while True:
             time.sleep(http_interval)
             #start = time.time()
+
             if self.dif_hosts == 'yes':
                 recent = self.urlQueryRecentdifhosts()
                 #if type(recent) == list:
                     #self.timestamp_lock.acquire()
                     #self.timestamp = recent[0]
                     #self.timestamp_lock.release()
+
             elif self.dif_hosts == 'no':
                 recent = self.urlqueryrecent()
                 #if type(recent) == list:
                     #self.timestamp_lock.acquire()
                     #self.timestamp = recent[0]
                     #self.timestamp_lock.release()
+
             if recent == False:
                 print "CONN REFUSED ON THREAD " + str(name) +", sleeping..."
                 time.sleep(30)
                 pass
+
             elif recent == -1:
                     time.sleep(http_interval)
+
             elif type(recent) == dict:
-                final = self.callfuncs(recent[1])
+                final = self.callfuncs(recent)
                 buygoodresp = self.seeifbuyinggood(final,name)
                 #print "A resposta do seeifbuyinggood() foi "
                 #print buygoodresp
@@ -357,6 +366,7 @@ class SteamJsonRecentThreading:
                 #elapsed = elapsed - start
                 #times.append(elapsed)
                 #print elapsed
+
             else:
                 i += 1
                 if i % 10 == 0:

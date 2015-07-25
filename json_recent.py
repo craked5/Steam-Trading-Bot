@@ -41,13 +41,16 @@ class SteamJsonRecent:
         self.contaNao = 0
 
     def getRecentTotalReady(self, recent_full):
+
         self.recent_parsed = {}
+
         if type(recent_full) == dict:
             for key in self.recent_parsing_list:
                 if recent_full.has_key(key):
                     recent_full.pop(key)
         else:
             recent_full = {}
+
         #retorna um dict so com as keys assets e listinginfo
         self.recent_parsed = recent_full
 
@@ -56,7 +59,9 @@ class SteamJsonRecent:
 
     #NAO EXECUTAR MANUALMENTE!!!!!!!!!!!!!!!!!!!!
     def getCleanAssetList(self):
+
         self.asset_list = {}
+
         if self.recent_parsed.has_key('assets'):
             self.asset_list = self.recent_parsed['assets']
             if self.asset_list.has_key('730'):
@@ -74,9 +79,11 @@ class SteamJsonRecent:
     #lista final dos assets = list2 = {'awp worm god':'231342342','ak47 redline':'432342342342',...}
     #nao executar, so no getfinallist()
     def getlistassets(self):
+
         try:
             self.final_list_assets = {}
             self.getCleanAssetList()
+
             for key_item in self.asset_list.keys():
                 if self.asset_list[key_item].has_key('market_hash_name'):
                     self.final_list_assets[self.asset_list[key_item]['market_hash_name']] \
@@ -92,7 +99,9 @@ class SteamJsonRecent:
     #NAO EXECUTAR MANUALMENTE!!!!!!!!!!!!!!!!!!!!
     #1 a ser executada
     def delNonCsgoListings(self):
+
         self.listinginfo_list = {}
+
         if self.recent_parsed.has_key('listinginfo'):
             temp_list = self.recent_parsed['listinginfo']
             self.listinginfo_list = temp_list
@@ -107,6 +116,7 @@ class SteamJsonRecent:
     #2 a ser executada
     #NAO EXECUTAR MANUALMENTE!!!!!!!!!!!!!!!!!!!!
     def getCleanListinginfoListWithAsset(self):
+
         for key_item in self.listinginfo_list:
             for key in self.listinginfo_parsing_list:
                 if self.listinginfo_list[key_item].has_key(key):
@@ -115,6 +125,7 @@ class SteamJsonRecent:
     #3 a ser executada
     #NAO EXECUTAR MANUALMENTE!!!!!!!!!!!!!!!!!!!!
     def getcleanlistings(self):
+
         for key_item in self.listinginfo_list:
             for key in self.listinginfo_asset_parsing_list:
                 if self.listinginfo_list[key_item]['asset'].has_key(key):
@@ -130,38 +141,39 @@ class SteamJsonRecent:
             self.getcleanlistings()
             for key_item in self.listinginfo_list.keys():
                 if self.listinginfo_list[key_item].has_key('converted_price'):
-                    #print type(self.listinginfo_list[key_item]['converted_price'])
-                    #print self.listinginfo_list[key_item]['converted_price']
                     self.listinginfo_list[key_item]['converted_price']
                     self.listinginfo_list[key_item]['converted_fee']
                 else:
                     self.listinginfo_list.pop(key_item)
         else:
             return False
-        #except:
-            #print "falha no parsing da lista de listings"
-            #return False
 
 #-------------------------------------------------------------------------------------------------------------------
 
     def getfinalrecentlist(self):
+
         self.final_list = {}
+
         if self.getlistlistings() == False:
             print 'falha no parsing dos listings, try again'
             return False
+
         elif self.getlistassets() == False:
             print 'falha no parsing dos assets, try again'
             return False
+
         else:
             for k in self.listinginfo_list:
                 for k2 in self.final_list_assets:
                     if self.final_list_assets.get(k2) == self.listinginfo_list[k]['asset']['id']:
                         self.final_list[k2] = self.listinginfo_list.get(k)
-        #print self.final_list
+
         return self.final_list
 
     def seeifbuyinggood(self):
+
         temp_resp = []
+
         for key in self.final_list:
             if key in self.log.list_items_to_buy:
                 print key
@@ -204,11 +216,11 @@ class SteamJsonRecent:
 
 #----------------------------------------------AUX FUNCTIONS-----------------------------------------------------------
     def urlqueryrecent(self):
-        return self.http.urlQueryRecent('steamcommunity.com')
+        return self.http.urlQueryRecent('steamcommunity.com',0)
 
     def urlQueryRecentdifhosts(self):
         host = random.choice(self.log.list_hosts)
-        return self.http.urlQueryRecent(host)
+        return self.http.urlQueryRecent(host,0)
 
     def getpositiononeiteminv(self):
         return self.http.getpositiononeiteminv()
@@ -268,21 +280,27 @@ class SteamJsonRecent:
             self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalance())
 
     def getmedianitemlist(self):
+
         self.list_median_prices = {}
+
         for key in self.log.list_items_to_buy:
             temp_item_priceover = {}
             temp_item_priceover = self.http.urlQueryItem(key)
             if temp_item_priceover == False:
                 print "Erro ao obter preco medio de " + key
+
             elif temp_item_priceover.has_key('median_price'):
                 temp_median_price = temp_item_priceover['median_price']
                 if isinstance(temp_median_price, basestring):
                     temp_median_price = temp_median_price.replace('&#8364; ','').replace(',','.').replace('-','0')
                     temp_median_price = "{0:.2f}".format(float(temp_median_price))
                 self.list_median_prices[key] = float(temp_median_price)
+
             if self.list_median_prices.has_key(key):
                 print 'O preco medio de ' + key + ' e: ' + str(self.list_median_prices[key])
+
             time.sleep(0)
+
         return self.list_median_prices
 
 #----------------------------------------FUNCAO QUE EXECUTA AS OUTRAS TODAS---------------------------------------------

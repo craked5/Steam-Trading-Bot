@@ -233,6 +233,21 @@ def getfinalitem(self):
     print self.final_item
     return self.final_item
 
+def urlQueryRecent(self):
+        try:
+            steam_response = req.get(self.complete_url_recent, headers=self.headers_recent_anditem)
+            print steam_response.status_code
+            if steam_response.status_code == 439:
+                return False
+            else:
+                try:
+                    recent_temp = ujson.loads(steam_response.text)
+                except ValueError:
+                    return False
+                return recent_temp
+        except req.ConnectionError:
+            return False
+
 
 sudo apt-get update
 sudo apt-get upgrade
