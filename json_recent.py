@@ -9,7 +9,7 @@ import ujson
 import decimal
 import random
 from logic import Logic
-from httputil import SteamBotHttp
+from http import SteamBotHttp
 
 
 
@@ -189,8 +189,8 @@ class SteamJsonRecent:
                                 temp = {}
                                 temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
                                                          self.final_list[key]['converted_fee'],self.final_list[key]['converted_currencyid'])
-                                self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],
-                                                     self.http.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1])
+                                self.log.writetobuys(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
+                                                     self.http.httputil.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1])
                                 if temp[0] == 200:
                                     if temp[1]['wallet_info'].has_key('wallet_balance'):
                                         if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
@@ -268,7 +268,7 @@ class SteamJsonRecent:
 
     def buyitemtest(self,name,listing,subtotal,fee,currency):
         temp =  self.http.buyitem(listing,subtotal,fee,currency)
-        self.writetobuyfile(subtotal,fee,self.http.data_buy,listing,name,temp[0],temp[1])
+        self.writetobuyfile(subtotal,fee,self.http.httputil.data_buy,listing,name,temp[0],temp[1])
         self.log.writetowallet(temp[1]['wallet_info']['wallet_balance'])
         temp_id = self.getpositiononeiteminv()
         temp_sell = self.sellitemtest(temp_id,0.01)
@@ -286,7 +286,7 @@ class SteamJsonRecent:
         for key in self.log.list_items_to_buy:
             temp_item_priceover = {}
             temp_item_priceover = self.http.urlQueryItem(key)
-            if temp_item_priceover == False:
+            if temp_item_priceover != 200:
                 print "Erro ao obter preco medio de " + key
 
             elif temp_item_priceover.has_key('median_price'):

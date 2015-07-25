@@ -1,7 +1,7 @@
 __author__ = 'nunosilva'
 
 from json_recent import SteamJsonRecent
-from httputil import SteamBotHttp
+from http import SteamBotHttp
 import time
 
 i = 0

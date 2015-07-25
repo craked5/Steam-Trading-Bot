@@ -4,7 +4,7 @@
 __author__ = 'nunosilva'
 __author__ = 'github.com/craked5'
 
-from httputil import SteamBotHttp
+from http import SteamBotHttp
 from json_recent import SteamJsonRecent
 from json_item import SteamJsonItem
 from json_recent_thread import SteamJsonRecentThreading

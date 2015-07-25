@@ -8,7 +8,7 @@ import ujson
 import decimal
 import random
 from logic import Logic
-from httputil import SteamBotHttp
+from http import SteamBotHttp
 
 
 
@@ -195,8 +195,8 @@ class SteamJsonItem:
                         if int(self.final_item[id]['converted_currencyid']) == 2003:
                             temp = self.http.buyitem(self.final_item[id]['listingid'],self.final_item[id]['converted_price'],
                                                      self.final_item[id]['converted_fee'],self.final_item[id]['converted_currencyid'])
-                            self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],
-                                                 self.http.data_buy,self.final_item[id]['listingid'],self.item,temp[0],temp[1])
+                            self.log.writetobuys(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
+                                                 self.http.httputil.data_buy,self.final_item[id]['listingid'],self.item,temp[0],temp[1])
                             if temp[0] == 200:
                                 if temp[1]['wallet_info'].has_key('wallet_balance'):
                                     if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
@@ -291,7 +291,7 @@ class SteamJsonItem:
 
     def buyitemtest(self,name,listing,subtotal,fee,currency):
         temp =  self.http.buyitem(listing,subtotal,fee,currency)
-        self.writetobuyfile(subtotal,fee,self.http.data_buy,listing,name,temp[0],temp[1])
+        self.writetobuyfile(subtotal,fee,self.http.httputil.data_buy,listing,name,temp[0],temp[1])
         self.log.writetowallet(temp[1]['wallet_info']['wallet_balance'])
         temp_id = self.getpositiononeiteminv()
         temp_sell = self.sellitemtest(temp_id,0.01)

@@ -10,7 +10,7 @@ import ujson
 import decimal
 import random
 from logic import Logic
-from httputil import SteamBotHttp
+from http import SteamBotHttp
 
 
 
@@ -32,6 +32,7 @@ class SteamJsonRecentThreading:
         #logic mode recent
         #logic mode item
         self.log = Logic('recent')
+        self.last_listing_buy = ''
         self.dif_hosts = self.log.dif_hosts_recent
         self.contaSim = 0
         self.contaNao = 0
@@ -196,27 +197,32 @@ class SteamJsonRecentThreading:
                                 (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
-                                    print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(t_name)
-                                    self.buy_lock.acquire()
-                                    print 'Entrey no acquire dos buys ON THREAD '  + str(t_name)
-                                    temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
-                                                             final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
-                                    self.log.writetobuys(self.http.data_buy['subtotal'], self.http.data_buy['fee'],
-                                                         self.http.data_buy,final_list_this[key]['listingid'],key,temp[0],temp[1])
-                                    if temp[0] == 200:
-                                        if temp[1]['wallet_info'].has_key('wallet_balance'):
-                                            if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
-                                                print "Ok COMPREI A: " + key + " ao preco: " + \
-                                                      str(final_list_this[key]['converted_price'] + final_list_this[key]['converted_fee'])
-                                                temp_resp.append(True)
-                                                temp_resp.append(self.list_median_prices[key])
-                                                temp_resp.append(key)
-                                                return temp_resp
+                                    if final_list_this[key]['listingid'] != self.last_listing_buy:
+                                        self.last_listing_buy = final_list_this[key]['listingid']
+                                        print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(t_name)
+                                        self.buy_lock.acquire()
+                                        print 'Entrey no acquire dos buys ON THREAD '  + str(t_name)
+                                        temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
+                                                                 final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
+                                        self.log.writetobuys(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
+                                                             self.http.httputil.data_buy,final_list_this[key]['listingid'],key,temp[0],temp[1])
+                                        if temp[0] == 200:
+                                            if temp[1]['wallet_info'].has_key('wallet_balance'):
+                                                if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
+                                                    print "Ok COMPREI A: " + key + " ao preco: " + \
+                                                          str(final_list_this[key]['converted_price'] + final_list_this[key]['converted_fee'])
+                                                    temp_resp.append(True)
+                                                    temp_resp.append(self.list_median_prices[key])
+                                                    temp_resp.append(key)
+                                                    return temp_resp
+                                        else:
+                                            print "Nao pude comprar item " + key
+                                            print "erro ao comprar item"
+                                        self.buy_lock.release()
+                                        print 'sai do lock dos buys ON THREAD ' + str(t_name)
                                     else:
-                                        print "Nao pude comprar item " + key
-                                        print "erro ao comprar item"
-                                    self.buy_lock.release()
-                                    print 'sai do lock dos buys ON THREAD ' + str(t_name)
+                                        temp_resp.append(False)
+                                        return temp_resp
                             else:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos On THREAD " + str(t_name)
                         else:
@@ -284,7 +290,7 @@ class SteamJsonRecentThreading:
 
     def buyitemtest(self,name,listing,subtotal,fee,currency):
         temp =  self.http.buyitem(listing,subtotal,fee,currency)
-        self.writetobuyfile(subtotal,fee,self.http.data_buy,listing,name,temp[0],temp[1])
+        self.writetobuyfile(subtotal,fee,self.http.httputil.data_buy,listing,name,temp[0],temp[1])
         self.log.writetowallet(temp[1]['wallet_info']['wallet_balance'])
         temp_id = self.getpositiononeiteminv()
         temp_sell = self.sellitemtest(temp_id,0.01)
@@ -316,14 +322,14 @@ class SteamJsonRecentThreading:
             #start = time.time()
 
             if self.dif_hosts == 'yes':
-                recent = self.urlQueryRecentdifhosts()
+                recent = self.urlQueryRecentdifhosts(name)
                 #if type(recent) == list:
                     #self.timestamp_lock.acquire()
                     #self.timestamp = recent[0]
                     #self.timestamp_lock.release()
 
             elif self.dif_hosts == 'no':
-                recent = self.urlqueryrecent()
+                recent = self.urlqueryrecent(name)
                 #if type(recent) == list:
                     #self.timestamp_lock.acquire()
                     #self.timestamp = recent[0]
@@ -382,6 +388,7 @@ class SteamJsonRecentThreading:
     def executethreads(self,n_threads,http_interval):
         i = 0
         list_threads = []
+
         for i in range(int(n_threads)):
             name = i
             t = threading.Thread(target=self.onerecentthread, args=(http_interval,name))
