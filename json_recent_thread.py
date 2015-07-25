@@ -328,47 +328,45 @@ class SteamJsonRecentThreading:
                 pass
             elif recent == -1:
                     time.sleep(http_interval)
-            elif type(recent) != None:
-                if type(recent[1]) == dict:
-
-                    final = self.callfuncs(recent[1])
-                    buygoodresp = self.seeifbuyinggood(final,name)
-                    #print "A resposta do seeifbuyinggood() foi "
-                    #print buygoodresp
-                    if buygoodresp[0] is True:
-                        price_sell = buygoodresp[1]
-                        price_sell = float(price_sell*0.90)
-                        price_sell = "{0:.2f}".format(price_sell)
-                        temp_item_one = self.getpositiononeiteminv()
-                        sell_response = self.sellitem(temp_item_one,buygoodresp[1])
-                        print 'Estou prestes a entrar no acquire dos sells on THREAD ' + str(name)
-                        self.sell_lock.acquire()
-                        print 'entrei no lock dos sells'
-                        if sell_response[0] == 200:
-                            self.writetowalletadd(price_sell)
-                            self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
-                        elif sell_response[0] == 502:
-                            self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
-                        self.sell_lock.release()
-                        print 'sai do lock dos sells ON THREAD ' + str(name)
-                    i += 1
-                    if i % 10 == 0:
-                        print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
-                    time.sleep(http_interval)
-                    #elapsed = time.time()
-                    #elapsed = elapsed - start
-                    #times.append(elapsed)
-                    #print elapsed
-                else:
-                    i += 1
-                    if i % 10 == 0:
-                        print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
-                    time.sleep(http_interval)
-                    #print i
-                    #elapsed = time.time()
-                    #elapsed = elapsed - start
-                    #times.append(elapsed)
-                    #print elapsed
+            elif type(recent) == dict:
+                final = self.callfuncs(recent[1])
+                buygoodresp = self.seeifbuyinggood(final,name)
+                #print "A resposta do seeifbuyinggood() foi "
+                #print buygoodresp
+                if buygoodresp[0] is True:
+                    price_sell = buygoodresp[1]
+                    price_sell = float(price_sell*0.90)
+                    price_sell = "{0:.2f}".format(price_sell)
+                    temp_item_one = self.getpositiononeiteminv()
+                    sell_response = self.sellitem(temp_item_one,buygoodresp[1])
+                    print 'Estou prestes a entrar no acquire dos sells on THREAD ' + str(name)
+                    self.sell_lock.acquire()
+                    print 'entrei no lock dos sells'
+                    if sell_response[0] == 200:
+                        self.writetowalletadd(price_sell)
+                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
+                    elif sell_response[0] == 502:
+                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
+                    self.sell_lock.release()
+                    print 'sai do lock dos sells ON THREAD ' + str(name)
+                i += 1
+                if i % 10 == 0:
+                    print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
+                time.sleep(http_interval)
+                #elapsed = time.time()
+                #elapsed = elapsed - start
+                #times.append(elapsed)
+                #print elapsed
+            else:
+                i += 1
+                if i % 10 == 0:
+                    print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
+                time.sleep(http_interval)
+                #print i
+                #elapsed = time.time()
+                #elapsed = elapsed - start
+                #times.append(elapsed)
+                #print elapsed
 
 
     def executethreads(self,n_threads,http_interval):

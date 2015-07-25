@@ -19,7 +19,6 @@ http_interval = raw_input('What time interval do you want the queries to be on R
 http_interval = float(http_interval)
 http_interval_item = raw_input('And on an individual item: \n')
 http_interval_item = float(http_interval_item)
-n_threads = raw_input('How many threads do you wish to run? \n')
 print '\n'
 print "OK now time one of the following commands: startsell ,startnosell ,buy ,sell , showlist, add, delete, login\n"
 http = SteamBotHttp()
@@ -108,7 +107,7 @@ try:
             elif temp[0] == 'dump':
                 js.exportJsonToFile(js.list_median_prices)
 
-            elif temp[0] == 'startsell':
+            elif temp[0] == 'sr':
                 print "STARTING BUYING AND SELLING MODE"
                 print "CTRL+C to stop!!!!!"
                 newpid = os.fork()
@@ -120,11 +119,11 @@ try:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
 
-            elif temp[0] == 'startsellt':
-                print "STARTING BUYING AND SELLING MODE"
+            elif temp[0] == 'srt':
+                n_threads = raw_input('How many threads do you wish to run? \n')
+                print "STARTING BUYING ON RECENT WITH " + str(n_threads) + " THREADS MODE"
                 print "CTRL+C to stop!!!!!"
                 jst = SteamJsonRecentThreading(list_median_prices)
-                jst.list_median_prices
                 newpid = os.fork()
                 fork_list.append(newpid)
                 if newpid == 0:
@@ -173,7 +172,7 @@ try:
             elif temp[0] == 'howmanyprocs':
                 print 'EXISTEM ' + str(len(process_items.keys())) + ' PROCESSOS A FUNCIONAR\n'
 
-            elif temp[0] == 'buyinditem':
+            elif temp[0] == 'bii':
                 proc_name = raw_input("Insira o nome do processo (normalmente algo relacionado com a arma: \n")
                 item_name = raw_input('Insira o nome da arma a comprar: \n')
                 process_items[proc_name] = os.fork()

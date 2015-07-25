@@ -334,7 +334,6 @@ class SteamBotHttp:
             return False
 
     def urlQueryRecent(self,host):
-        list_return = []
         try:
             steam_response = req.get(self.complete_url_recent.replace(self.host,host),headers=self.headers_recent)
             if steam_response.status_code == 200:
@@ -345,9 +344,7 @@ class SteamBotHttp:
                     recent_temp = ujson.loads(steam_response.text)
                 except ValueError:
                     return False
-                list_return.append(time_temp)
-                list_return.append(recent_temp)
-                return list_return
+                return recent_temp
             elif steam_response.status_code == 304:
                 return -1
         except req.ConnectionError:
