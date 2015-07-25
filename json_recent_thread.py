@@ -255,7 +255,7 @@ class SteamJsonRecentThreading:
         return self.http.sellitem(assetid,price)
 
     def exportJsonToFile(self,json):
-        with open('stuff.txt', 'w') as outfile:
+        with open('util/stuff.txt', 'w') as outfile:
             ujson.dump(json, outfile)
         outfile.close()
         return json
@@ -273,7 +273,7 @@ class SteamJsonRecentThreading:
         return float(self.log.wallet_balance)
 
     def loadmedianpricesfromfile(self):
-        file = open('median_prices.json','r')
+        file = open('util/median_prices.json','r')
         self.median_price_list = ujson.load(file)
         file.close()
 

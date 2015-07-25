@@ -19,24 +19,24 @@ class Logic:
                 what_hosts = raw_input('Qual as hosts que pretende (eu/us/world)? \n')
                 print what_hosts
                 if what_hosts == 'eu':
-                    f_hosts = open('hosts_eu.txt','r')
+                    f_hosts = open('util/hosts_eu.txt','r')
                     self.list_hosts = [line.rstrip('\n') for line in f_hosts]
                     shuffle(self.list_hosts)
                     print self.list_hosts
                 elif what_hosts == 'us':
-                    f_hosts = open('hosts_us.txt','r')
+                    f_hosts = open('util/hosts_us.txt','r')
                     self.list_hosts = [line.rstrip('\n') for line in f_hosts]
                     shuffle(self.list_hosts)
                     print self.list_hosts
                 elif what_hosts == 'world':
-                    f_hosts = open('hosts_world.txt','r')
+                    f_hosts = open('util/hosts_world.txt','r')
                     self.list_hosts = [line.rstrip('\n') for line in f_hosts]
                     shuffle(self.list_hosts)
                     print self.list_hosts
             elif host_mode == 'n':
                 self.dif_hosts_recent = 'no'
             try:
-                self.f_items_pobre = open('items_pobre.txt', 'r')
+                self.f_items_pobre = open('util/items_pobre.txt', 'r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
@@ -45,7 +45,7 @@ class Logic:
             self.wallet_balance = 0
             self.f_items_pobre.close()
             try:
-                self.f_wallet = open('wallet.txt', 'r')
+                self.f_wallet = open('util/wallet.txt', 'r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
@@ -56,8 +56,8 @@ class Logic:
         elif mode == 'item':
             self.wallet_balance = 0
             try:
-                self.f_wallet = open('wallet.txt', 'r')
-                self.f_hosts = open('hosts_eu.txt','r')
+                self.f_wallet = open('util/wallet.txt', 'r')
+                self.f_hosts = open('util/hosts_eu.txt','r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"
@@ -72,7 +72,7 @@ class Logic:
 
     def writeInItemsTxt(self,item):
         try:
-            tempfile = open('items_pobre.txt', 'a')
+            tempfile = open('util/items_pobre.txt', 'a')
             tempfile.write(item+'\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
@@ -80,7 +80,7 @@ class Logic:
         except IOError:
             print "Erro ao escrever no ficheiro"
             return False
-        tempfile2 = open('items_pobre.txt', 'r')
+        tempfile2 = open('util/items_pobre.txt', 'r')
         self.list_items_to_buy = [line.rstrip('\n') for line in tempfile2]
         tempfile2.close()
         print 'New List: '
@@ -89,19 +89,19 @@ class Logic:
         return True
 
     def delInItemsTxt(self,item):
-        tempfile = open('items_pobre.txt', 'r')
+        tempfile = open('util/items_pobre.txt', 'r')
         lines = [line1.rstrip('\n') for line1 in tempfile]
         print lines
         tempfile.close()
         try:
-            tempfile2 = open('items_pobre.txt', 'w')
+            tempfile2 = open('util/items_pobre.txt', 'w')
             for line2 in lines:
                 if line2.rstrip('\n')!=item:
                     tempfile2.write(line2+'\n')
                     tempfile2.flush()
                     os.fsync(tempfile2.fileno())
             tempfile2.close()
-            tempfile3 = open('items_pobre.txt', 'r')
+            tempfile3 = open('util/items_pobre.txt', 'r')
             self.list_items_to_buy = [line3.rstrip('\n') for line3 in tempfile3]
             tempfile3.close()
         except IOError:
@@ -118,7 +118,7 @@ class Logic:
         wallet_balance = float(temp)
         wallet_balance = str(wallet_balance)
         try:
-            tempfile = open('wallet.txt','w')
+            tempfile = open('util/wallet.txt','w')
             tempfile.write(wallet_balance)
             tempfile.flush()
             os.fsync(tempfile.fileno())
@@ -134,7 +134,7 @@ class Logic:
 
 
     def writetobuys(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
-        tempfile = open('buys.txt', 'a')
+        tempfile = open('util/buys.txt', 'a')
         temp_string2 = 'A data buy foi ' + str(data_buy)
         temp_string3 = 'A codigo de resposta foi ' + str(responsecode) + ' e o dict de resposta foi ' + str(responsedict)
         temp_string4 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
@@ -162,7 +162,7 @@ class Logic:
             return False
 
     def writetosells(self,status,content,item,price,balance):
-        tempfile = open('sells.txt','a')
+        tempfile = open('util/sells.txt','a')
         if status == 502:
             temp_string = 'Tentei vender a ' + item + ' ao preco ' + str(price) + ' mas o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content

@@ -257,7 +257,7 @@ class SteamJsonItem:
         return self.http.sellitem(assetid,price)
 
     def exportJsonToFile(self,json):
-        with open('/Users/nunosilva/Desktop/steamutils/data.txt', 'w') as outfile:
+        with open('util/data.txt', 'w') as outfile:
             ujson.dump(json, outfile)
         return json
 
