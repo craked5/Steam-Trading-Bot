@@ -213,11 +213,12 @@ class SteamJsonRecentThreading:
                                             if temp[1]['wallet_info'].has_key('wallet_balance'):
                                                 if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
                                                     print "Ok COMPREI A: " + key + " ao preco: " + \
-                                                          str(final_list_this[key]['converted_price'] + final_list_this[key]['converted_fee'])
+                                                         str(final_list_this[key]['converted_price'] + final_list_this[key]['converted_fee'])
                                                     temp_resp.append(True)
                                                     temp_resp.append(self.list_median_prices[key])
                                                     temp_resp.append(key)
                                                     self.buy_lock.release()
+                                                    print 'sai do lock dos buys ON THREAD ' + str(t_name)
                                                     return temp_resp
                                         else:
                                             print "Nao pude comprar item " + key
@@ -278,11 +279,11 @@ class SteamJsonRecentThreading:
         self.median_price_list = ujson.load(file)
         file.close()
 
-    def writetosellfile(self,status,content,item,price,balance):
-        return self.log.writetosells(status,content,item,price,balance)
+    def writetosellfile(self,status,content,item,price,balance,thread_n):
+        return self.log.writetosells(status,content,item,price,balance,thread_n)
 
-    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
-        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict)
+    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
+        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
 
     def sellitemtest(self,assetid,price):
         return self.http.sellitem(assetid,price)
@@ -363,9 +364,9 @@ class SteamJsonRecentThreading:
                     print 'entrei no lock dos sells'
                     if sell_response[0] == 200:
                         self.writetowalletadd(price_sell)
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
                     elif sell_response[0] == 502:
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
                     self.sell_lock.release()
                     print 'sai do lock dos sells ON THREAD ' + str(name)
                 i += 1

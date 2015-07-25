@@ -276,11 +276,11 @@ class SteamJsonItem:
     def getwalletbalance(self):
         return float(self.log.wallet_balance)
 
-    def writetosellfile(self,status,content,item,price,balance):
-        return self.log.writetosells(status,content,item,price,balance)
+    def writetosellfile(self,status,content,item,price,balance,thread_n):
+        return self.log.writetosells(status,content,item,price,balance,thread_n)
 
-    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
-        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict)
+    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
+        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
 
     def sellitemtest(self,assetid,price):
         return self.http.sellitem(assetid,price)

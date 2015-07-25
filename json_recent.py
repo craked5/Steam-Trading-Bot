@@ -252,11 +252,11 @@ class SteamJsonRecent:
         file.close()
         return self.list_median_prices
 
-    def writetosellfile(self,status,content,item,price,balance):
-        return self.log.writetosells(status,content,item,price,balance)
+    def writetosellfile(self,status,content,item,price,balance,thread_n):
+        return self.log.writetosells(status,content,item,price,balance,thread_n)
 
-    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict):
-        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict)
+    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
+        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
 
     def sellitemtest(self,assetid,price):
         return self.http.sellitem(assetid,price)
@@ -332,9 +332,9 @@ class SteamJsonRecent:
                     sell_response = self.sellitem(temp_item_one,buygoodresp[1])
                     if sell_response[0] == 200:
                         self.writetowalletadd(price_sell)
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
                     elif sell_response[0] == 502:
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
                 time.sleep(http_interval)
             else:
                 time.sleep(http_interval)
