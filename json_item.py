@@ -274,7 +274,7 @@ class SteamJsonItem:
         return self.log.list_items_to_buy
 
     def getwalletbalance(self):
-        return int(self.log.wallet_balance)
+        return float(self.log.wallet_balance)
 
     def writetosellfile(self,status,content,item,price,balance):
         return self.log.writetosells(status,content,item,price,balance)

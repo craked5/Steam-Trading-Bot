@@ -123,7 +123,7 @@ class Logic:
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
-            self.wallet_balance = wallet_balance
+            self.wallet_balance = float(wallet_balance)
         except IOError:
             print "Error doing stuff"
             return False

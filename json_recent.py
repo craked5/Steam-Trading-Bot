@@ -244,7 +244,7 @@ class SteamJsonRecent:
         return self.log.list_items_to_buy
 
     def getwalletbalance(self):
-        return int(self.log.wallet_balance)
+        return float(self.log.wallet_balance)
 
     def loadmedianpricesfromfile(self):
         file = open('median_prices.json','r')
