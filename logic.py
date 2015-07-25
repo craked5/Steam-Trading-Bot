@@ -133,7 +133,7 @@ class Logic:
         return True
 
 
-    def writetobuys(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
+    def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
         tempfile = open('util/buys.txt', 'a')
         temp_string2 = 'A data buy foi ' + str(data_buy)
         temp_string3 = 'A codigo de resposta foi ' + str(responsecode) + ' e o dict de resposta foi ' + str(responsedict)
@@ -161,7 +161,7 @@ class Logic:
         else:
             return False
 
-    def writetosells(self,status,content,item,price,balance,thread_n):
+    def writetosellfile(self,status,content,item,price,balance,thread_n):
         tempfile = open('util/sells.txt','a')
         if status == 502:
             temp_string = 'A thread ' + str(thread_n) + 'Tentou vender a ' + item + ' ao preco ' + str(price) + ' mas o codigo foi ' + str(status)

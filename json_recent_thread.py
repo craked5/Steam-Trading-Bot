@@ -207,7 +207,7 @@ class SteamJsonRecentThreading:
                                         print 'Entrey no acquire dos buys ON THREAD '  + str(t_name)
                                         temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
                                                                  final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
-                                        self.log.writetobuys(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
+                                        self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
                                                              self.http.httputil.data_buy,final_list_this[key]['listingid'],key,temp[0],temp[1],t_name)
                                         if temp[0] == 200:
                                             if temp[1]['wallet_info'].has_key('wallet_balance'):
@@ -280,10 +280,10 @@ class SteamJsonRecentThreading:
         file.close()
 
     def writetosellfile(self,status,content,item,price,balance,thread_n):
-        return self.log.writetosells(status,content,item,price,balance,thread_n)
+        return self.log.writetosellfile(status,content,item,price,balance,thread_n)
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
-        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
+        return self.log.writetobuyfile(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
 
     def sellitemtest(self,assetid,price):
         return self.http.sellitem(assetid,price)

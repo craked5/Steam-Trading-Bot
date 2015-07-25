@@ -196,7 +196,7 @@ class SteamJsonItem:
                         if int(self.final_item[id]['converted_currencyid']) == 2003:
                             temp = self.http.buyitem(self.final_item[id]['listingid'],self.final_item[id]['converted_price'],
                                                      self.final_item[id]['converted_fee'],self.final_item[id]['converted_currencyid'])
-                            self.log.writetobuys(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
+                            self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
                                                  self.http.httputil.data_buy,self.final_item[id]['listingid'],self.item,temp[0],temp[1],0)
                             if temp[0] == 200:
                                 if temp[1]['wallet_info'].has_key('wallet_balance'):
@@ -267,9 +267,6 @@ class SteamJsonItem:
     def delInItemsTxt(self,item):
         return self.log.delInItemsTxt(item)
 
-    def getpositiononeiteminv(self):
-        return self.http.getpositiononeiteminv()
-
     def getlistbuyitems(self):
         return self.log.list_items_to_buy
 
@@ -277,10 +274,10 @@ class SteamJsonItem:
         return float(self.log.wallet_balance)
 
     def writetosellfile(self,status,content,item,price,balance,thread_n):
-        return self.log.writetosells(status,content,item,price,balance,thread_n)
+        return self.log.writetosellfile(status,content,item,price,balance,thread_n)
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
-        return self.log.writetobuys(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
+        return self.log.writetobuyfile(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
 
     def sellitemtest(self,assetid,price):
         return self.http.sellitem(assetid,price)
