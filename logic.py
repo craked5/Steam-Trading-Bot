@@ -147,6 +147,7 @@ class Logic:
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
+            return True
         elif responsecode == 200:
             temp_string = 'Comprei ' + key + ' com a listingid ' + str(listingid) + ' ao preco de ' + str(subtotal+fee)
             tempfile.write(temp_string+'\n')
@@ -156,6 +157,9 @@ class Logic:
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
+            return True
+        else:
+            return False
 
     def writetosells(self,status,content,item,price,balance):
         tempfile = open('sells.txt','a')
@@ -171,6 +175,7 @@ class Logic:
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
+            return True
         elif status == 200:
             temp_string = 'Vendi a ' + item + ' ao preco ' + str(price) + ' e o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
@@ -183,3 +188,6 @@ class Logic:
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
+            return True
+        else:
+            return False

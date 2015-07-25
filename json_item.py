@@ -188,7 +188,8 @@ class SteamJsonItem:
                 temp_converted_price_math = float(decimal.Decimal(self.final_item[id]['converted_price']) / 100)
                 temp_converted_fee_math = float(decimal.Decimal(self.final_item[id]['converted_fee'])/100)
                 #print 'ESTOU NO BUYGOOD 4'
-                if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= (31.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                        (28.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                     #print 'ESTOU NO BUYGOOD 5'
                     if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
                         #print 'ESTOU NO BUYGOOD 6'
@@ -273,7 +274,7 @@ class SteamJsonItem:
         return self.log.list_items_to_buy
 
     def getwalletbalance(self):
-        return self.log.wallet_balance
+        return int(self.log.wallet_balance)
 
     def writetosellfile(self,status,content,item,price,balance):
         return self.log.writetosells(status,content,item,price,balance)
