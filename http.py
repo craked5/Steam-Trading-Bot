@@ -79,7 +79,6 @@ class SteamBotHttp:
     def urlQueryItem(self,item):
 
         steam_response = req.get(self.complete_url_item + item, headers=self.httputil.headers_recent_anditem)
-
         if steam_response.status_code == 200:
             try:
                 item_temp = ujson.loads(steam_response.content)
@@ -174,7 +173,7 @@ class SteamBotHttp:
         self.httputil.data_buy['currency'] = int(currency) - 2000
         self.httputil.data_buy['subtotal'] = int(subtotal)
         self.httputil.data_buy['fee'] = int(fee)
-        self.httputil.data_buy['total'] = int(self.data_buy['subtotal'] + self.data_buy['fee'])
+        self.httputil.data_buy['total'] = int(self.httputil.data_buy['subtotal'] + self.httputil.data_buy['fee'])
         try:
             temp = req.post(self.buy_item_url_without_listingid+listing, data=self.httputil.data_buy, headers=self.httputil.headers_buy)
         except req.ConnectionError:

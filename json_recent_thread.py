@@ -41,6 +41,7 @@ class SteamJsonRecentThreading:
         self.timestamp_lock = threading.Lock()
         self.buy_lock = threading.Lock()
         self.sell_lock = threading.Lock()
+        self.last_listing_buy_lock = threading.Lock()
         self.timestamp = ''
 
     def getRecentTotalReady(self, recent_full):
@@ -198,7 +199,9 @@ class SteamJsonRecentThreading:
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
                                     if final_list_this[key]['listingid'] != self.last_listing_buy:
+                                        self.last_listing_buy_lock.acquire()
                                         self.last_listing_buy = final_list_this[key]['listingid']
+                                        self.last_listing_buy_lock.release()
                                         print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(t_name)
                                         self.buy_lock.acquire()
                                         print 'Entrey no acquire dos buys ON THREAD '  + str(t_name)
@@ -386,10 +389,10 @@ class SteamJsonRecentThreading:
 
 
     def executethreads(self,n_threads,http_interval):
-        i = 0
+        i = 1
         list_threads = []
 
-        for i in range(int(n_threads)):
+        for i in range(1,int(n_threads)+1):
             name = i
             t = threading.Thread(target=self.onerecentthread, args=(http_interval,name))
             t.start()

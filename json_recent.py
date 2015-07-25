@@ -286,8 +286,9 @@ class SteamJsonRecent:
         for key in self.log.list_items_to_buy:
             temp_item_priceover = {}
             temp_item_priceover = self.http.urlQueryItem(key)
-            if temp_item_priceover != 200:
+            if type(temp_item_priceover) == int:
                 print "Erro ao obter preco medio de " + key
+                print "Status code da querie: " + str(temp_item_priceover)
 
             elif temp_item_priceover.has_key('median_price'):
                 temp_median_price = temp_item_priceover['median_price']
@@ -298,8 +299,6 @@ class SteamJsonRecent:
 
             if self.list_median_prices.has_key(key):
                 print 'O preco medio de ' + key + ' e: ' + str(self.list_median_prices[key])
-
-            time.sleep(0)
 
         return self.list_median_prices
 
