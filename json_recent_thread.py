@@ -208,7 +208,7 @@ class SteamJsonRecentThreading:
                                         temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
                                                                  final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
                                         self.log.writetobuys(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
-                                                             self.http.httputil.data_buy,final_list_this[key]['listingid'],key,temp[0],temp[1])
+                                                             self.http.httputil.data_buy,final_list_this[key]['listingid'],key,temp[0],temp[1],t_name)
                                         if temp[0] == 200:
                                             if temp[1]['wallet_info'].has_key('wallet_balance'):
                                                 if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
@@ -217,6 +217,7 @@ class SteamJsonRecentThreading:
                                                     temp_resp.append(True)
                                                     temp_resp.append(self.list_median_prices[key])
                                                     temp_resp.append(key)
+                                                    self.buy_lock.release()
                                                     return temp_resp
                                         else:
                                             print "Nao pude comprar item " + key

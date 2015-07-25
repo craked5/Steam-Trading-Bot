@@ -190,7 +190,7 @@ class SteamJsonRecent:
                                 temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
                                                          self.final_list[key]['converted_fee'],self.final_list[key]['converted_currencyid'])
                                 self.log.writetobuys(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
-                                                     self.http.httputil.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1])
+                                                     self.http.httputil.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1],0)
                                 if temp[0] == 200:
                                     if temp[1]['wallet_info'].has_key('wallet_balance'):
                                         if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
