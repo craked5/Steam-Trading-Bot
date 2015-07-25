@@ -1,0 +1,261 @@
+recent = todo o recent
+recent_parsed = assets + listinginfo do recent
+assets = todos os assets
+clean_assets = assets so com os params importantes
+listinginfo_list = listings do csgo
+listinginfo_clean_with_asset = listings do csgo so com os params importantes mas com o asset de cada um ainda
+                                por fazer parsed
+clean_listings = listings do csgo so com os params importantes
+
+-------------------------------------------########IT WORKS#########------------------------------------------
+
+OBJECTIVO FINAL:
+    DIcionario com KEY = NOME DO ITEM e VALUE = PRECO DO ITEM:
+
+        list1 = {'231342342':'2.45','432342342342':'12.76',...}
+        list2 = {'awp worm god':'231342342','ak47 redline':'432342342342',...}
+
+        for k in list1:
+            for k2 in list2:
+                if list2.get(k2) == k:
+                    self.final_list[k2] = list1.get(k)
+
+------------------------------------------#######################----------------------------------------------
+from smb_json_recent import SteamJsonRecent
+from smb_requests_recent import SteamBotHttp
+http = SteamBotHttp(1)
+js = SteamJsonRecent()
+recent = {}
+recent = http.urlQueryRecent()
+js.getRecentTotalReady(recent)
+js.getfinallist()
+
+------------------------------------------#######################----------------------------------------------
+
+
+1 - Start program
+2 - show the commands that the user can use
+    2.a - Login - lets the user login using chrome cookies - NOT DONE!
+    2.b - start INTERVAL(INT) - lets the user start the program - 40% DONE!
+        2.b.a - when the program is started only a ctrl+c will exit it - NOT DONE!
+    2.c - add MARKET_HASH_NAME - lets the user add an ITEM (market_hash_name) to the potencial buy list - NOT DONE!
+    2.d - show list - lets the user see the potencial buying list - NOT DONE!
+    2.e - delete MARKET_HASH_NAME - lets the user delete a MARKET_HASH_NAME from the potencial buy list - NOT DONE!
+    MORE COMING SOON.....
+
+CODE FOR EACH STEP:
+
+------------------------------------------#######################----------------------------------------------
+
+USER ENTERS START:
+    1 - Requests to steam recents and item - DONE!
+    2 - Parsing steam recents to a final list of NAME:PRICE - DONE!
+    3 - See if the X item on the recent list is on the item list made by the user - DONE!
+        3.a - if it is, make a request for that specific item - DONE!
+        3.b - if its not, jump to next item and when its over, do 1 again - DONE!
+    4 - Apply buying algo to see if the item is worth buying or not - DONE!
+        4.a - if its worth buying, check to see if steam wallet has money for it - NOT DONE!
+            4.a.a - if yes, buy it - NOT DONE!
+            4.a.b - if not, dont buy it jump to 3 for the next item - NOT DONE!
+        4.b - if not jump to 3 for the next item
+    5 - when all item done, jump to step 1 to start all over again
+
+-------------------------------------------AUX---------------------------------------------------------------
+'''
+def decode_list(data):
+    rv = []
+    for item in data:
+        if isinstance(item, unicode):
+            item = item.encode('utf-8')
+        elif isinstance(item, list):
+            item = decode_list(item)
+        elif isinstance(item, dict):
+            item = decode_dict(item)
+        rv.append(item)
+    return rv
+
+def decode_dict(data):
+    rv = {}
+    for key, value in data.iteritems():
+        if isinstance(key, unicode):
+            key = key.encode('utf-8')
+        if isinstance(value, unicode):
+            value = value.encode('utf-8')
+        elif isinstance(value, list):
+            value = decode_list(value)
+        elif isinstance(value, dict):
+            value = decode_dict(value)
+        rv[key] = value
+    return rv
+'''
+=-----------------------------------------------------------------------------------------------
+'''
+#temp_resp e a resposta do seeifbuy
+#temp[0] = True
+#temp[1] = assetid
+#temp[2] = price
+def startbuyingsell():
+    i = 0
+    times = []
+    while True:
+        try:
+            start = time.time()
+            recent = http.urlQueryRecent()
+            if recent == False:
+                print "CONN REFUSED, sleeping..."
+                time.sleep(30)
+                pass
+            elif recent == -1:
+                time.sleep(0.200)
+                print "recent igual, trying again"
+            elif type(recent) == dict:
+                js.getRecentTotalReady(recent)
+                js.getfinalrecentlist()
+                temp_resp = js.seeifbuyinggood()
+                print temp_resp[0]
+                if temp_resp[0] is True:
+                    print "OK SELLING ITEM"
+                    sell_response = http.sellitem(temp_resp[1],temp_resp[2])
+                    js.writetosellfile(sell_response[0],sell_response[1],temp_resp[3],temp_resp[2])
+                i += 1
+                print i
+                time.sleep(http_interval)
+                elapsed = time.time()
+                elapsed = elapsed - start
+                print elapsed
+            else:
+                time.sleep(http_interval)
+                i += 1
+                print i
+                elapsed = time.time()
+                elapsed = elapsed - start
+                print elapsed
+        except KeyboardInterrupt:
+            print '\n'
+            print "User stopped searching"
+            break
+'''
+
+=-----------------------------------------------------------------------------------------------
+STARTBUYINGNOSELL SAMPLE::
+=-----------------------------------------------------------------------------------------------
+
+if temp[0] == 'startnosell':
+                print "STARTING ONLY BUYING MODE"
+                print "CTRL+C to stop!!!!!"
+                newpid = os.fork()
+                fork_list.append(newpid)
+                if newpid == 0:
+                    time.sleep(2)
+                    startbuyingnosell()
+                else:
+                    pids = (os.getpid(), newpid)
+                    print "parent: %d, child: %d" % pids
+
+def startbuyingnosell():
+    i = 0
+    times = []
+    while True:
+        start = time.clock()
+        recent = {}
+        recent = http.urlQueryRecent()
+        if recent == False:
+            print "CONN REFUSED, sleeping..."
+            time.sleep(30)
+            pass
+        elif recent == -1:
+            print "LISTAS RECENTS IGUAIS, TENTANDO DE NOVO!!!!!!"
+            pass
+        try:
+            js.getRecentTotalReady(recent)
+            js.getfinalrecentlist()
+            js.seeifbuyinggood()
+            i += 1
+            print i
+            time.sleep(http_interval)
+            elapsed = time.clock()
+            elapsed = elapsed - start
+            print elapsed
+            times.append(elapsed)
+        except AttributeError:
+            print "error, a continuar"
+
+=-----------------------------------------------------------------------------------------------
+
+Traceback (most recent call last):
+  File "SMB_main.py", line 113, in <module>
+    startbuyingsell()
+  File "SMB_main.py", line 44, in startbuyingsell
+    temp_resp = js.seeifbuyinggood()
+  File "/home/ubuntu/Steam/smb_json_recent.py", line 202, in seeifbuyinggood
+    temp_resp.append(temp_item_priceover[key_in_priceover]['median_price'])
+TypeError: 'bool' object has no attribute '__getitem__'
+
+Traceback (most recent call last):
+  File "SMB_main.py", line 114, in <module>
+    startbuyingsell()
+  File "SMB_main.py", line 44, in startbuyingsell
+    resp = js.seeifbuyinggood()
+  File "/home/ubuntu/Steam/smb_json_recent.py", line 189, in seeifbuyinggood
+    if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance())/100:
+TypeError: unsupported operand type(s) for /: 'str' and 'int'
+
+------------------------------------------TO DO!!!!----------------------------------------------
+
+-IMPLEMENTAR A VERIFICACAO DE VENDA AUTOMATICA: VER SE O ITEM VENDEU PARA ADICIONAR O VALOR DA
+                                                DA VENDA AO BALANCE
+       -VER SE ESTE PASSO E POSSIVEL COM PROCESSO OU THREAD DIFERENTE
+
+-VER SE EXISTE PROBLEMA DEPOIS DA PRIMEIRA COMPRA
+
+CZ75-Auto | Tigris (Field-Tested)
+AK-47 | Elite Build (Field-Tested)
+AK-47 | Elite Build (Minimal Wear)
+
+------------------------------------------DISCOVER MIN PRICe ITEM!!!!----------------------------------------------
+
+def minpriceitem(self):
+    temp_simple = {}
+    for keys in temp:
+        temp_simple[keys] = temp[keys][converted_price]
+    return min(temp_simple,key=temp_simple.get)
+
+def getfinalitem(self):
+    self.final_item = {}
+    if self.getlistlistings() == False:
+        print 'falha no parsing dos listings, try again'
+        return False
+    else:
+        min_price_key = self.minpriceitem()
+        for k in self.listinginfo_list:
+            if k == min_price_key
+                self.final_item[k] = self.listinginfo_list[k]
+    print self.final_item
+    return self.final_item
+
+def urlQueryRecent(self):
+        try:
+            steam_response = req.get(self.complete_url_recent, headers=self.headers_recent_anditem)
+            print steam_response.status_code
+            if steam_response.status_code == 439:
+                return False
+            else:
+                try:
+                    recent_temp = ujson.loads(steam_response.text)
+                except ValueError:
+                    return False
+                return recent_temp
+        except req.ConnectionError:
+            return False
+
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install htop
+sudo apt-get install git
+sudo apt-get install python-dev
+sudo apt-get install python-pip
+sudo pip install pycrypto
+sudo pip install ujson
+sudo pip install requests[security]
+sudo pip install numpy
