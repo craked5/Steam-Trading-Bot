@@ -363,9 +363,9 @@ class SteamJsonRecentThreading:
                     print 'entrei no lock dos sells'
                     if sell_response[0] == 200:
                         self.writetowalletadd(price_sell)
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
+                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
                     elif sell_response[0] == 502:
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
+                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
                     self.sell_lock.release()
                     print 'sai do lock dos sells ON THREAD ' + str(name)
                 i += 1

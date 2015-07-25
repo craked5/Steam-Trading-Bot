@@ -332,9 +332,9 @@ class SteamJsonRecent:
                     sell_response = self.sellitem(temp_item_one,buygoodresp[1])
                     if sell_response[0] == 200:
                         self.writetowalletadd(price_sell)
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
+                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
                     elif sell_response[0] == 502:
-                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance())
+                        self.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
                 time.sleep(http_interval)
             else:
                 time.sleep(http_interval)
