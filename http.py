@@ -37,39 +37,39 @@ class SteamBotHttp:
 
         donotcache = self.now_milliseconds()
 
-        httputil.rsa_data['donotcache'] = donotcache
-        httputil.login_data['donotcache'] = donotcache
+        self.httputil.rsa_data['donotcache'] = donotcache
+        self.httputil.login_data['donotcache'] = donotcache
 
-        temp_rsa = req.post('https://steamcommunity.com/login/getrsakey/', headers=httputil.rsa_headers, data=httputil.rsa_data)
+        temp_rsa = req.post('https://steamcommunity.com/login/getrsakey/', headers=self.httputil.rsa_headers, data=self.httputil.rsa_data)
         print temp_rsa.content
         print 'O status code do GETRSA foi ' + str(temp_rsa.status_code)
 
         temp_ras_good = ujson.loads(temp_rsa.content)
-        httputil.login_data['rsatimestamp'] = temp_ras_good['timestamp']
+        self.httputil.login_data['rsatimestamp'] = temp_ras_good['timestamp']
         mod = long(temp_ras_good['publickey_mod'], 16)
         exp = long(temp_ras_good['publickey_exp'], 16)
         rsa_key = RSA.construct((mod, exp))
         rsa = PKCS1_v1_5.PKCS115_Cipher(rsa_key)
-        encrypted_password = rsa.encrypt(httputil.password)
+        encrypted_password = rsa.encrypt(self.httputil.password)
         encrypted_password = base64.b64encode(encrypted_password)
-        httputil.login_data['password'] = encrypted_password
+        self.httputil.login_data['password'] = encrypted_password
 
-        temp_dologin = req.post('https://steamcommunity.com/login/dologin/', headers=httputil.rsa_headers, data=httputil.login_data)
+        temp_dologin = req.post('https://steamcommunity.com/login/dologin/', headers=self.httputil.rsa_headers, data=self.httputil.login_data)
         print temp_dologin.content
         print 'O status code do DOLOGIN foi ' + str(temp_dologin.status_code)
 
         temp_dologin_good = ujson.loads(temp_dologin.content)
-        httputil.transfer_data['steamid'] = temp_dologin_good['transfer_parameters']['steamid']
-        httputil.transfer_data['token'] = temp_dologin_good['transfer_parameters']['token']
-        httputil.transfer_data['auth'] = temp_dologin_good['transfer_parameters']['auth']
-        httputil.transfer_data['remember_login'] = temp_dologin_good['transfer_parameters']['remember_login']
-        httputil.transfer_data['token_secure'] = temp_dologin_good['transfer_parameters']['token_secure']
+        self.httputil.transfer_data['steamid'] = temp_dologin_good['transfer_parameters']['steamid']
+        self.httputil.transfer_data['token'] = temp_dologin_good['transfer_parameters']['token']
+        self.httputil.transfer_data['auth'] = temp_dologin_good['transfer_parameters']['auth']
+        self.httputil.transfer_data['remember_login'] = temp_dologin_good['transfer_parameters']['remember_login']
+        self.httputil.transfer_data['token_secure'] = temp_dologin_good['transfer_parameters']['token_secure']
 
-        temp_transfer = req.post('https://store.steampowered.com/login/transfer', headers=httputil.transfer_headers,data=httputil.transfer_data)
+        temp_transfer = req.post('https://store.steampowered.com/login/transfer', headers=self.httputil.transfer_headers,data=self.httputil.transfer_data)
         print 'O status code do LOGINTRANSFER foi ' + str(temp_transfer.status_code)
 
     def logout(self):
-        temp_logout = req.post('https://steamcommunity.com/login/logout/', headers= httputil.headers_logout, data= httputil.logout_data)
+        temp_logout = req.post('https://steamcommunity.com/login/logout/', headers= self.httputil.headers_logout, data= self.httputil.logout_data)
         print 'O status code do LOGOUT FOR ' + str(temp_logout.status_code)
 
 
@@ -78,7 +78,7 @@ class SteamBotHttp:
 
     def urlQueryItem(self,item):
 
-        steam_response = req.get(self.complete_url_item + item, headers=httputil.headers_recent_anditem)
+        steam_response = req.get(self.complete_url_item + item, headers=self.httputil.headers_recent_anditem)
 
         if steam_response.status_code == 200:
             try:
@@ -92,13 +92,13 @@ class SteamBotHttp:
     def urlQueryRecent(self,host,thread):
         try:
 
-            steam_response = req.get(self.complete_url_recent.replace(self.host,host),headers=httputil.headers_recent)
+            steam_response = req.get(self.complete_url_recent.replace(self.host,host),headers=self.httputil.headers_recent)
 
             if steam_response.status_code == 200:
                 print 'Status code: ' + str(steam_response.status_code) + ' na thread ' + str(thread)
                 timestamp = time.time()
                 time_temp = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(timestamp))
-                self.headers_recent['If-Modified-Since'] = time_temp
+                self.httputil.headers_recent['If-Modified-Since'] = time_temp
                 try:
                     recent_temp = ujson.loads(steam_response.text)
                 except ValueError:
@@ -116,7 +116,7 @@ class SteamBotHttp:
 
         try:
             steam_response = req.get(self.render_item_url_first_part.replace(self.host,host)+item+self.render_item_url_sencond_part,
-                                     headers = httputil.headers_item_list_ind)
+                                     headers = self.httputil.headers_item_list_ind)
             print steam_response.url
         except req.ConnectionError:
             return False
@@ -156,10 +156,10 @@ class SteamBotHttp:
         price_temp = (0.90*price_temp)
         price_temp = round(price_temp)
 
-        httputil.data_sell['assetid'] = int(assetid)
-        httputil.data_sell['price'] = int(price_temp)
+        self.httputil.data_sell['assetid'] = int(assetid)
+        self.httputil.data_sell['price'] = int(price_temp)
 
-        temp = req.post(self.sell_item_url, data=httputil.data_sell, headers=httputil.headers_sell)
+        temp = req.post(self.sell_item_url, data=self.httputil.data_sell, headers=self.httputil.headers_sell)
 
         list_return.append(temp.status_code)
         list_return.append(temp.content)
@@ -171,12 +171,12 @@ class SteamBotHttp:
 
         temp_tuple = []
 
-        httputil.data_buy['currency'] = int(currency) - 2000
-        httputil.data_buy['subtotal'] = int(subtotal)
-        httputil.data_buy['fee'] = int(fee)
-        httputil.data_buy['total'] = int(self.data_buy['subtotal'] + self.data_buy['fee'])
+        self.httputil.data_buy['currency'] = int(currency) - 2000
+        self.httputil.data_buy['subtotal'] = int(subtotal)
+        self.httputil.data_buy['fee'] = int(fee)
+        self.httputil.data_buy['total'] = int(self.data_buy['subtotal'] + self.data_buy['fee'])
         try:
-            temp = req.post(self.buy_item_url_without_listingid+listing, data=httputil.data_buy, headers=httputil.headers_buy)
+            temp = req.post(self.buy_item_url_without_listingid+listing, data=self.httputil.data_buy, headers=self.httputil.headers_buy)
         except req.ConnectionError:
             pass
 
@@ -190,7 +190,7 @@ class SteamBotHttp:
     def queryitemtest(self):
 
         steam_response = req.get(self.render_item_url_first_part+'AWP%20%7C%20Asiimov%20%28Field-Tested%29'+self.render_item_url_sencond_part,
-                                 headers = httputil.headers_item_list_ind)
+                                 headers = self.httputil.headers_item_list_ind)
 
         print steam_response.status_code
         print steam_response.url
