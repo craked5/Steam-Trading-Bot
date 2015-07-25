@@ -183,7 +183,7 @@ class SteamJsonRecent:
                     temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price'])/100)
                     temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
                     if float(float("{0:.2f}".format(self.list_median_prices[key])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
-                            (28.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                            (29.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                         if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                             if int(self.final_list[key]['converted_currencyid']) == 2003:
                                 temp = {}
