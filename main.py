@@ -24,7 +24,8 @@ print "OK now time one of the following commands: startsell ,startnosell ,buy ,s
 http = SteamBotHttp()
 js = SteamJsonRecent()
 fork_list = []
-commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','add','login','showlist','delete','quit','sell','loadmedianprices','getmedianprices']
+commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','add','login',
+            'showlist','delete','quit','sell','loadmedianprices','getmedianprices']
 
 '''
 #STARTBUYINGSELL NUMBER 2 NO BULLSHIT CODES
@@ -45,7 +46,8 @@ def startbuyinditem(item_buy,proc_name):
             jsind.setdownstate(1)
             if jsind.getdownstate() == 1:
                 sleep_time_down += 15
-                print "CONN REFUSED" + ' on item ' + item_buy + ' at try ' + str(i)+ ', sleeping for ' + str(sleep_time_down)
+                print "CONN REFUSED" + ' on item ' + item_buy + ' at try ' + str(i)+ ', sleeping for ' + \
+                      str(sleep_time_down)
                 time.sleep(sleep_time_down)
             pass
         elif type(item) == dict:
@@ -55,12 +57,12 @@ def startbuyinditem(item_buy,proc_name):
             jsind.getfinalitem()
             resp = jsind.seeifbuyinggood()
             if resp[0] is True:
-                price_sell = temp[1]
+                price_sell = command_input[1]
                 price_sell = float(price_sell*0.90)
                 price_sell = "{0:.2f}".format(price_sell)
                 print "OK SELLING ITEM"
                 temp_one = jsind.getpositiononeiteminv()
-                sell_response = jsind.sellitem(temp_one,temp[1])
+                sell_response = jsind.sellitem(temp_one,command_input[1])
                 if sell_response[0] == 200:
                     jsind.writetowalletadd(price_sell)
                     jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance(),0)
@@ -87,27 +89,27 @@ try:
     process_items = {}
     while True:
         try:
-            temp = raw_input('Insira o comando que pretende usar: ')
-            temp = temp.split(' ')
+            command_input = raw_input('Insira o comando que pretende usar: ')
+            command_input = command_input.split(' ')
 
-            if temp[0] == 'login':
+            if command_input[0] == 'login':
                 http.login()
 
-            elif temp[0] == 'logout':
+            elif command_input[0] == 'logout':
                 http.logout()
 
-            elif temp[0] == 'getmedianprices':
+            elif command_input[0] == 'getmedianprices':
                 list_median_prices = js.getmedianitemlist()
                 print list_median_prices
 
-            elif temp[0] == 'loadmedianprices':
+            elif command_input[0] == 'loadmedianprices':
                 list_median_prices = js.loadmedianpricesfromfile()
                 print list_median_prices
 
-            elif temp[0] == 'dump':
+            elif command_input[0] == 'dump':
                 js.exportJsonToFile(js.list_median_prices)
 
-            elif temp[0] == 'sr':
+            elif command_input[0] == 'sr':
                 print "STARTING BUYING AND SELLING MODE"
                 print "CTRL+C to stop!!!!!"
                 newpid = os.fork()
@@ -119,7 +121,7 @@ try:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
 
-            elif temp[0] == 'srt':
+            elif command_input[0] == 'srt':
                 n_threads = raw_input('How many threads do you wish to run? \n')
                 print "STARTING BUYING ON RECENT WITH " + str(n_threads) + " THREADS MODE"
                 print "CTRL+C to stop!!!!!"
@@ -133,33 +135,37 @@ try:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
 
-            elif temp[0] == 'showlist':
+            elif command_input[0] == 'showlist':
                 print 'This is the item list: '
                 print js.getlistbuyitems()
 
-            elif temp[0] == 'delete':
+            elif command_input[0] == 'delete':
                 item_rem = raw_input('Item to remove from the list: ')
                 js.delInItemsTxt(item_rem)
 
-            elif temp[0] == 'add':
+            elif command_input[0] == 'add':
                 item_add = raw_input('Item to add to the list: ')
                 js.writeInItemsTxt(item_add)
 
-            elif temp[0] == 'sell':
-                js.sellitemtest(temp[1], float(temp[2]))
+            elif command_input[0] == 'sell':
+                js.sellitemtest(command_input[1], float(command_input[2]))
 
-            elif temp[0] == 'balance':
+            elif command_input[0] == 'wallettest':
+                js.parsewalletbalanceandwrite()
+
+            elif command_input[0] == 'balance':
                 print js.getwalletbalance()
 
-            elif temp[0] == 'buy':
-                js.buyitemtest(temp[1],temp[2],int(temp[3]),int(temp[4]),int(temp[5]))
+            elif command_input[0] == 'buy':
+                js.buyitemtest(command_input[1],command_input[2],int(command_input[3]),
+                               int(command_input[4]),int(command_input[5]))
 
-            elif temp[0] == 'procs':
+            elif command_input[0] == 'procs':
                 for n_proc in process_items:
                     print n_proc + '  ' + str(process_items[n_proc])
                 print fork_list
 
-            elif temp[0] == 'killproc':
+            elif command_input[0] == 'killproc':
                 proctokill = raw_input('Insira o nome do processo para matar (faca showlistproc se nao souber): ')
                 for proc in process_items.keys():
                     if proc == proctokill:
@@ -169,10 +175,10 @@ try:
                         print "MATOU O PROCESSO PARA COMPRAR e VENDER O ITEM " + proc
                         break
 
-            elif temp[0] == 'howmanyprocs':
+            elif command_input[0] == 'howmanyprocs':
                 print 'EXISTEM ' + str(len(process_items.keys())) + ' PROCESSOS A FUNCIONAR\n'
 
-            elif temp[0] == 'bii':
+            elif command_input[0] == 'bii':
                 proc_name = raw_input("Insira o nome do processo (normalmente algo relacionado com a arma: \n")
                 item_name = raw_input('Insira o nome da arma a comprar: \n')
                 process_items[proc_name] = os.fork()
@@ -185,7 +191,7 @@ try:
                     pids = (os.getpid(), process_items[proc_name])
                     print "parent: %d, child: %d" % pids
 
-            elif temp[0] == 'quit':
+            elif command_input[0] == 'quit':
                 print "User saiu"
                 for p in fork_list:
                     os.kill(p,signal.SIGKILL)

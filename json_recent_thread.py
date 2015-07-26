@@ -19,12 +19,16 @@ class SteamJsonRecentThreading:
     def __init__(self,list_median_prices):
         self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
                                     u'success',u'more',u'purchaseinfo']
-        self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
-                                   'background_color','icon_url','icon_url_large','descriptions','name','name_color','type',
-                                   'market_name','market_actions','commodity','app_icon','owner','actions','market_tradable_restriction']
+        self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
+                                   'status','original_amount','tradable',
+                                   'background_color','icon_url','icon_url_large',
+                                   'descriptions','name','name_color','type',
+                                   'market_name','market_actions','commodity','app_icon',
+                                   'owner','actions','market_tradable_restriction']
         self.listinginfo_parsing_list = ['fee','publisher_fee_percent','steam_fee','publisher_fee',
                                          'converted_steam_fee','converted_publisher_fee','converted_price_per_unit',
-                                         'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
+                                         'converted_fee_per_unit','converted_fee_per_unit',
+                                         'converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
         self.float100 = float(100)
@@ -194,7 +198,8 @@ class SteamJsonRecentThreading:
                         #try:
                         temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
                         temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
-                        if float(float("{0:.2f}".format(self.list_median_prices[key])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                        if float(float("{0:.2f}".format(self.list_median_prices[key])) -
+                                float((temp_converted_price_math+temp_converted_fee_math))) >= \
                                 (28.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
@@ -205,15 +210,20 @@ class SteamJsonRecentThreading:
                                         print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(t_name)
                                         self.buy_lock.acquire()
                                         print 'Entrey no acquire dos buys ON THREAD '  + str(t_name)
-                                        temp = self.http.buyitem(final_list_this[key]['listingid'],final_list_this[key]['converted_price'],
-                                                                 final_list_this[key]['converted_fee'],final_list_this[key]['converted_currencyid'])
-                                        self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
-                                                             self.http.httputil.data_buy,final_list_this[key]['listingid'],key,temp[0],temp[1],t_name)
+                                        temp = self.http.buyitem(final_list_this[key]['listingid'],
+                                                                 final_list_this[key]['converted_price'],
+                                                                 final_list_this[key]['converted_fee'],
+                                                                 final_list_this[key]['converted_currencyid'])
+                                        self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
+                                                                self.http.httputil.data_buy['fee'],
+                                                             self.http.httputil.data_buy,final_list_this[key]['listingid'],
+                                                                key,temp[0],temp[1],t_name)
                                         if temp[0] == 200:
                                             if temp[1]['wallet_info'].has_key('wallet_balance'):
                                                 if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
                                                     print "Ok COMPREI A: " + key + " ao preco: " + \
-                                                         str(final_list_this[key]['converted_price'] + final_list_this[key]['converted_fee'])
+                                                         str(final_list_this[key]['converted_price'] +
+                                                             final_list_this[key]['converted_fee'])
                                                     temp_resp.append(True)
                                                     temp_resp.append(self.list_median_prices[key])
                                                     temp_resp.append(key)
@@ -364,9 +374,11 @@ class SteamJsonRecentThreading:
                     print 'entrei no lock dos sells'
                     if sell_response[0] == 200:
                         self.writetowalletadd(price_sell)
-                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],
+                                                 price_sell,self.getwalletbalance(),name)
                     elif sell_response[0] == 502:
-                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),name)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],
+                                                 price_sell,self.getwalletbalance(),name)
                     self.sell_lock.release()
                     print 'sai do lock dos sells ON THREAD ' + str(name)
                 i += 1

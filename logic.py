@@ -139,7 +139,8 @@ class Logic:
         temp_string3 = 'A codigo de resposta foi ' + str(responsecode) + ' e o dict de resposta foi ' + str(responsedict)
         temp_string4 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
         if responsecode == 502:
-            temp_string = 'A thread ' + str(thread_n) + ' tentou comprar ' + key + ' com a listingid ' + str(listingid) + ' ao preco de ' + str(subtotal+fee)
+            temp_string = 'A thread ' + str(thread_n) + ' tentou comprar ' + key + ' com a listingid ' + \
+                          str(listingid) + ' ao preco de ' + str(subtotal+fee)
             tempfile.write(temp_string+'\n')
             tempfile.write(temp_string2+'\n')
             tempfile.write(temp_string3+'\n')
@@ -149,7 +150,8 @@ class Logic:
             tempfile.close()
             return True
         elif responsecode == 200:
-            temp_string = 'A thread ' + str(thread_n) + ' comprou a ' + key + ' com a listingid ' + str(listingid) + ' ao preco de ' + str(subtotal+fee)
+            temp_string = 'A thread ' + str(thread_n) + ' comprou a ' + key + ' com a listingid ' + \
+                          str(listingid) + ' ao preco de ' + str(subtotal+fee)
             tempfile.write(temp_string+'\n')
             tempfile.write(temp_string2+'\n')
             tempfile.write(temp_string3+'\n')
@@ -164,7 +166,8 @@ class Logic:
     def writetosellfile(self,status,content,item,price,balance,thread_n):
         tempfile = open('util/sells.txt','a')
         if status == 502:
-            temp_string = 'A thread ' + str(thread_n) + 'Tentou vender a ' + item + ' ao preco ' + str(price) + ' mas o codigo foi ' + str(status)
+            temp_string = 'A thread ' + str(thread_n) + 'Tentou vender a ' + item + ' ao preco ' + str(price) + \
+                          ' mas o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
             temp_string4 = 'O balance depois da sale ficara ' + str(balance)
@@ -177,7 +180,8 @@ class Logic:
             tempfile.close()
             return True
         elif status == 200:
-            temp_string = 'A thread ' + str(thread_n) + ' Vendeu a ' + item + ' ao preco ' + str(price) + ' e o codigo foi ' + str(status)
+            temp_string = 'A thread ' + str(thread_n) + ' Vendeu a ' + item + ' ao preco ' + str(price) + \
+                          ' e o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
             temp_string4 = 'O balance depois da sale ficara ' + str(balance)

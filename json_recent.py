@@ -5,6 +5,8 @@ __author__ = 'nunosilva'
 __author__ = 'github.com/craked5'
 
 import time
+import unicodedata
+from bs4 import BeautifulSoup
 import ujson
 import decimal
 import random
@@ -18,12 +20,16 @@ class SteamJsonRecent:
     def __init__(self):
         self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
                                     u'success',u'more',u'purchaseinfo']
-        self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
-                                   'background_color','icon_url','icon_url_large','descriptions','name','name_color','type',
-                                   'market_name','market_actions','commodity','app_icon','owner','actions','market_tradable_restriction']
+        self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
+                                   'status','original_amount','tradable',
+                                   'background_color','icon_url','icon_url_large','descriptions',
+                                   'name','name_color','type',
+                                   'market_name','market_actions','commodity','app_icon','owner',
+                                   'actions','market_tradable_restriction']
         self.listinginfo_parsing_list = ['fee','publisher_fee_percent','steam_fee','publisher_fee',
                                          'converted_steam_fee','converted_publisher_fee','converted_price_per_unit',
-                                         'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
+                                         'converted_fee_per_unit','converted_fee_per_unit',
+                                         'converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
         self.list_median_prices = {}
@@ -182,20 +188,26 @@ class SteamJsonRecent:
                     #try:
                     temp_converted_price_math = float(decimal.Decimal(self.final_list[key]['converted_price'])/100)
                     temp_converted_fee_math = float(decimal.Decimal(self.final_list[key]['converted_fee'])/100)
-                    if float(float("{0:.2f}".format(self.list_median_prices[key])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                    if float(float("{0:.2f}".format(self.list_median_prices[key])) -
+                            float((temp_converted_price_math+temp_converted_fee_math))) >= \
                             (29.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                         if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
                             if int(self.final_list[key]['converted_currencyid']) == 2003:
                                 temp = {}
-                                temp = self.http.buyitem(self.final_list[key]['listingid'],self.final_list[key]['converted_price'],
-                                                         self.final_list[key]['converted_fee'],self.final_list[key]['converted_currencyid'])
-                                self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
-                                                     self.http.httputil.data_buy,self.final_list[key]['listingid'],key,temp[0],temp[1],0)
+                                temp = self.http.buyitem(self.final_list[key]['listingid'],
+                                                         self.final_list[key]['converted_price'],
+                                                         self.final_list[key]['converted_fee'],
+                                                         self.final_list[key]['converted_currencyid'])
+                                self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
+                                                        self.http.httputil.data_buy['fee'],
+                                                     self.http.httputil.data_buy,
+                                                        self.final_list[key]['listingid'],key,temp[0],temp[1],0)
                                 if temp[0] == 200:
                                     if temp[1]['wallet_info'].has_key('wallet_balance'):
                                         if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
                                             print "Ok COMPREI A: " + key + " ao preco: " + \
-                                                  str(self.final_list[key]['converted_price'] + self.final_list[key]['converted_fee'])
+                                                  str(self.final_list[key]['converted_price'] +
+                                                      self.final_list[key]['converted_fee'])
                                             temp_resp.append(True)
                                             temp_resp.append(self.list_median_prices[key])
                                             temp_resp.append(key)
@@ -302,6 +314,23 @@ class SteamJsonRecent:
 
         return self.list_median_prices
 
+    def parsewalletbalanceandwrite(self):
+
+        soup = BeautifulSoup(self.http.getsteamwalletsite(),'html.parser')
+        balance_soup = soup.find('span',{'id':'marketWalletBalanceAmount'})
+
+        if balance_soup != None:
+            balance_soup = balance_soup.get_text()
+            balance_str = balance_soup.encode('ascii','ignore').replace(',','.')
+
+            self.log.writetowallet(float(balance_str)*100)
+
+            print self.log.wallet_balance
+            print float(balance_str)
+            return float(balance_str)
+        else:
+            print "ERROR GETTING WALLET BALANCE, MAYBE FAZER LOGIN RESOLVE ESTE PROBLEMA"
+            return False
 #----------------------------------------FUNCAO QUE EXECUTA AS OUTRAS TODAS---------------------------------------------
 
     def startbuyingsell(self,http_interval):
@@ -332,9 +361,11 @@ class SteamJsonRecent:
                     sell_response = self.sellitem(temp_item_one,buygoodresp[1])
                     if sell_response[0] == 200:
                         self.writetowalletadd(price_sell)
-                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,
+                                                 self.getwalletbalance(),0)
                     elif sell_response[0] == 502:
-                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,self.getwalletbalance(),0)
+                        self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,
+                                                 self.getwalletbalance(),0)
                 time.sleep(http_interval)
             else:
                 time.sleep(http_interval)

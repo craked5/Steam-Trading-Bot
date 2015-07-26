@@ -17,12 +17,16 @@ class SteamJsonItem:
     def __init__(self,item):
         self.recent_parsing_list = [u'results_html',u'hovers',u'app_data',u'currency',
                                     u'success',u'start',u'pagesize',u'total_count',u'assets']
-        self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount','status','original_amount','tradable',
-                                   'background_color','icon_url','icon_url_large','descriptions','name','name_color','type',
-                                   'market_name','market_actions','commodity','app_icon','owner','actions','market_tradable_restriction']
+        self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
+                                   'status','original_amount','tradable',
+                                   'background_color','icon_url','icon_url_large','descriptions',
+                                   'name','name_color','type',
+                                   'market_name','market_actions','commodity','app_icon','owner','actions',
+                                   'market_tradable_restriction']
         self.listinginfo_parsing_list = ['fee','publisher_fee_percent','currencyid','steam_fee','publisher_fee',
                                          'converted_steam_fee','converted_price_per_unit',
-                                         'converted_fee_per_unit','converted_fee_per_unit','converted_publisher_fee_per_unit','price',
+                                         'converted_fee_per_unit','converted_fee_per_unit',
+                                         'converted_publisher_fee_per_unit','price',
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
         self.item = item
@@ -188,23 +192,28 @@ class SteamJsonItem:
                 temp_converted_price_math = float(decimal.Decimal(self.final_item[id]['converted_price']) / 100)
                 temp_converted_fee_math = float(decimal.Decimal(self.final_item[id]['converted_fee'])/100)
                 #print 'ESTOU NO BUYGOOD 4'
-                if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) - float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) -
+                        float((temp_converted_price_math+temp_converted_fee_math))) >= \
                         (28.5*(temp_converted_price_math+temp_converted_fee_math)/100):
                     #print 'ESTOU NO BUYGOOD 5'
                     if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
                         #print 'ESTOU NO BUYGOOD 6'
                         if int(self.final_item[id]['converted_currencyid']) == 2003:
-                            temp = self.http.buyitem(self.final_item[id]['listingid'],self.final_item[id]['converted_price'],
-                                                     self.final_item[id]['converted_fee'],self.final_item[id]['converted_currencyid'])
-                            self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'], self.http.httputil.data_buy['fee'],
-                                                 self.http.httputil.data_buy,self.final_item[id]['listingid'],self.item,temp[0],temp[1],0)
+                            temp = self.http.buyitem(self.final_item[id]['listingid'],
+                                                     self.final_item[id]['converted_price'],
+                                                     self.final_item[id]['converted_fee'],
+                                                     self.final_item[id]['converted_currencyid'])
+                            self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
+                                                    self.http.httputil.data_buy['fee'],
+                                                 self.http.httputil.data_buy,
+                                                    self.final_item[id]['listingid'],self.item,temp[0],temp[1],0)
                             if temp[0] == 200:
                                 if temp[1]['wallet_info'].has_key('wallet_balance'):
                                     if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
                                         print "Ok COMPREI A: " + self.item + " ao preco: " + \
-                                              str(self.final_item[id]['converted_price'] + self.final_item[id]['converted_fee'])
+                                              str(self.final_item[id]['converted_price'] +
+                                                  self.final_item[id]['converted_fee'])
                                         temp_resp.append(True)
-                                        #temp_resp.append(self.final_list[key]['listingid'])
                                         temp_resp.append(temp_item_priceover['median_price'])
                                         temp_resp.append(self.item)
                                         return temp_resp
@@ -213,14 +222,6 @@ class SteamJsonItem:
                                 print "erro ao comprar item"
                     else:
                         print "Nao pude comprar: " + self.item +" porque nao tenho fundos"
-                        #print "preco da arma: " + str(temp_converted_price_math+temp_converted_fee_math)
-                        #print "saldo da wallet: " + str(self.log.wallet_balance)
-                #else:
-                    #print "nao posso comprar " + key + " porque margens nao sao suficientes"
-                    #print "preco da " + key + " : " + str(temp_converted_price_math+temp_converted_fee_math)
-                    #print "preco medio da " + key + " : " + str(temp_item_priceover['median_price'])
-                    #print "margem necessaria: " + str(20*(temp_converted_price_math+temp_converted_fee_math)/100)
-                    #print "margem obtida: " + str((temp_item_priceover['median_price'] - (temp_converted_price_math+temp_converted_fee_math)))
             except ValueError, KeyError:
                 print "float not valid"
                 temp_resp.append(False)
