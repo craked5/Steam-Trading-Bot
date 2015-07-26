@@ -153,6 +153,10 @@ try:
             elif command_input[0] == 'wallettest':
                 js.parsewalletbalanceandwrite()
 
+            elif command_input[0] == 'seeactivetest':
+                temp = js.getactivelistingsparsed()
+                print temp
+
             elif command_input[0] == 'balance':
                 print js.getwalletbalance()
 

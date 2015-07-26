@@ -29,6 +29,33 @@ class Httpheaders:
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.130 Safari/537.36'
         }
+        self.headers_active_listings = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Encoding": "gzip,deflate,sdch",
+            "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
+            'Connection':'keep-alive',
+            'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
+                     '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
+                     'Steam_Language=english; '
+                     '730_17workshopQueueTime=1432014476; '
+                     'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
+                     'sessionid=5cfbd35e404358ce92d5aaa0; '
+                     'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
+                     'strInventoryLastContext=730_2; '
+                     'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
+                     'timezoneOffset=3600,0; '
+                     'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days'
+                     '%22%3A15%2C%22sales_this_year%22%3A133%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A'
+                     '0%2C%22new_device_cooldown_days%22%3A7%7D; '
+                     'tsTradeOffersLastRead=1435052082',
+            'DNT':1,
+            'Host':'steamcommunity.com',
+            'Referer':'http://steamcommunity.com/market/',
+            'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
+                         'Chrome/43.0.2357.130 Safari/537.36',
+            'X-Requested-With':'XMLHttpRequest'
+        }
+
         self.headers_recent_anditem = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
@@ -81,6 +108,7 @@ class Httpheaders:
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.130 Safari/537.36'
         }
+        se = 32
         self.headers_item_list_ind = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",

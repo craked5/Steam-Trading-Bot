@@ -22,6 +22,7 @@ class SteamBotHttp:
         self.pre_host_normal = 'http://'
         self.pre_host_https = 'https://'
         self.market = '/market'
+        self.mylistings = '/mylistings/'
         #currency=3/2003 == euro
         self.item_price_viewer = '/priceoverview/?currency=3&appid=730&market_hash_name='
         self.recent_listed = '/recent/?country=PT&language=english&currency=3'
@@ -195,6 +196,17 @@ class SteamBotHttp:
         temp = req.get('http://steamcommunity.com/market/',headers=self.httputil.headers_wallet)
         if temp.status_code == 200:
             return temp.content
+        else:
+            return False
+
+    def getmyactivelistingsraw(self):
+        my_listings = req.get(self.pre_host_normal+'steamcommunity.com'+self.market+self.mylistings,
+                              headers=self.httputil.headers_active_listings)
+        if my_listings.status_code == 200:
+            my_listings_dict = ujson.loads(my_listings.content)
+            return my_listings_dict
+        else:
+            return False
 
 #-----------------------------------------AUX FUNCTIONS------------------------------------------------------------------
 

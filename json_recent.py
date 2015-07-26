@@ -331,6 +331,34 @@ class SteamJsonRecent:
         else:
             print "ERROR GETTING WALLET BALANCE, MAYBE FAZER LOGIN RESOLVE ESTE PROBLEMA"
             return False
+
+    def getactivelistingsparsed(self):
+        active_listings = self.http.getmyactivelistingsraw()
+        active_listings_list = []
+
+        print type(active_listings)
+        if type(active_listings) == dict:
+            if active_listings.has_key('assets'):
+                if active_listings['assets'].has_key('730'):
+                    active_listings = active_listings['assets']['730']['2']
+
+                    for id in active_listings:
+                        active_listings_list.append(id)
+
+                    return active_listings_list
+        else:
+            return False
+
+    #todo
+    def seeifanyitemsold(self):
+
+        active_listings = self.getactivelistingsparsed()
+
+
+
+
+
+
 #----------------------------------------FUNCAO QUE EXECUTA AS OUTRAS TODAS---------------------------------------------
 
     def startbuyingsell(self,http_interval):
@@ -357,8 +385,8 @@ class SteamJsonRecent:
                     price_sell = buygoodresp[1]
                     price_sell = float(price_sell*0.90)
                     price_sell = "{0:.2f}".format(price_sell)
-                    temp_item_one = self.getpositiononeiteminv()
-                    sell_response = self.sellitem(temp_item_one,buygoodresp[1])
+                    ID_item_pos_one = self.getpositiononeiteminv()
+                    sell_response = self.sellitem(ID_item_pos_one,buygoodresp[1])
                     if sell_response[0] == 200:
                         self.writetowalletadd(price_sell)
                         self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],price_sell,
