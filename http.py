@@ -116,6 +116,7 @@ class SteamBotHttp:
         except req.ConnectionError:
             return False
 
+        return False
     def urlqueryspecificitemind(self,host,item):
 
         try:
