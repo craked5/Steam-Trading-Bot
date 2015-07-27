@@ -488,13 +488,14 @@ class SteamJsonRecentThreading:
                 counter += 1
                 if counter % 10 == 0:
                     print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
-                elif counter % 300 == 0:
+                elif counter % 250 == 0:
                     self.write_active_listings_lock.acquire()
                     if self.seeifanyitemsold() == True:
                         self.parsewalletbalanceandwrite()
                     self.write_active_listings_lock.release()
-                elif counter % 4000 == 0:
-                    time.sleep(60)
+                elif counter % 2500 == 0:
+                    print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                    time.sleep(15)
                 time.sleep(http_interval)
                 #elapsed = time.time()
                 #elapsed = elapsed - start
@@ -505,13 +506,14 @@ class SteamJsonRecentThreading:
                 counter += 1
                 if counter % 10 == 0:
                     print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
-                elif counter % 300 == 0:
+                elif counter % 250 == 0:
                     self.write_active_listings_lock.acquire()
                     if self.seeifanyitemsold() == True:
                         self.parsewalletbalanceandwrite()
                     self.write_active_listings_lock.release()
-                elif counter % 4000 == 0:
-                    time.sleep(60)
+                elif counter % 500 == 0:
+                    print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                    time.sleep(15)
                 time.sleep(http_interval)
                 #print i
                 #elapsed = time.time()
