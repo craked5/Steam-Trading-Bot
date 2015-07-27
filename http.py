@@ -96,7 +96,7 @@ class SteamBotHttp:
         try:
 
             steam_response = req.get(self.complete_url_recent.replace(self.host,host),
-                                     headers=self.httputil.headers_recent)
+                                     headers=self.httputil.headers_recent,timeout=4)
 
             if steam_response.status_code == 200:
                 print 'Status code: ' + str(steam_response.status_code) + ' na thread ' + str(thread)
