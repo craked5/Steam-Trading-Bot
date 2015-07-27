@@ -98,6 +98,13 @@ try:
             elif command_input[0] == 'logout':
                 http.logout()
 
+            elif command_input[0] == 'stuffnow':
+                list_median_prices50 = {}
+                for key in list_median_prices:
+                    if list_median_prices[key] > 0.45:
+                        list_median_prices50[key] = list_median_prices[key]
+                print list_median_prices50
+
             elif command_input[0] == 'getmedianprices':
                 list_median_prices = jst.getmedianitemlist()
                 print list_median_prices
@@ -164,6 +171,9 @@ try:
             elif command_input[0] == 'seeactivelistings':
                 temp = jst.getactivelistingsparsed()
                 print temp
+
+            elif command_input[0] == 'newlisttest':
+                list_median_prices50
 
             elif command_input[0] == 'updateactivelistings':
                 temp = jst.updateactivelistings()

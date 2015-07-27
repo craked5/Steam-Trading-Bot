@@ -43,7 +43,7 @@ class Logic:
                 self.dif_hosts_recent = 'no'
 
             try:
-                f_items_pobre = open('util/items_pobre.txt', 'r')
+                f_items_pobre = open('util/items_pobre50.txt', 'r')
             except IOError:
                 print "Error opening the items to buy list file!"
             print "ITEMS TO BUY file was opened ok"
@@ -92,7 +92,7 @@ class Logic:
     def writeInItemsTxt(self,item):
 
         try:
-            tempfile = open('util/items_pobre.txt', 'a')
+            tempfile = open('util/items_pobre50.txt', 'a')
             tempfile.write(item+'\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
@@ -101,7 +101,7 @@ class Logic:
             print "Erro ao escrever no ficheiro"
             return False
 
-        tempfile2 = open('util/items_pobre.txt', 'r')
+        tempfile2 = open('util/items_pobre50.txt', 'r')
         self.list_items_to_buy = [line.rstrip('\n') for line in tempfile2]
         tempfile2.close()
 
@@ -113,20 +113,20 @@ class Logic:
 
     def delInItemsTxt(self,item):
 
-        tempfile = open('util/items_pobre.txt', 'r')
+        tempfile = open('util/items_pobre50.txt', 'r')
         lines = [line1.rstrip('\n') for line1 in tempfile]
         print lines
         tempfile.close()
 
         try:
-            tempfile2 = open('util/items_pobre.txt', 'w')
+            tempfile2 = open('util/items_pobre50.txt', 'w')
             for line2 in lines:
                 if line2.rstrip('\n')!=item:
                     tempfile2.write(line2+'\n')
                     tempfile2.flush()
                     os.fsync(tempfile2.fileno())
             tempfile2.close()
-            tempfile3 = open('util/items_pobre.txt', 'r')
+            tempfile3 = open('util/items_pobre50.txt', 'r')
             self.list_items_to_buy = [line3.rstrip('\n') for line3 in tempfile3]
             tempfile3.close()
         except IOError:
