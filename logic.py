@@ -10,7 +10,6 @@ import time
 from random import shuffle
 class Logic:
 
-    #todo load active listings from web when logic is initiated
     def __init__(self,mode):
         self.list_hosts = []
         self.ids_active_listings = []
@@ -47,7 +46,7 @@ class Logic:
                 f_items_pobre = open('util/items_pobre.txt', 'r')
             except IOError:
                 print "Error opening the items to buy list file!"
-            print "file was opened ok"
+            print "ITEMS TO BUY file was opened ok"
 
             #primeira leitura do ficheiro
             self.list_items_to_buy = [line.rstrip('\n') for line in f_items_pobre]
@@ -55,9 +54,9 @@ class Logic:
             f_items_pobre.close()
 
             try:
-                f_listings = open('active_listings.txt','r')
+                f_listings = open('util/active_listings.txt','r')
                 self.ids_active_listings = [line.rstrip('\n') for line in f_listings]
-                print self.ids_active_listings
+                print "ACTIVE LISTINGS FILE WAS OPENED OK"
             except IOError:
                 print 'Error opening active listings file!'
 
@@ -65,7 +64,7 @@ class Logic:
                 f_wallet = open('util/wallet.txt', 'r')
             except IOError:
                 print "Error opening the wallet file"
-            print "file was opened ok"
+            print "wallet file file was opened ok"
 
             self.wallet_balance = f_wallet.readlines()
             self.wallet_balance = float(self.wallet_balance[0])
@@ -140,6 +139,7 @@ class Logic:
 
         return True
 
+    #escreve para o ficheiro wallet e actualiza a var wallet_balance com o balance
     #balance - int
     def writetowallet(self,balance):
 
@@ -163,6 +163,7 @@ class Logic:
 
         return True
 
+    #escreve para o active_listings.txt e actualiza a var active_listings
     def writetoactivelistings(self,id):
 
         try:
@@ -185,6 +186,7 @@ class Logic:
 
         return True
 
+    #delete an id from the active_listings.txt file and updates the active_listings self var
     def deletefromactivelistings(self,id):
 
         tempfile = open('util/active_listings.txt', 'r')
@@ -212,6 +214,21 @@ class Logic:
         print self.ids_active_listings
 
         return True
+
+    def writenewactivelistings(self,list):
+        try:
+            f_listings = open('util/active_listings.txt', 'w')
+            for id in list:
+                f_listings.write(id+'\n')
+                f_listings.flush()
+                os.fsync(f_listings.fileno())
+                f_listings.close()
+        except IOError:
+            return False
+        self.ids_active_listings = list
+        return self.ids_active_listings
+
+
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
 

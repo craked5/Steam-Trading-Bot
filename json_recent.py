@@ -1,3 +1,4 @@
+'''
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -397,3 +398,4 @@ class SteamJsonRecent:
                 time.sleep(http_interval)
             else:
                 time.sleep(http_interval)
+                '''

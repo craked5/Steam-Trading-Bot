@@ -9,6 +9,8 @@ import threading
 import ujson
 import decimal
 import random
+import unicodedata
+from bs4 import BeautifulSoup
 from logic import Logic
 from http import SteamBotHttp
 
@@ -16,7 +18,7 @@ from http import SteamBotHttp
 
 class SteamJsonRecentThreading:
 
-    def __init__(self,list_median_prices):
+    def __init__(self):
         self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
                                     u'success',u'more',u'purchaseinfo']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
@@ -40,12 +42,12 @@ class SteamJsonRecentThreading:
         self.dif_hosts = self.log.dif_hosts_recent
         self.contaSim = 0
         self.contaNao = 0
-        self.list_median_prices = list_median_prices
-        print len(self.list_median_prices)
+        self.list_median_prices = {}
         self.timestamp_lock = threading.Lock()
         self.buy_lock = threading.Lock()
         self.sell_lock = threading.Lock()
         self.last_listing_buy_lock = threading.Lock()
+        self.write_active_listings_lock = threading.Lock()
         self.timestamp = ''
 
     def getRecentTotalReady(self, recent_full):
@@ -267,7 +269,7 @@ class SteamJsonRecentThreading:
         return self.http.sellitem(assetid,price)
 
     def exportJsonToFile(self,json):
-        with open('util/stuff.txt', 'w') as outfile:
+        with open('util/median_prices.json', 'w') as outfile:
             ujson.dump(json, outfile)
         outfile.close()
         return json
@@ -286,8 +288,9 @@ class SteamJsonRecentThreading:
 
     def loadmedianpricesfromfile(self):
         file = open('util/median_prices.json','r')
-        self.median_price_list = ujson.load(file)
+        self.list_median_prices = ujson.load(file)
         file.close()
+        return self.list_median_prices
 
     def writetosellfile(self,status,content,item,price,balance,thread_n):
         return self.log.writetosellfile(status,content,item,price,balance,thread_n)
@@ -316,6 +319,108 @@ class SteamJsonRecentThreading:
         elif temp_sell[0] == 502:
             self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalance())
 
+    def getmedianitemlist(self):
+
+        self.list_median_prices = {}
+
+        for key in self.log.list_items_to_buy:
+            temp_item_priceover = {}
+            temp_item_priceover = self.http.urlQueryItem(key)
+            if type(temp_item_priceover) == int:
+                print "Erro ao obter preco medio de " + key
+                print "Status code da querie: " + str(temp_item_priceover)
+
+            elif temp_item_priceover.has_key('median_price'):
+                temp_median_price = temp_item_priceover['median_price']
+                if isinstance(temp_median_price, basestring):
+                    temp_median_price = temp_median_price.replace('&#8364; ','').replace(',','.').replace('-','0')
+                    temp_median_price = "{0:.2f}".format(float(temp_median_price))
+                self.list_median_prices[key] = float(temp_median_price)
+
+            if self.list_median_prices.has_key(key):
+                print 'O preco medio de ' + key + ' e: ' + str(self.list_median_prices[key])
+
+        return self.list_median_prices
+
+    #returns wallet balance from steam website in float format
+    def parsewalletbalance(self):
+        soup = BeautifulSoup(self.http.getsteamwalletsite(),'html.parser')
+        balance_soup = soup.find('span',{'id':'marketWalletBalanceAmount'})
+
+        if balance_soup != None:
+            balance_soup = balance_soup.get_text()
+            balance_str = balance_soup.encode('ascii','ignore').replace(',','.')
+
+            return float(balance_str)
+        else:
+            print "ERROR GETTING WALLET BALANCE, MAYBE FAZER LOGIN RESOLVE ESTE PROBLEMA"
+            return False
+
+
+    #Vai buscar o valor o balance da minha carteira ao Steam diretamente
+    #e se encontrar, atualiza a var wallet_balance
+    def parsewalletbalanceandwrite(self):
+
+        soup = BeautifulSoup(self.http.getsteamwalletsite(),'html.parser')
+        balance_soup = soup.find('span',{'id':'marketWalletBalanceAmount'})
+
+        if balance_soup != None:
+            balance_soup = balance_soup.get_text()
+            balance_str = balance_soup.encode('ascii','ignore').replace(',','.')
+
+            self.log.writetowallet(float(balance_str)*100)
+
+            return float(balance_str)
+        else:
+            print "ERROR GETTING WALLET BALANCE, MAYBE FAZER LOGIN RESOLVE ESTE PROBLEMA"
+            return False
+
+    #faz uma querie para ver as active listings que a conta tem
+    #retorna as active_listings actuais ou false
+    def getactivelistingsparsed(self):
+        active_listings = self.http.getmyactivelistingsraw()
+        active_listings_list = []
+
+        if type(active_listings) == dict:
+            if active_listings.has_key('assets'):
+                if type(active_listings['assets']) == dict:
+                    if active_listings['assets'].has_key('730'):
+                        active_listings = active_listings['assets']['730']['2']
+
+                        for id in active_listings:
+                            active_listings_list.append(id)
+
+                        print type(active_listings_list)
+                        return active_listings_list
+                else:
+                    return False
+        else:
+            return False
+
+    #returns new active listings list or False
+    def updateactivelistings(self):
+        temp = self.getactivelistingsparsed()
+        if temp != False:
+            if type(self.log.writenewactivelistings(temp)) == list:
+                print "NEW ACTIVE LISTINGS: \n"
+                return self.log.ids_active_listings
+        else:
+            return False
+
+    #ver se algum item nas active_listings vendeu
+    #retorna uma nova active listings se sim
+    #return a active listings se nao
+    def seeifanyitemsold(self):
+
+        active_listings = self.getactivelistingsparsed()
+        if active_listings != False:
+            if self.log.ids_active_listings != active_listings:
+                self.log.writenewactivelistings(active_listings)
+                print 'VENDI ITEMS!'
+                return True
+        else:
+            print "ERROR"
+            return False
 #----------------------------------------------THREADING-----------------------------------------------------------
 
     def callfuncs(self,recent_full):
@@ -330,7 +435,7 @@ class SteamJsonRecentThreading:
         return temp_final
 
     def onerecentthread(self,http_interval,name):
-        i = 0
+        counter = 0
         times = []
         while True:
             time.sleep(http_interval)
@@ -373,7 +478,6 @@ class SteamJsonRecentThreading:
                     self.sell_lock.acquire()
                     print 'entrei no lock dos sells'
                     if sell_response[0] == 200:
-                        self.writetowalletadd(price_sell)
                         self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],
                                                  price_sell,self.getwalletbalance(),name)
                     elif sell_response[0] == 502:
@@ -381,9 +485,14 @@ class SteamJsonRecentThreading:
                                                  price_sell,self.getwalletbalance(),name)
                     self.sell_lock.release()
                     print 'sai do lock dos sells ON THREAD ' + str(name)
-                i += 1
-                if i % 10 == 0:
+                counter += 1
+                if counter % 10 == 0:
                     print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
+                elif counter % 1500 == 0:
+                    self.write_active_listings_lock.acquire()
+                    if self.seeifanyitemsold() == True:
+                        self.parsewalletbalanceandwrite()
+                    self.write_active_listings_lock.release()
                 time.sleep(http_interval)
                 #elapsed = time.time()
                 #elapsed = elapsed - start
@@ -391,9 +500,14 @@ class SteamJsonRecentThreading:
                 #print elapsed
 
             else:
-                i += 1
-                if i % 10 == 0:
+                counter += 1
+                if counter % 10 == 0:
                     print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
+                elif counter % 1500 == 0:
+                    self.write_active_listings_lock.acquire()
+                    if self.seeifanyitemsold() == True:
+                        self.parsewalletbalanceandwrite()
+                    self.write_active_listings_lock.release()
                 time.sleep(http_interval)
                 #print i
                 #elapsed = time.time()

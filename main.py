@@ -5,7 +5,7 @@ __author__ = 'nunosilva'
 __author__ = 'github.com/craked5'
 
 from http import SteamBotHttp
-from json_recent import SteamJsonRecent
+#from json_recent import SteamJsonRecent
 from json_item import SteamJsonItem
 from json_recent_thread import SteamJsonRecentThreading
 import time
@@ -20,11 +20,11 @@ http_interval = float(http_interval)
 http_interval_item = raw_input('And on an individual item: \n')
 http_interval_item = float(http_interval_item)
 print '\n'
-print "OK now time one of the following commands: startsell ,startnosell ,buy ,sell , showlist, add, delete, login\n"
+print "OK now time one of the following commands: srt ,buy ,sell , showlist, add, delete, login\n"
 http = SteamBotHttp()
-js = SteamJsonRecent()
+jst = SteamJsonRecentThreading()
 fork_list = []
-commands = ['startsell','buyinditem','howmanyprocs','showlistprocs','killproc','add','login',
+commands = ['bii','howmanyprocs','showlistprocs','killproc','add','login',
             'showlist','delete','quit','sell','loadmedianprices','getmedianprices']
 
 '''
@@ -65,9 +65,9 @@ def startbuyinditem(item_buy,proc_name):
                 sell_response = jsind.sellitem(temp_one,command_input[1])
                 if sell_response[0] == 200:
                     jsind.writetowalletadd(price_sell)
-                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance(),0)
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalance(),0)
                 elif sell_response[0] == 502:
-                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,js.getwalletbalance(),0)
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalance(),0)
             if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
             i += 1
@@ -99,37 +99,44 @@ try:
                 http.logout()
 
             elif command_input[0] == 'getmedianprices':
-                list_median_prices = js.getmedianitemlist()
+                list_median_prices = jst.getmedianitemlist()
                 print list_median_prices
 
             elif command_input[0] == 'loadmedianprices':
-                list_median_prices = js.loadmedianpricesfromfile()
+                list_median_prices = jst.loadmedianpricesfromfile()
                 print list_median_prices
 
             elif command_input[0] == 'dump':
-                js.exportJsonToFile(js.list_median_prices)
+                jst.exportJsonToFile(jst.list_median_prices)
 
-            elif command_input[0] == 'sr':
-                print "STARTING BUYING AND SELLING MODE"
-                print "CTRL+C to stop!!!!!"
-                newpid = os.fork()
-                fork_list.append(newpid)
-                if newpid == 0:
-                    time.sleep(2)
-                    js.startbuyingsell(http_interval)
-                else:
-                    pids = (os.getpid(), newpid)
-                    print "parent: %d, child: %d" % pids
+
+            #elif command_input[0] == 'sr':
+                #print "STARTING BUYING AND SELLING MODE"
+                #print "CTRL+C to stop!!!!!"
+                #newpid = os.fork()
+                #fork_list.append(newpid)
+                #if newpid == 0:
+                    #time.sleep(2)
+                    #jst.startbuyingsell(http_interval)
+                #else:
+                    #pids = (os.getpid(), newpid)
+                    #print "parent: %d, child: %d" % pids
+
 
             elif command_input[0] == 'srt':
                 n_threads = raw_input('How many threads do you wish to run? \n')
-                print "STARTING BUYING ON RECENT WITH " + str(n_threads) + " THREADS MODE"
-                print "CTRL+C to stop!!!!!"
-                jst = SteamJsonRecentThreading(list_median_prices)
+                temp_balance = jst.parsewalletbalance()
+                if temp_balance != False:
+                    if jst.log.wallet_balance != temp_balance:
+                        if type(jst.parsewalletbalanceandwrite()) == float:
+                            print "Balance foi updated!"
+                jst.updateactivelistings()
                 newpid = os.fork()
                 fork_list.append(newpid)
                 if newpid == 0:
                     time.sleep(2)
+                    print "STARTING BUYING ON RECENT WITH " + str(n_threads) + " THREADS MODE"
+                    print "CTRL+C to stop!!!!!"
                     jst.executethreads(n_threads,http_interval)
                 else:
                     pids = (os.getpid(), newpid)
@@ -137,31 +144,33 @@ try:
 
             elif command_input[0] == 'showlist':
                 print 'This is the item list: '
-                print js.getlistbuyitems()
+                print jst.getlistbuyitems()
 
             elif command_input[0] == 'delete':
                 item_rem = raw_input('Item to remove from the list: ')
-                js.delInItemsTxt(item_rem)
+                jst.delInItemsTxt(item_rem)
 
             elif command_input[0] == 'add':
                 item_add = raw_input('Item to add to the list: ')
-                js.writeInItemsTxt(item_add)
+                jst.writeInItemsTxt(item_add)
 
             elif command_input[0] == 'sell':
-                js.sellitemtest(command_input[1], float(command_input[2]))
+                jst.sellitemtest(command_input[1], float(command_input[2]))
 
-            elif command_input[0] == 'wallettest':
-                js.parsewalletbalanceandwrite()
+            elif command_input[0] == 'getbalance':
+                ba = jst.parsewalletbalanceandwrite()
+                print "O NOVO BALANCE E " + str(ba)
 
-            elif command_input[0] == 'seeactivetest':
-                temp = js.getactivelistingsparsed()
+            elif command_input[0] == 'seeactivelistings':
+                temp = jst.getactivelistingsparsed()
                 print temp
 
-            elif command_input[0] == 'balance':
-                print js.getwalletbalance()
+            elif command_input[0] == 'updateactivelistings':
+                temp = jst.updateactivelistings()
+                print temp
 
             elif command_input[0] == 'buy':
-                js.buyitemtest(command_input[1],command_input[2],int(command_input[3]),
+                jst.buyitemtest(command_input[1],command_input[2],int(command_input[3]),
                                int(command_input[4]),int(command_input[5]))
 
             elif command_input[0] == 'procs':
