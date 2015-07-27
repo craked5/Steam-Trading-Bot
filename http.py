@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'nunosilva'
-__author__ = 'github.com/craked5'
+__author__ = 'nunosilva, github.com/craked5'
 
 import requests as req
 import ast

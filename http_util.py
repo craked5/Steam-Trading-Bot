@@ -1,4 +1,4 @@
-__author__ = 'nunosilva'
+__author__ = 'nunosilva, github.com/craked5'
 
 class Httpheaders:
 
