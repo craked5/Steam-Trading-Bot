@@ -463,6 +463,10 @@ class SteamJsonRecentThreading:
             elif recent == -1:
                     time.sleep(http_interval)
 
+            elif recent == -2:
+                    print 'TIMEOUT NA THREAD ' + str(name) + ' SLEEPING FOR 30 SECS'
+                    time.sleep(30)
+
             elif type(recent) == dict:
                 final = self.callfuncs(recent)
                 buygoodresp = self.seeifbuyinggood(final,name)

@@ -96,7 +96,7 @@ class SteamBotHttp:
         try:
 
             steam_response = req.get(self.complete_url_recent.replace(self.host,host),
-                                     headers=self.httputil.headers_recent,timeout=4)
+                                     headers=self.httputil.headers_recent,timeout=7)
 
             if steam_response.status_code == 200:
                 print 'Status code: ' + str(steam_response.status_code) + ' na thread ' + str(thread)
@@ -115,6 +115,8 @@ class SteamBotHttp:
 
         except req.ConnectionError:
             return False
+        except req.Timeout:
+            return -2
 
         return False
     def urlqueryspecificitemind(self,host,item):
