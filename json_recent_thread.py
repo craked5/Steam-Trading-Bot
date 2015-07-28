@@ -491,14 +491,17 @@ class SteamJsonRecentThreading:
                     lowest_price = self.getlowestprice(buygoodresp[2])
                     print lowest_price
                     if (lowest_price+(0.02*lowest_price)/buygoodresp[3]) >= 1.07:
+                        print price_sell
                         price_sell = float(lowest_price)
                         price_sell_str = "{0:.2f}".format(price_sell)
                     else:
-                        price_sell = buygoodresp[1]
-                        price_sell = float(price_sell*0.90)
+                        print price_sell
+                        price_sell = float(buygoodresp[1]*0.93)
                         price_sell_str = "{0:.2f}".format(price_sell)
 
-                    sell_response = self.sellitem(id_item_pos_one,price_sell)
+                    price_sell_without_fee = price_sell/1.15
+                    print price_sell_without_fee
+                    sell_response = self.sellitem(id_item_pos_one,price_sell_without_fee)
 
                     print 'Estou prestes a entrar no acquire dos sells on THREAD ' + str(name)
                     self.sell_lock.acquire()
