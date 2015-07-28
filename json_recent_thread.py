@@ -229,6 +229,7 @@ class SteamJsonRecentThreading:
                                                     temp_resp.append(True)
                                                     temp_resp.append(self.list_median_prices[key])
                                                     temp_resp.append(key)
+                                                    temp_resp.append(temp_converted_fee_math+temp_converted_price_math)
                                                     self.buy_lock.release()
                                                     print 'sai do lock dos buys ON THREAD ' + str(t_name)
                                                     return temp_resp
@@ -305,6 +306,19 @@ class SteamJsonRecentThreading:
         temp = float(amount_add) + float(self.getwalletbalance())
         temp = temp*100
         return self.log.writetowallet(int(temp))
+
+    def getlowestprice(self,item):
+        temp_item_priceover = self.http.urlQueryItem(key)
+        if type(temp_item_priceover) == int:
+            print "Erro ao obter preco mais baixo actualmente de " + key
+            print "Status code da querie: " + str(temp_item_priceover)
+
+        elif temp_item_priceover.has_key('lowest_price'):
+            temp_lowest_price = temp_item_priceover['lowest_price']
+            if isinstance(temp_lowest_price, basestring):
+                temp_lowest_price = temp_lowest_price.replace('&#8364; ','').replace(',','.').replace('-','0')
+                temp_lowest_price = "{0:.2f}".format(float(temp_lowest_price))
+                return temp_lowest_price
 
     def buyitemtest(self,name,listing,subtotal,fee,currency):
         temp =  self.http.buyitem(listing,subtotal,fee,currency)
@@ -468,62 +482,68 @@ class SteamJsonRecentThreading:
                     time.sleep(30)
 
             elif type(recent) == dict:
-                final = self.callfuncs(recent)
-                buygoodresp = self.seeifbuyinggood(final,name)
-                #print "A resposta do seeifbuyinggood() foi "
-                #print buygoodresp
+                buygoodresp = self.seeifbuyinggood(self.callfuncs(recent),name)
+
                 if buygoodresp[0] is True:
-                    price_sell = buygoodresp[1]
-                    price_sell = float(price_sell*0.90)
-                    price_sell = "{0:.2f}".format(price_sell)
-                    temp_item_one = self.getpositiononeiteminv()
-                    sell_response = self.sellitem(temp_item_one,buygoodresp[1])
+
+                    id_item_pos_one = self.getpositiononeiteminv()
+
+                    lowest_price = self.getlowestprice(buygoodresp[2])
+                    print lowest_price
+                    if (lowest_price+(0.02*lowest_price)/buygoodresp[3]) >= 1.07:
+                        price_sell = float(lowest_price)
+                        price_sell_str = "{0:.2f}".format(price_sell)
+                    else:
+                        price_sell = buygoodresp[1]
+                        price_sell = float(price_sell*0.90)
+                        price_sell_str = "{0:.2f}".format(price_sell)
+
+                    sell_response = self.sellitem(id_item_pos_one,price_sell)
+
                     print 'Estou prestes a entrar no acquire dos sells on THREAD ' + str(name)
                     self.sell_lock.acquire()
                     print 'entrei no lock dos sells'
+
                     if sell_response[0] == 200:
                         self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],
-                                                 price_sell,self.getwalletbalance(),name)
+                                                 price_sell_str,name)
                     elif sell_response[0] == 502:
                         self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],
-                                                 price_sell,self.getwalletbalance(),name)
+                                                 price_sell_str,name)
+
                     self.sell_lock.release()
                     print 'sai do lock dos sells ON THREAD ' + str(name)
+
                 counter += 1
                 if counter % 10 == 0:
                     print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
+
                 elif counter % 250 == 0:
                     self.write_active_listings_lock.acquire()
                     if self.seeifanyitemsold() == True:
                         self.parsewalletbalanceandwrite()
                     self.write_active_listings_lock.release()
+
                 elif counter % 2500 == 0:
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
                     time.sleep(15)
                 time.sleep(http_interval)
-                #elapsed = time.time()
-                #elapsed = elapsed - start
-                #times.append(elapsed)
-                #print elapsed
 
             else:
                 counter += 1
                 if counter % 10 == 0:
                     print 'A THREAD ' + str(name) + ' ESTA OK!!!!!!!!!!!!!!!!!!!!!!'
+
                 elif counter % 250 == 0:
                     self.write_active_listings_lock.acquire()
                     if self.seeifanyitemsold() == True:
                         self.parsewalletbalanceandwrite()
                     self.write_active_listings_lock.release()
+
                 elif counter % 500 == 0:
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
                     time.sleep(15)
                 time.sleep(http_interval)
-                #print i
-                #elapsed = time.time()
-                #elapsed = elapsed - start
-                #times.append(elapsed)
-                #print elapsed
 
 
     def executethreads(self,n_threads,http_interval):

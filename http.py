@@ -81,16 +81,18 @@ class SteamBotHttp:
         self.donotcache = int(time.time() * 1000)
 
     def urlQueryItem(self,item):
-
-        steam_response = req.get(self.complete_url_item + item, headers=self.httputil.headers_recent_anditem)
-        if steam_response.status_code == 200:
-            try:
-                item_temp = ujson.loads(steam_response.content)
-            except ValueError:
-                return steam_response.status_code, steam_response.content
-            return item_temp
-        else:
-            return steam_response.status_code
+        try:
+            steam_response = req.get(self.complete_url_item + item, headers=self.httputil.headers_recent_anditem,timeout=5)
+            if steam_response.status_code == 200:
+                try:
+                    item_temp = ujson.loads(steam_response.content)
+                except ValueError:
+                    return steam_response.status_code, steam_response.content
+                return item_temp
+            else:
+                return steam_response.status_code
+        except req.Timeout:
+            return False
 
     def urlQueryRecent(self,host,thread):
         try:
@@ -161,7 +163,6 @@ class SteamBotHttp:
 
         list_return = []
         price_temp = price * 100
-        price_temp = (0.90*price_temp)
         price_temp = round(price_temp)
 
         self.httputil.data_sell['assetid'] = int(assetid)

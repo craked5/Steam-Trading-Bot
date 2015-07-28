@@ -264,7 +264,7 @@ class Logic:
         else:
             return False
 
-    def writetosellfile(self,status,content,item,price,balance,thread_n):
+    def writetosellfile(self,status,content,item,price,thread_n):
 
         tempfile = open('util/sells.txt','a')
 
@@ -273,11 +273,9 @@ class Logic:
                           ' mas o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
-            temp_string4 = 'O balance depois da sale ficara ' + str(balance)
             tempfile.write(temp_string+'\n')
             tempfile.write(temp_string2+'\n')
-            tempfile.write(temp_string3+'\n')
-            tempfile.write(temp_string4+'\n\n\n')
+            tempfile.write(temp_string3+'\n\n\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
@@ -288,11 +286,9 @@ class Logic:
                           ' e o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
-            temp_string4 = 'O balance depois da sale ficara ' + str(balance)
             tempfile.write(temp_string+'\n')
             tempfile.write(temp_string2+'\n')
-            tempfile.write(temp_string3+'\n')
-            tempfile.write(temp_string4+'\n\n\n')
+            tempfile.write(temp_string3+'\n\n\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()

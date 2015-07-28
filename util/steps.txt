@@ -258,4 +258,4 @@ sudo apt-get install python-pip
 sudo pip install pycrypto
 sudo pip install ujson
 sudo pip install requests[security]
-sudo pip install numpy
+sudo pip install beautifulsoup4
