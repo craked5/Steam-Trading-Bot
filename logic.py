@@ -264,8 +264,8 @@ class Logic:
         else:
             return False
 
-    def writetosold(self,balance):
-        f_sold = open()
+    #def writetosold(self,balance):
+        #f_sold = open()
 
 
     def writetosellfile(self,status,content,item,price,thread_n):
