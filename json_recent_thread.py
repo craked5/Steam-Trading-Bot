@@ -525,12 +525,10 @@ class SteamJsonRecentThreading:
                     self.write_active_listings_lock.acquire()
                     if self.seeifanyitemsold() == True:
                         self.parsewalletbalanceandwrite()
+                        self.log.writetosold(self.log.wallet_balance)
                     self.write_active_listings_lock.release()
-
-                elif counter % 2500 == 0:
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
                     time.sleep(15)
-                time.sleep(http_interval)
 
             else:
                 counter += 1
@@ -542,10 +540,9 @@ class SteamJsonRecentThreading:
                     if self.seeifanyitemsold() == True:
                         self.parsewalletbalanceandwrite()
                     self.write_active_listings_lock.release()
-
-                elif counter % 500 == 0:
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
                     time.sleep(15)
+
                 time.sleep(http_interval)
 
 
