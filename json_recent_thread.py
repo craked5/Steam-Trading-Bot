@@ -344,6 +344,10 @@ class SteamJsonRecentThreading:
                 print "Erro ao obter preco medio de " + key
                 print "Status code da querie: " + str(temp_item_priceover)
 
+            elif type(temp_item_priceover) == bool:
+                print "Erro ao obter preco medio de " + key
+                print "Status code da querie: " + str(temp_item_priceover)
+
             elif temp_item_priceover.has_key('median_price'):
                 temp_median_price = temp_item_priceover['median_price']
                 if isinstance(temp_median_price, basestring):

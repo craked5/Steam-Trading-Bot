@@ -45,6 +45,12 @@ class Logic:
                     shuffle(self.list_hosts)
                     print self.list_hosts
 
+                elif what_hosts == 'asia':
+                    f_hosts = open('util/hosts_asia.txt','r')
+                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
+                    shuffle(self.list_hosts)
+                    print self.list_hosts
+
             elif host_mode == 'n':
                 self.dif_hosts_recent = 'no'
 
