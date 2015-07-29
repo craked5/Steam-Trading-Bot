@@ -318,9 +318,9 @@ class SteamJsonRecentThreading:
         return self.log.writetowallet(int(temp))
 
     def getlowestprice(self,item):
-        temp_item_priceover = self.http.querypriceoverview(key)
+        temp_item_priceover = self.http.querypriceoverview(item)
         if type(temp_item_priceover) == int:
-            print "Erro ao obter preco mais baixo actualmente de " + key
+            print "Erro ao obter preco mais baixo actualmente de " + item
             print "Status code da querie: " + str(temp_item_priceover)
 
         elif temp_item_priceover.has_key('lowest_price'):
@@ -516,7 +516,7 @@ class SteamJsonRecentThreading:
                         price_sell_str = "{0:.2f}".format(price_sell)
                     else:
                         print price_sell
-                        price_sell = float(buygoodresp[1]*0.93)
+                        price_sell = float(buygoodresp[1]*0.95)
                         price_sell_str = "{0:.2f}".format(price_sell)
 
                     price_sell_without_fee = price_sell/1.15
