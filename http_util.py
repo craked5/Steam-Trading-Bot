@@ -3,7 +3,8 @@ __author__ = 'nunosilva, github.com/craked5'
 class Httpheaders:
 
     def __init__(self):
-        self.sessionid = "5cfbd35e404358ce92d5aaa0"
+        self.sessionid = "06281c9c31aaabd92f850ea7"
+
         self.headers_wallet = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
@@ -14,7 +15,7 @@ class Httpheaders:
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                     'sessionid=5cfbd35e404358ce92d5aaa0; '
+                     'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
@@ -29,6 +30,7 @@ class Httpheaders:
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.130 Safari/537.36'
         }
+
         self.headers_active_listings = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
@@ -39,7 +41,7 @@ class Httpheaders:
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                     'sessionid=5cfbd35e404358ce92d5aaa0; '
+                     'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
@@ -56,7 +58,7 @@ class Httpheaders:
             'X-Requested-With':'XMLHttpRequest'
         }
 
-        self.headers_recent_anditem = {
+        self.headers_item_priceoverview = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
@@ -67,7 +69,7 @@ class Httpheaders:
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                     'sessionid=5cfbd35e404358ce92d5aaa0; '
+                     'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
@@ -78,10 +80,11 @@ class Httpheaders:
                      'tsTradeOffersLastRead=1435052082',
             'DNT':1,
             'Host':'steamcommunity.com',
-            'Pragma':'no-cache',
+            'Upgrade-Insecure-Requests':1,
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.130 Safari/537.36'
         }
+
         self.headers_recent = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
@@ -93,7 +96,7 @@ class Httpheaders:
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                     'sessionid=5cfbd35e404358ce92d5aaa0; '
+                     'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
@@ -105,10 +108,11 @@ class Httpheaders:
             'DNT':1,
             'Host':'steamcommunity.com',
             'If-Modified-Since':'Sat, 18 Jul 2015 22:48:42 GMT',
+            'Upgrade-Insecure-Requests':1,
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.130 Safari/537.36'
         }
-        se = 32
+
         self.headers_item_list_ind = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
@@ -120,7 +124,7 @@ class Httpheaders:
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                     'sessionid=5cfbd35e404358ce92d5aaa0; '
+                     'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
@@ -131,10 +135,11 @@ class Httpheaders:
                      'tsTradeOffersLastRead=1435052082',
             'DNT':1,
             'Host':'steamcommunity.com',
-            'Pragma':'no-cache',
+            'Upgrade-Insecure-Requests':1,
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.130 Safari/537.36'
         }
+
         self.headers_sell = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
@@ -147,7 +152,7 @@ class Httpheaders:
                       '730_17workshopQueueTime=1432014476; '
                       'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                      'sessionid=5cfbd35e404358ce92d5aaa0; '
+                      'sessionid='+self.sessionid+';'
                       'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_day'
                       's%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%'
                       '3A0%2C%22new_device_cooldown_days%22%3A7%7D; '
@@ -163,6 +168,7 @@ class Httpheaders:
                           "Chrome/43.0.2357.124 Safari/537.36",
             "X-Requested-With": "XMLHttpRequest"
         }
+
         self.headers_buy = {
             'Accept': '*/*',
             'Accept-Encoding': 'gzip, deflate',
@@ -177,7 +183,7 @@ class Httpheaders:
                       '730_17workshopQueueTime=1432014476; '
                       'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                      'sessionid=5cfbd35e404358ce92d5aaa0; '
+                      'sessionid='+self.sessionid+';'
                       'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_day'
                       's%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%'
                       '3A0%2C%22new_device_cooldown_days%22%3A7%7D; '
@@ -195,6 +201,7 @@ class Httpheaders:
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.124 Safari/537.36'
         }
+
         self.rsa_headers = {
             'Accept':'text/javascript, text/html, application/xml, text/xml, */*',
             'Accept-Encoding':'gzip, deflate',
@@ -208,7 +215,7 @@ class Httpheaders:
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                     'sessionid=5cfbd35e404358ce92d5aaa0; '
+                     'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7C90d987902b02ceec924245352748dc71; '
                      'strInventoryLastContext=730_2; '
                      'timezoneOffset=3600,0',
@@ -222,6 +229,7 @@ class Httpheaders:
             'X-Prototype-Version':1.7,
             'X-Requested-With':'XMLHttpRequest'
         }
+
         self.transfer_headers = {
             'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Encoding':'gzip, deflate',
@@ -253,6 +261,7 @@ class Httpheaders:
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 '
                          '(KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36',
         }
+
         self.headers_logout = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate',
@@ -267,7 +276,7 @@ class Httpheaders:
                       'Steam_Language=english; '
                       '730_17workshopQueueTime=1432014476; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
-                      'sessionid=5cfbd35e404358ce92d5aaa0; '
+                      'sessionid='+self.sessionid+';'
                       'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_day'
                       's%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%'
                       '3A0%2C%22new_device_cooldown_days%22%3A7%7D; '
@@ -284,9 +293,11 @@ class Httpheaders:
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.124 Safari/537.36'
         }
+
         self.logout_data = {
             'sessionid' : self.sessionid
         }
+
         #price = preco que eu quero receber = price+fee_price
         self.data_sell = {
             "sessionid" : self.sessionid,
@@ -296,9 +307,11 @@ class Httpheaders:
             "amount" : 1,
             "price" : 1000
         }
+
         #subtotal = price without fee
         #fee = a fee
         #total = price com a fee
+
         self.data_buy = {
             'sessionid': self.sessionid,
             'currency': 3,
@@ -308,10 +321,12 @@ class Httpheaders:
             'quantity': 1
         }
         self.password = 'Steamgresso1234567@'
+
         self.rsa_data = {
             'username': 'freeman777',
             'donotcache': 0
         }
+
         self.login_data = {
             'password':'',
             'username':'freeman777',
@@ -325,6 +340,7 @@ class Httpheaders:
             'remember_login':'true',
             'donotcache': 0
         }
+
         self.transfer_data = {
             'steamid': 0,
             'token':'',

@@ -21,7 +21,7 @@ def median(lst):
 while i is not 200:
     start = time.clock()
     recent = {}
-    recent = http.urlQueryRecent()
+    recent = http.queryrecent()
     js.getRecentTotalReady(recent)
     js.getfinalrecentlist()
     i += 1

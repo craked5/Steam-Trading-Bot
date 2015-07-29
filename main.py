@@ -65,9 +65,9 @@ def startbuyinditem(item_buy,proc_name):
                 sell_response = jsind.sellitem(temp_one,command_input[1])
                 if sell_response[0] == 200:
                     jsind.writetowalletadd(price_sell)
-                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalance(),0)
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalancefromvar(),0)
                 elif sell_response[0] == 502:
-                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalance(),0)
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalancefromvar(),0)
             if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
             i += 1
@@ -167,6 +167,12 @@ try:
             elif command_input[0] == 'getbalance':
                 ba = jst.parsewalletbalanceandwrite()
                 print "O NOVO BALANCE E " + str(ba)
+
+            elif command_input[0] == 'recenttc':
+                i = 0
+                for i in range(100):
+                    jst.queryrecentdifhostsdifcountries(0)
+                    time.sleep(0.100)
 
             elif command_input[0] == 'seeactivelistings':
                 temp = jst.getactivelistingsparsed()

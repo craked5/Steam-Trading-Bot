@@ -39,6 +39,7 @@ class SteamJsonRecentThreading:
         #logic mode item
         self.log = Logic('recent')
         self.last_listing_buy = ''
+        self.dif_countries = self.log.dif_countries
         self.dif_hosts = self.log.dif_hosts_recent
         self.contaSim = 0
         self.contaNao = 0
@@ -203,7 +204,7 @@ class SteamJsonRecentThreading:
                         if float(float("{0:.2f}".format(self.list_median_prices[key])) -
                                 float((temp_converted_price_math+temp_converted_fee_math))) >= \
                                 (30.5*(temp_converted_price_math+temp_converted_fee_math)/100):
-                            if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalance())):
+                            if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalancefromvar())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
                                     if final_list_this[key]['listingid'] != self.last_listing_buy:
                                         self.last_listing_buy_lock.acquire()
@@ -256,12 +257,21 @@ class SteamJsonRecentThreading:
         return temp_resp
 
 #----------------------------------------------AUX FUNCTIONS-----------------------------------------------------------
-    def urlqueryrecent(self,thread):
-        return self.http.urlQueryRecent('steamcommunity.com',thread)
+    def queryrecent(self,thread):
+        return self.http.queryrecent('steamcommunity.com',thread)
 
-    def urlQueryRecentdifhosts(self,thread):
+    def queryrecentdifcountries(self,thread):
+        country = random.choice(self.log.list_countries)
+        return self.http.urlqueryrecentwithcountry('steamcommunity.com',country,thread)
+
+    def queryrecentdifhosts(self,thread):
         host = random.choice(self.log.list_hosts)
-        return self.http.urlQueryRecent(host,thread)
+        return self.http.queryrecent(host,thread)
+
+    def queryrecentdifhostsdifcountries(self,thread):
+        host = random.choice(self.log.list_hosts)
+        country = random.choice(self.log.list_countries)
+        return self.http.urlqueryrecentwithcountry(host,country,thread)
 
     def getpositiononeiteminv(self):
         return self.http.getpositiononeiteminv()
@@ -284,7 +294,7 @@ class SteamJsonRecentThreading:
     def getlistbuyitems(self):
         return self.log.list_items_to_buy
 
-    def getwalletbalance(self):
+    def getwalletbalancefromvar(self):
         return float(self.log.wallet_balance)
 
     def loadmedianpricesfromfile(self):
@@ -303,12 +313,12 @@ class SteamJsonRecentThreading:
         return self.http.sellitem(assetid,price)
 
     def writetowalletadd(self,amount_add):
-        temp = float(amount_add) + float(self.getwalletbalance())
+        temp = float(amount_add) + float(self.getwalletbalancefromvar())
         temp = temp*100
         return self.log.writetowallet(int(temp))
 
     def getlowestprice(self,item):
-        temp_item_priceover = self.http.urlQueryItem(key)
+        temp_item_priceover = self.http.querypriceoverview(key)
         if type(temp_item_priceover) == int:
             print "Erro ao obter preco mais baixo actualmente de " + key
             print "Status code da querie: " + str(temp_item_priceover)
@@ -327,11 +337,11 @@ class SteamJsonRecentThreading:
         temp_id = self.getpositiononeiteminv()
         temp_sell = self.sellitemtest(temp_id,0.01)
         if temp_sell[0] == 200:
-            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalance())
+            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalancefromvar())
             self.writetowalletadd(0.01)
-            print "balance esperado depois desta sale: " + str(self.getwalletbalance())
+            print "balance esperado depois desta sale: " + str(self.getwalletbalancefromvar())
         elif temp_sell[0] == 502:
-            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalance())
+            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalancefromvar())
 
     def getmedianitemlist(self):
 
@@ -339,7 +349,7 @@ class SteamJsonRecentThreading:
 
         for key in self.log.list_items_to_buy:
             temp_item_priceover = {}
-            temp_item_priceover = self.http.urlQueryItem(key)
+            temp_item_priceover = self.http.querypriceoverview(key)
             if type(temp_item_priceover) == int:
                 print "Erro ao obter preco medio de " + key
                 print "Status code da querie: " + str(temp_item_priceover)
@@ -457,21 +467,27 @@ class SteamJsonRecentThreading:
         times = []
         while True:
             time.sleep(http_interval)
-            #start = time.time()
+            #start = time.tim
 
             if self.dif_hosts == 'yes':
-                recent = self.urlQueryRecentdifhosts(name)
-                #if type(recent) == list:
+                if self.dif_countries == 'yes':
+                    recent = self.queryrecentdifhostsdifcountries(name)
+                    #if type(recent) == list:
                     #self.timestamp_lock.acquire()
                     #self.timestamp = recent[0]
-                    #self.timestamp_lock.release()
+                    #self.timestamp_lock.release(
+                else:
+                    recent = self.queryrecentdifhosts(name)
 
             elif self.dif_hosts == 'no':
-                recent = self.urlqueryrecent(name)
+                if self.dif_countries == 'yes':
+                    recent = self.queryrecentdifcountries(name)
                 #if type(recent) == list:
                     #self.timestamp_lock.acquire()
                     #self.timestamp = recent[0]
                     #self.timestamp_lock.release()
+                else:
+                    recent = self.queryrecent(name)
 
             if recent == False:
                 print "CONN REFUSED ON THREAD " + str(name) +", sleeping..."
@@ -483,7 +499,7 @@ class SteamJsonRecentThreading:
 
             elif recent == -2:
                     print 'TIMEOUT NA THREAD ' + str(name) + ' SLEEPING FOR 30 SECS'
-                    time.sleep(30)
+                    time.sleep(random.randint(16,31))
 
             elif type(recent) == dict:
                 buygoodresp = self.seeifbuyinggood(self.callfuncs(recent),name)

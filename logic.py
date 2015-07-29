@@ -15,6 +15,7 @@ class Logic:
         self.ids_active_listings = []
         if mode == 'recent':
 
+            self.wallet_balance = 0
             host_mode = raw_input('Quer mudar as hosts de cada querie no RECENT (n/y)? \n')
 
             if host_mode == 'y':
@@ -54,16 +55,26 @@ class Logic:
             elif host_mode == 'n':
                 self.dif_hosts_recent = 'no'
 
+            dif_countries = raw_input('Quer mudar os country code do RECENT (n/y)? \n')
+            if dif_countries == 'y':
+                self.dif_countries = 'yes'
+                try:
+                    f_list_countries = open('util/list_countries.txt', 'r')
+                    self.list_countries = [line.rstrip('\n') for line in f_list_countries]
+                    print "ITEMS TO BUY file was opened ok"
+                    f_list_countries.close()
+                except IOError:
+                    print "Error opening the items to buy list file!"
+            else:
+                self.dif_countries = 'no'
+
             try:
                 f_items_pobre = open('util/items_pobre50.txt', 'r')
+                self.list_items_to_buy = [line.rstrip('\n') for line in f_items_pobre]
+                print "ITEMS TO BUY file was opened ok"
+                f_items_pobre.close()
             except IOError:
                 print "Error opening the items to buy list file!"
-            print "ITEMS TO BUY file was opened ok"
-
-            #primeira leitura do ficheiro
-            self.list_items_to_buy = [line.rstrip('\n') for line in f_items_pobre]
-            self.wallet_balance = 0
-            f_items_pobre.close()
 
             try:
                 f_listings = open('util/active_listings.txt','r')
@@ -74,13 +85,12 @@ class Logic:
 
             try:
                 f_wallet = open('util/wallet.txt', 'r')
+                self.wallet_balance = f_wallet.readlines()
+                self.wallet_balance = float(self.wallet_balance[0])
+                print "wallet file file was opened ok"
+                f_wallet.close()
             except IOError:
                 print "Error opening the wallet file"
-            print "wallet file file was opened ok"
-
-            self.wallet_balance = f_wallet.readlines()
-            self.wallet_balance = float(self.wallet_balance[0])
-            f_wallet.close()
 
             print self.wallet_balance
 

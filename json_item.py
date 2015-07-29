@@ -174,7 +174,7 @@ class SteamJsonItem:
         except:
             temp_resp.append(False)
             return temp_resp
-        temp_item_priceover = self.http.urlQueryItem(self.item)
+        temp_item_priceover = self.http.querypriceoverview(self.item)
         if temp_item_priceover['success'] is True:
             #print 'ESTOU NO BUYGOOD 2'
             for key_in_priceover in temp_item_priceover:

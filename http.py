@@ -3,6 +3,7 @@
 
 __author__ = 'nunosilva, github.com/craked5'
 
+import random
 import requests as req
 import ast
 import ujson
@@ -25,6 +26,11 @@ class SteamBotHttp:
         #currency=3/2003 == euro
         self.item_price_viewer = '/priceoverview/?currency=3&appid=730&market_hash_name='
         self.recent_listed = '/recent/?country=PT&language=english&currency=3'
+
+        #TESTE RECENT_LISTED -APAGAR DEPOIS
+        self.recent_listed_countrys1 = '/recent/?country='
+        self.recent_listed_countrys2 = '&language=english&currency=3'
+
         self.complete_url_item = self.pre_host_normal+self.host+self.market+self.item_price_viewer
         self.complete_url_recent = self.pre_host_normal+self.host+self.market+self.recent_listed
         self.sell_item_url = self.pre_host_https+self.host+self.market+'/sellitem/'
@@ -80,9 +86,9 @@ class SteamBotHttp:
     def now_milliseconds(self):
         self.donotcache = int(time.time() * 1000)
 
-    def urlQueryItem(self,item):
+    def querypriceoverview(self,item):
         try:
-            steam_response = req.get(self.complete_url_item + item, headers=self.httputil.headers_recent_anditem,timeout=5)
+            steam_response = req.get(self.complete_url_item + item, headers=self.httputil.headers_item_priceoverview,timeout=15)
             if steam_response.status_code == 200:
                 try:
                     item_temp = ujson.loads(steam_response.content)
@@ -94,11 +100,11 @@ class SteamBotHttp:
         except req.Timeout:
             return False
 
-    def urlQueryRecent(self,host,thread):
+    def queryrecent(self,host,thread):
         try:
 
             steam_response = req.get(self.complete_url_recent.replace(self.host,host),
-                                     headers=self.httputil.headers_recent,timeout=10)
+                                     headers=self.httputil.headers_recent,timeout=15)
 
             if steam_response.status_code == 200:
                 print 'Status code: ' + str(steam_response.status_code) + ' na thread ' + str(thread)
@@ -113,6 +119,37 @@ class SteamBotHttp:
 
             elif steam_response.status_code == 304:
                 print 'Status code: ' + str(steam_response.status_code) + ' na thread ' + str(thread)
+                return -1
+
+        except req.ConnectionError:
+            return False
+        except req.Timeout:
+            return -2
+
+        return False
+
+    def urlqueryrecentwithcountry(self,host,country,thread):
+        try:
+
+            steam_response = req.get(self.pre_host_normal+host+self.market+self.recent_listed_countrys1+country+
+                                     self.recent_listed_countrys2,
+                                     headers=self.httputil.headers_recent,timeout=15)
+
+            if steam_response.status_code == 200:
+                print 'Status code: ' + str(steam_response.status_code) + ' na thread ' + str(thread) + ' e country code' \
+                                                                                                        ': ' + country
+                timestamp = time.time()
+                time_temp = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(timestamp))
+                self.httputil.headers_recent['If-Modified-Since'] = time_temp
+                try:
+                    recent_temp = ujson.loads(steam_response.text)
+                except ValueError:
+                    return False
+                return recent_temp
+
+            elif steam_response.status_code == 304:
+                print 'Status code: ' + str(steam_response.status_code) + ' na thread ' + str(thread) + ' e country code' \
+                                                                                                        ': ' + country
                 return -1
 
         except req.ConnectionError:
