@@ -91,7 +91,8 @@ class SteamBotHttp:
             steam_response = req.get(self.complete_url_item + item, headers=self.httputil.headers_item_priceoverview,timeout=15)
             if steam_response.status_code == 200:
                 try:
-                    item_temp = ujson.loads(steam_response.content)
+                    item_temp_str_no_uni = steam_response.content.decode('unicode_escape').encode('ascii','ignore')
+                    item_temp = ujson.loads(item_temp_str_no_uni)
                 except ValueError:
                     return steam_response.status_code, steam_response.content
                 return item_temp

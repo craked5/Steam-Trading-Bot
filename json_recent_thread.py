@@ -361,7 +361,8 @@ class SteamJsonRecentThreading:
             elif temp_item_priceover.has_key('median_price'):
                 temp_median_price = temp_item_priceover['median_price']
                 if isinstance(temp_median_price, basestring):
-                    temp_median_price = temp_median_price.replace('\u20ac ','').replace(',','.').replace('-','0')
+                    temp_median_price = temp_median_price.decode('unicode_escape').encode('ascii','ignore')
+                    temp_median_price = temp_median_price.replace(',','.').replace('-','0')
                     temp_median_price = "{0:.2f}".format(float(temp_median_price))
                 self.list_median_prices[key] = float(temp_median_price)
 
