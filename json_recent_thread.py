@@ -255,7 +255,9 @@ class SteamJsonRecentThreading:
                             else:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos On THREAD " + str(t_name)
                         else:
-                            print "nao posso comprar " + key + " porque margens nao sao suficientes ON THREAD " + str(t_name)
+                            print "nao posso comprar " + key + " porque margens nao sao suficientes com" \
+                                                               " o preco " + \
+                                  str(temp_converted_fee_math+temp_converted_price_math) + " ON THREAD " + str(t_name)
                     else:
                         temp_resp.append(False)
                         return temp_resp
