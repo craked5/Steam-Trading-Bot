@@ -212,8 +212,8 @@ class SteamJsonRecentThreading:
                                         self.last_listing_buy_lock.release()
                                         print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(t_name)
                                         self.buy_lock.acquire()
-                                        if (float("{0:.2f}".format(self.list_median_prices[key])) - float(self.getlowestprice(key))) \
-                                                >= (0.15*float("{0:.2f}".format(self.list_median_prices[key]))):
+                                        if (float(self.list_median_prices[key]) - float(self.getlowestprice(key))) \
+                                                >= (0.15*float(self.list_median_prices[key])):
                                             print "O PRECO LOWEST E MT MAIS BAIXO QUE O MEDIO, NAO VOU COMPRAR"
                                             print 'sai do lock dos buys ON THREAD ' + str(t_name)
                                             self.buy_lock.release()
