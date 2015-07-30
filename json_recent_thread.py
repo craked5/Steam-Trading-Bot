@@ -203,7 +203,7 @@ class SteamJsonRecentThreading:
                         temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
                         if float(float("{0:.2f}".format(self.list_median_prices[key])) -
                                 float((temp_converted_price_math+temp_converted_fee_math))) >= \
-                                (30.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                                (30.5*(float(self.list_median_prices[key]))):
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalancefromvar())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
                                     if final_list_this[key]['listingid'] != self.last_listing_buy:
@@ -530,7 +530,7 @@ class SteamJsonRecentThreading:
 
                     price_sell_without_fee = price_sell/1.15
                     print price_sell_without_fee
-                    sell_response = self.sellitem(id_item_pos_one,price_sell_without_fee)
+                    sell_response = self.sellitem(id_item_pos_one,float(price_sell_without_fee))
 
                     print 'Estou prestes a entrar no acquire dos sells on THREAD ' + str(name)
                     self.sell_lock.acquire()
@@ -557,7 +557,7 @@ class SteamJsonRecentThreading:
                         self.log.writetosold(self.log.wallet_balance)
                     self.write_active_listings_lock.release()
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-                    time.sleep(15)
+                    time.sleep(random.randint(10,20))
 
             else:
                 counter += 1
@@ -570,7 +570,7 @@ class SteamJsonRecentThreading:
                         self.parsewalletbalanceandwrite()
                     self.write_active_listings_lock.release()
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-                    time.sleep(15)
+                    time.sleep(random.randint(10,20))
 
                 time.sleep(http_interval)
 
