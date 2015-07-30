@@ -215,9 +215,10 @@ class SteamJsonRecentThreading:
 
                                         self.buy_lock.acquire()
 
-                                        if (self.list_median_prices[key] - self.getlowestprice(key)) \
-                                                >= (15*self.list_median_prices[key]):
+                                        if (float("{0:.2f}".format(self.list_median_prices[key])) - self.getlowestprice(key)) \
+                                                >= (0.15*float("{0:.2f}".format(self.list_median_prices[key]))):
                                             print "O PRECO LOWEST E MT MAIS BAIXO QUE O MEDIO, NAO VOU COMPRAR"
+                                            print 'sai do lock dos buys ON THREAD ' + str(t_name)
                                             self.buy_lock.release()
                                             temp_resp.append(False)
                                             return temp_resp
@@ -231,6 +232,7 @@ class SteamJsonRecentThreading:
                                                                 self.http.httputil.data_buy['fee'],
                                                              self.http.httputil.data_buy,final_list_this[key]['listingid'],
                                                                 key,temp[0],temp[1],t_name)
+
                                         if temp[0] == 200:
                                             if temp[1]['wallet_info'].has_key('wallet_balance'):
                                                 if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
@@ -247,6 +249,10 @@ class SteamJsonRecentThreading:
                                         else:
                                             print "Nao pude comprar item " + key
                                             print "erro ao comprar item"
+                                            self.buy_lock.release()
+                                            temp_resp.append(False)
+                                            return temp_resp
+
                                         self.buy_lock.release()
                                         print 'sai do lock dos buys ON THREAD ' + str(t_name)
                                     else:
@@ -509,8 +515,9 @@ class SteamJsonRecentThreading:
                     time.sleep(http_interval)
 
             elif recent == -2:
-                    print 'TIMEOUT NA THREAD ' + str(name) + ' SLEEPING FOR 30 SECS'
-                    time.sleep(random.randint(16,31))
+                    sleepe = random.randint(16,31)
+                    print 'TIMEOUT NA THREAD ' + str(name) + ' SLEEPING FOR ' + str(sleepe) + ' SECS'
+                    time.sleep(sleepe)
 
             elif type(recent) == dict:
                 buygoodresp = self.seeifbuyinggood(self.callfuncs(recent),name)
