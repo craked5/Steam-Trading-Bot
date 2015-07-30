@@ -207,11 +207,21 @@ class SteamJsonRecentThreading:
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalancefromvar())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
                                     if final_list_this[key]['listingid'] != self.last_listing_buy:
+
                                         self.last_listing_buy_lock.acquire()
                                         self.last_listing_buy = final_list_this[key]['listingid']
                                         self.last_listing_buy_lock.release()
                                         print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(t_name)
+
                                         self.buy_lock.acquire()
+
+                                        if (self.list_median_prices[key] - self.getlowestprice(key)) \
+                                                >= (15*self.list_median_prices[key]):
+                                            print "O PRECO LOWEST E MT MAIS BAIXO QUE O MEDIO, NAO VOU COMPRAR"
+                                            self.buy_lock.release()
+                                            temp_resp.append(False)
+                                            return temp_resp
+
                                         print 'Entrey no acquire dos buys ON THREAD '  + str(t_name)
                                         temp = self.http.buyitem(final_list_this[key]['listingid'],
                                                                  final_list_this[key]['converted_price'],
