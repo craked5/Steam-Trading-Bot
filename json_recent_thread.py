@@ -518,7 +518,8 @@ class SteamJsonRecentThreading:
 
                     lowest_price = self.getlowestprice(buygoodresp[2])
                     print lowest_price
-                    if (lowest_price+(0.02*lowest_price)/buygoodresp[3]) >= 1.07:
+
+                    if ((float(lowest_price)+(0.02*float(lowest_price)))/float(buygoodresp[3])) >= 1.07:
                         print price_sell
                         price_sell = float(lowest_price)
                         price_sell_str = "{0:.2f}".format(price_sell)
