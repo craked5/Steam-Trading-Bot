@@ -204,7 +204,8 @@ class SteamJsonRecentThreading:
                         if float(float(self.list_median_prices[key]) -
                                 float((temp_converted_price_math+temp_converted_fee_math))) >= \
                                 (0.305*(float(self.list_median_prices[key]))):
-                            if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalancefromvar())):
+                            if (temp_converted_price_math+temp_converted_fee_math) <= \
+                                    float((80*self.getwalletbalancefromvar())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
                                     if final_list_this[key]['listingid'] != self.last_listing_buy:
                                         self.last_listing_buy_lock.acquire()
@@ -256,8 +257,9 @@ class SteamJsonRecentThreading:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos On THREAD " + str(t_name)
                         else:
                             print "THREAD " + str(t_name) + " nao pode comprar " + key + \
-                                  " porque margens nao sao suficientes. Preco medio: " + str(self.list_median_prices[key])
-                            + ' Preco do item: ' + str(temp_converted_fee_math+temp_converted_price_math)
+                                  " porque margens nao sao suficientes. " \
+                                  "Preco medio: " + str(self.list_median_prices[key]) +\
+                                  ' Preco do item: ' + str(temp_converted_fee_math+temp_converted_price_math)
 
                     else:
                         temp_resp.append(False)
