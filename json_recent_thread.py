@@ -201,9 +201,9 @@ class SteamJsonRecentThreading:
                         #try:
                         temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
                         temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
-                        if float(float("{0:.2f}".format(self.list_median_prices[key])) -
+                        if float(float(self.list_median_prices[key]) -
                                 float((temp_converted_price_math+temp_converted_fee_math))) >= \
-                                (30.5*(float(self.list_median_prices[key]))):
+                                (0.305*(float(self.list_median_prices[key]))):
                             if (temp_converted_price_math+temp_converted_fee_math) <= float((80*self.getwalletbalancefromvar())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
                                     if final_list_this[key]['listingid'] != self.last_listing_buy:
