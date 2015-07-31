@@ -233,6 +233,25 @@ class SteamBotHttp:
 
         return temp_tuple
 
+    def buyitemTEST(self,listing,subtotal,fee,currency,host):
+
+        temp_tuple = []
+
+        self.httputil.data_buy['currency'] = int(currency) - 2000
+        self.httputil.data_buy['subtotal'] = int(subtotal)
+        self.httputil.data_buy['fee'] = int(fee)
+        self.httputil.data_buy['total'] = int(self.httputil.data_buy['subtotal'] + self.httputil.data_buy['fee'])
+        try:
+            temp = req.post(self.pre_host_https+str(host)+self.market+'/buylisting/'+listing, data=self.httputil.data_buy,
+                            headers=self.httputil.headers_buy)
+        except req.ConnectionError:
+            pass
+
+        temp_tuple.append(int(temp.status_code))
+        temp_tuple.append(ast.literal_eval(temp.content))
+
+        return temp_tuple
+
     def getsteamwalletsite(self):
         temp = req.get('http://steamcommunity.com/market/',headers=self.httputil.headers_wallet)
         if temp.status_code == 200:

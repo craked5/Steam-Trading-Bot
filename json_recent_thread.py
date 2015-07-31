@@ -345,18 +345,11 @@ class SteamJsonRecentThreading:
                 temp_lowest_price = "{0:.2f}".format(float(temp_lowest_price))
                 return temp_lowest_price
 
-    def buyitemtest(self,name,listing,subtotal,fee,currency):
-        temp =  self.http.buyitem(listing,subtotal,fee,currency)
-        self.writetobuyfile(subtotal,fee,self.http.httputil.data_buy,listing,name,temp[0],temp[1])
-        self.log.writetowallet(temp[1]['wallet_info']['wallet_balance'])
-        temp_id = self.getpositiononeiteminv()
-        temp_sell = self.sellitemtest(temp_id,0.01)
-        if temp_sell[0] == 200:
-            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalancefromvar())
-            self.writetowalletadd(0.01)
-            print "balance esperado depois desta sale: " + str(self.getwalletbalancefromvar())
-        elif temp_sell[0] == 502:
-            self.writetosellfile(temp_sell[0],temp_sell[1],name,0.01,self.getwalletbalancefromvar())
+    def buyitemtest(self,listing,subtotal,fee,currency,host):
+        temp =  self.http.buyitemTEST(listing,subtotal,fee,currency,host)
+        print str(temp[0]) + '\n'
+        print temp[1]
+
 
     def getmedianitemlist(self):
 
