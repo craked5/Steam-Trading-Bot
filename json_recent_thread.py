@@ -525,13 +525,13 @@ class SteamJsonRecentThreading:
                     print lowest_price
 
                     if ((float(lowest_price)+(0.02*float(lowest_price)))/float(buygoodresp[3])) >= 1.07:
-                        print price_sell
                         price_sell = float(lowest_price)
                         price_sell_str = "{0:.2f}".format(price_sell)
-                    else:
                         print price_sell
-                        price_sell = float(buygoodresp[1]*0.95)
+                    else:
+                        price_sell = float(buygoodresp[1] * 0.95)
                         price_sell_str = "{0:.2f}".format(price_sell)
+                        print price_sell
 
                     price_sell_without_fee = price_sell/1.15
                     print price_sell_without_fee
@@ -557,7 +557,7 @@ class SteamJsonRecentThreading:
 
                 elif counter % 250 == 0:
                     self.write_active_listings_lock.acquire()
-                    if self.seeifanyitemsold() == True:
+                    if self.seeifanyitemsold():
                         self.parsewalletbalanceandwrite()
                         self.log.writetosold(self.log.wallet_balance)
                     self.write_active_listings_lock.release()
