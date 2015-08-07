@@ -15,7 +15,8 @@ from logic import Logic
 from http import SteamBotHttp
 
 
-
+#todo implement individual item throught html parsing
+#todo i need to check the html names of the elements and parse them
 class SteamJsonRecentThreading:
 
     def __init__(self):
@@ -458,6 +459,13 @@ class SteamJsonRecentThreading:
         else:
             print "ERROR"
             return False
+
+
+    def testinditemhtml(self,item):
+        item_html = self.http.queryitemtest(item)
+
+
+
 #----------------------------------------------THREADING-----------------------------------------------------------
 
     def callfuncs(self,recent_full):

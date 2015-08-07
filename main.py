@@ -186,8 +186,8 @@ try:
                 print temp
 
             elif command_input[0] == 'buy':
-                jst.buyitemtest(command_input[1],command_input[2],int(command_input[3]),
-                               int(command_input[4]),int(command_input[5]))
+                jst.buyitemtest(command_input[1],int(command_input[2]),int(command_input[3]),
+                               int(command_input[4]),command_input[5])
 
             elif command_input[0] == 'procs':
                 for n_proc in process_items:

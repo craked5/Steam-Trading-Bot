@@ -241,11 +241,10 @@ class SteamBotHttp:
         self.httputil.data_buy['subtotal'] = int(subtotal)
         self.httputil.data_buy['fee'] = int(fee)
         self.httputil.data_buy['total'] = int(self.httputil.data_buy['subtotal'] + self.httputil.data_buy['fee'])
-        try:
-            temp = req.post(self.pre_host_https+str(host)+self.market+'/buylisting/'+listing, data=self.httputil.data_buy,
-                            headers=self.httputil.headers_buy)
-        except req.ConnectionError:
-            pass
+        urll = 'https://'+str(host)+'/market/buylisting/'+listing
+        print urll
+        temp = req.post(urll, data=self.httputil.data_buy,
+                        headers=self.httputil.headers_buy)
 
         temp_tuple.append(int(temp.status_code))
         temp_tuple.append(ast.literal_eval(temp.content))
@@ -270,14 +269,11 @@ class SteamBotHttp:
 
 #-----------------------------------------AUX FUNCTIONS------------------------------------------------------------------
 
-    def queryitemtest(self):
+    def queryitemtest(self,item):
 
-        steam_response = req.get(self.render_item_url_first_part+'AWP%20%7C%20Asiimov%20%28Field-Tested%29'+
-                                 self.render_item_url_sencond_part,
-                                 headers = self.httputil.headers_item_list_ind)
+        steam_response = req.get(self.render_item_url_first_part+item,headers = self.httputil.headers_item_list_ind)
 
         print steam_response.status_code
         print steam_response.url
 
-        recent_temp = ujson.loads(steam_response.text)
-        return recent_temp
+        return steam_response.content

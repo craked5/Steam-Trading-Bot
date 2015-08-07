@@ -3,7 +3,7 @@ __author__ = 'nunosilva, github.com/craked5'
 class Httpheaders:
 
     def __init__(self):
-        self.sessionid = "06281c9c31aaabd92f850ea7"
+        self.sessionid = "701e95194399b26e87b16329"
 
         self.headers_wallet = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
