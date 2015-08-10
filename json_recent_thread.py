@@ -15,8 +15,8 @@ from logic import Logic
 from http import SteamBotHttp
 
 
-#todo implement individual item throught html parsing
-#todo i need to check the html names of the elements and parse them
+#todo REIMPLEMENT THE BUYING FUCNTION ON IND ITEM
+#todo REIMPLEMENT ALL THE RECENT FEATURES (get walletbalance from the web, active listings and more) ON TEH IND ITEM
 class SteamJsonRecentThreading:
 
     def __init__(self):
@@ -187,7 +187,7 @@ class SteamJsonRecentThreading:
             if item == temp:
                 return True
 
-    def seeifbuyinggood(self,final_list,t_name):
+    def buyingroutine(self,final_list,t_name):
         temp_resp = []
         if final_list == False:
             temp_resp.append(False)
@@ -204,9 +204,9 @@ class SteamJsonRecentThreading:
                         temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
                         if float(float(self.list_median_prices[key]) -
                                 float((temp_converted_price_math+temp_converted_fee_math))) >= \
-                                (0.305*(float(self.list_median_prices[key]))):
+                                (0.275*(float(self.list_median_prices[key]))):
                             if (temp_converted_price_math+temp_converted_fee_math) <= \
-                                    float((80*self.getwalletbalancefromvar())):
+                                    float((95*self.getwalletbalancefromvar())):
                                 if int(final_list_this[key]['converted_currencyid']) == 2003:
                                     if final_list_this[key]['listingid'] != self.last_listing_buy:
 
@@ -261,6 +261,8 @@ class SteamJsonRecentThreading:
                                         return temp_resp
                             else:
                                 print "Nao pude comprar: " + key +" porque nao tenho fundos On THREAD " + str(t_name)
+                                temp_resp.append(False)
+                                return temp_resp
                         else:
                             print "THREAD " + str(t_name) + " nao pode comprar " + key + \
                                   " porque margens nao sao suficientes. " \
@@ -468,7 +470,7 @@ class SteamJsonRecentThreading:
 
 #----------------------------------------------THREADING-----------------------------------------------------------
 
-    def callfuncs(self,recent_full):
+    def getfinallistfromrecent(self,recent_full):
         temp_full = self.getRecentTotalReady(recent_full)
         temp1_assets = self.getCleanAssetList(temp_full)
         temp2_assets = self.getlistassets(temp1_assets)
@@ -520,7 +522,7 @@ class SteamJsonRecentThreading:
                     time.sleep(sleepe)
 
             elif type(recent) == dict:
-                buygoodresp = self.seeifbuyinggood(self.callfuncs(recent),name)
+                buygoodresp = self.buyingroutine(self.getfinallistfromrecent(recent),name)
 
                 if buygoodresp[0] is True:
 
@@ -586,7 +588,6 @@ class SteamJsonRecentThreading:
 
 
     def executethreads(self,n_threads,http_interval):
-        i = 1
         list_threads = []
 
         for i in range(1,int(n_threads)+1):

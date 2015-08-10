@@ -98,7 +98,7 @@ class Logic:
             self.wallet_balance = 0
             try:
                 f_wallet = open('util/wallet.txt', 'r')
-                f_hosts = open('util/hosts_eu.txt','r')
+                f_hosts = open('util/hosts_us_.txt','r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"

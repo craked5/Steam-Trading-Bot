@@ -210,6 +210,12 @@ try:
             elif command_input[0] == 'bii':
                 proc_name = raw_input("Insira o nome do processo (normalmente algo relacionado com a arma: \n")
                 item_name = raw_input('Insira o nome da arma a comprar: \n')
+                temp_balance = jst.parsewalletbalance()
+                if temp_balance != False:
+                    if jst.log.wallet_balance != temp_balance:
+                        if type(jst.parsewalletbalanceandwrite()) == float:
+                            print "Balance foi updated!"
+                jst.updateactivelistings()
                 process_items[proc_name] = os.fork()
                 fork_list.append(process_items[proc_name])
                 print process_items

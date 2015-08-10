@@ -3,13 +3,11 @@
 
 __author__ = 'nunosilva, github.com/craked5'
 
-
 import ujson
 import decimal
 import random
 from logic import Logic
 from http import SteamBotHttp
-
 
 
 class SteamJsonItem:
@@ -166,7 +164,7 @@ class SteamJsonItem:
         else:
             return False
 
-    def seeifbuyinggood(self):
+    def seeifbuyinggood(self,median_price):
         temp_resp = []
         #print 'ESTOU NO BUYGOOD 1'
         try:
@@ -174,58 +172,45 @@ class SteamJsonItem:
         except:
             temp_resp.append(False)
             return temp_resp
-        temp_item_priceover = self.http.querypriceoverview(self.item)
-        if temp_item_priceover['success'] is True:
-            #print 'ESTOU NO BUYGOOD 2'
-            for key_in_priceover in temp_item_priceover:
-                if isinstance(temp_item_priceover[key_in_priceover], basestring):
-                    temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].rstrip('&#8364; ')
-                    temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].replace(',','.')
-                    temp_item_priceover[key_in_priceover] = temp_item_priceover[key_in_priceover].replace('-','0')
-                    if temp_item_priceover[key_in_priceover] != bool:
-                        try:
-                            temp_item_priceover[key_in_priceover] = float(temp_item_priceover[key_in_priceover])
-                        except ValueError:
-                            print "erro ao por em float"
-            try:
-                #print 'ESTOU NO BUYGOOD 3'
-                temp_converted_price_math = float(decimal.Decimal(self.final_item[id]['converted_price']) / 100)
-                temp_converted_fee_math = float(decimal.Decimal(self.final_item[id]['converted_fee'])/100)
-                #print 'ESTOU NO BUYGOOD 4'
-                if float(float("{0:.2f}".format(temp_item_priceover['median_price'])) -
-                        float((temp_converted_price_math+temp_converted_fee_math))) >= \
-                        (28.5*(temp_converted_price_math+temp_converted_fee_math)/100):
-                    #print 'ESTOU NO BUYGOOD 5'
-                    if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
-                        #print 'ESTOU NO BUYGOOD 6'
-                        if int(self.final_item[id]['converted_currencyid']) == 2003:
-                            temp = self.http.buyitem(self.final_item[id]['listingid'],
-                                                     self.final_item[id]['converted_price'],
-                                                     self.final_item[id]['converted_fee'],
-                                                     self.final_item[id]['converted_currencyid'])
-                            self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
-                                                    self.http.httputil.data_buy['fee'],
-                                                 self.http.httputil.data_buy,
-                                                    self.final_item[id]['listingid'],self.item,temp[0],temp[1],0)
-                            if temp[0] == 200:
-                                if temp[1]['wallet_info'].has_key('wallet_balance'):
-                                    if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
-                                        print "Ok COMPREI A: " + self.item + " ao preco: " + \
-                                              str(self.final_item[id]['converted_price'] +
-                                                  self.final_item[id]['converted_fee'])
-                                        temp_resp.append(True)
-                                        temp_resp.append(temp_item_priceover['median_price'])
-                                        temp_resp.append(self.item)
-                                        return temp_resp
-                            else:
-                                print "Nao pude comprar item " + self.item
-                                print "erro ao comprar item"
-                    else:
-                        print "Nao pude comprar: " + self.item +" porque nao tenho fundos"
-            except ValueError, KeyError:
-                print "float not valid"
-                temp_resp.append(False)
-                return temp_resp
+        try:
+            #print 'ESTOU NO BUYGOOD 3'
+            temp_converted_price_math = float(decimal.Decimal(self.final_item[id]['converted_price']) / 100)
+            temp_converted_fee_math = float(decimal.Decimal(self.final_item[id]['converted_fee'])/100)
+            #print 'ESTOU NO BUYGOOD 4'
+            if float(float("{0:.2f}".format(median_price)) -
+                    float((temp_converted_price_math+temp_converted_fee_math))) >= \
+                    (28.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                #print 'ESTOU NO BUYGOOD 5'
+                if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
+                    #print 'ESTOU NO BUYGOOD 6'
+                    if int(self.final_item[id]['converted_currencyid']) == 2003:
+                        temp = self.http.buyitem(self.final_item[id]['listingid'],
+                                                 self.final_item[id]['converted_price'],
+                                                 self.final_item[id]['converted_fee'],
+                                                 self.final_item[id]['converted_currencyid'])
+                        self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
+                                                self.http.httputil.data_buy['fee'],
+                                             self.http.httputil.data_buy,
+                                                self.final_item[id]['listingid'],self.item,temp[0],temp[1],0)
+                        if temp[0] == 200:
+                            if temp[1]['wallet_info'].has_key('wallet_balance'):
+                                if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
+                                    print "Ok COMPREI A: " + self.item + " ao preco: " + \
+                                          str(self.final_item[id]['converted_price'] +
+                                              self.final_item[id]['converted_fee'])
+                                    temp_resp.append(True)
+                                    temp_resp.append(median_price)
+                                    temp_resp.append(self.item)
+                                    return temp_resp
+                        else:
+                            print "Nao pude comprar item " + self.item
+                            print "erro ao comprar item"
+                else:
+                    print "Nao pude comprar: " + self.item +" porque nao tenho fundos"
+        except ValueError, KeyError:
+            print "float not valid"
+            temp_resp.append(False)
+            return temp_resp
         temp_resp.append(False)
         return temp_resp
 
