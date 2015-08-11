@@ -3,6 +3,7 @@
 
 __author__ = 'nunosilva, github.com/craked5'
 
+import socket
 import random
 import requests as req
 import ast
@@ -157,6 +158,8 @@ class SteamBotHttp:
             return False
         except req.Timeout:
             return -2
+        except socket.timeout:
+            return -2
 
         return False
     def urlqueryspecificitemind(self,host,item):
@@ -229,7 +232,10 @@ class SteamBotHttp:
             pass
 
         temp_tuple.append(int(temp.status_code))
-        temp_tuple.append(ast.literal_eval(temp.content))
+        try:
+            temp_tuple.append(ast.literal_eval(temp.content))
+        except SyntaxError:
+            temp_tuple.append(False)
 
         return temp_tuple
 
