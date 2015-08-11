@@ -218,10 +218,15 @@ class SteamJsonRecentThreading:
                                         self.buy_lock.acquire()
                                         print 'Entrei no acquire dos buys ON THREAD '  + str(t_name)
 
-                                        if (float(self.list_median_prices[key]) - float(self.getlowestprice(key))) \
-                                                >= (0.15*float(self.list_median_prices[key])):
-                                            print "O PRECO LOWEST E MT MAIS BAIXO QUE O MEDIO, NAO VOU COMPRAR"
-                                            print 'sai do lock dos buys ON THREAD ' + str(t_name)
+                                        try:
+                                            if (float(self.list_median_prices[key]) - float(self.getlowestprice(key))) \
+                                                    >= (0.15*float(self.list_median_prices[key])):
+                                                print "O PRECO LOWEST E MT MAIS BAIXO QUE O MEDIO, NAO VOU COMPRAR"
+                                                print 'sai do lock dos buys ON THREAD ' + str(t_name)
+                                                self.buy_lock.release()
+                                                temp_resp.append(False)
+                                                return temp_resp
+                                        except:
                                             self.buy_lock.release()
                                             temp_resp.append(False)
                                             return temp_resp
@@ -340,6 +345,9 @@ class SteamJsonRecentThreading:
         if type(temp_item_priceover) == int:
             print "Erro ao obter preco mais baixo actualmente de " + item
             print "Status code da querie: " + str(temp_item_priceover)
+
+        if type(temp_item_priceover) != bool:
+            return False
 
         elif temp_item_priceover.has_key('lowest_price'):
             temp_lowest_price = temp_item_priceover['lowest_price']
