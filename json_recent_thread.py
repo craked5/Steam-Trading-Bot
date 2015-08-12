@@ -198,7 +198,6 @@ class SteamJsonRecentThreading:
                 if key in self.log.list_items_to_buy:
                     print key
                     if self.list_median_prices.has_key(key):
-                        print self.list_median_prices[key]
                         #try:
                         temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
                         temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
@@ -238,7 +237,8 @@ class SteamJsonRecentThreading:
 
                                         self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
                                                                 self.http.httputil.data_buy['fee'],
-                                                             self.http.httputil.data_buy,final_list_this[key]['listingid'],
+                                                                self.http.httputil.data_buy,
+                                                                final_list_this[key]['listingid'],
                                                                 key,temp[0],temp[1],t_name)
 
                                         if temp[0] == 200:
@@ -539,7 +539,6 @@ class SteamJsonRecentThreading:
                     id_item_pos_one = self.getpositiononeiteminv()
 
                     lowest_price = self.getlowestprice(buygoodresp[2])
-                    print lowest_price
 
                     if ((float(lowest_price)+(0.02*float(lowest_price)))/float(buygoodresp[3])) >= 1.07:
                         price_sell = float(lowest_price)
@@ -576,7 +575,6 @@ class SteamJsonRecentThreading:
                     self.write_active_listings_lock.acquire()
                     if self.seeifanyitemsold():
                         self.parsewalletbalanceandwrite()
-                        self.log.writetosold(self.log.wallet_balance)
                     self.write_active_listings_lock.release()
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
                     time.sleep(random.randint(10,20))
@@ -588,7 +586,7 @@ class SteamJsonRecentThreading:
 
                 elif counter % 250 == 0:
                     self.write_active_listings_lock.acquire()
-                    if self.seeifanyitemsold() == True:
+                    if self.seeifanyitemsold():
                         self.parsewalletbalanceandwrite()
                     self.write_active_listings_lock.release()
                     print "CHEGUEI AS " + str(counter) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
@@ -605,3 +603,10 @@ class SteamJsonRecentThreading:
             t = threading.Thread(target=self.onerecentthread, args=(http_interval,name))
             t.start()
             list_threads.append(t)
+
+        while True:
+            for thread in list_threads:
+                if not thread.is_alive():
+                    list_threads.remove(thread)
+                    print "Removed thread " + str(thread)
+            time.sleep(900)

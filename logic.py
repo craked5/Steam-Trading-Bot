@@ -10,7 +10,7 @@ import time
 from random import shuffle
 class Logic:
 
-    def __init__(self,mode):
+    def __init__(self,mode,ind_hosts):
         self.list_hosts = []
         self.ids_active_listings = []
         if mode == 'recent':
@@ -28,8 +28,8 @@ class Logic:
                     shuffle(self.list_hosts)
                     print self.list_hosts
 
-                elif what_hosts == 'us':
-                    f_hosts = open('util/hosts_us.txt','r')
+                elif what_hosts == 'us1':
+                    f_hosts = open('util/hosts_us1.txt','r')
                     self.list_hosts = [line.rstrip('\n') for line in f_hosts]
                     shuffle(self.list_hosts)
                     print self.list_hosts
@@ -40,8 +40,8 @@ class Logic:
                     shuffle(self.list_hosts)
                     print self.list_hosts
 
-                elif what_hosts == 'usfirst':
-                    f_hosts = open('util/hosts_us_first.txt','r')
+                elif what_hosts == 'us2':
+                    f_hosts = open('util/hosts_us2.txt','r')
                     self.list_hosts = [line.rstrip('\n') for line in f_hosts]
                     shuffle(self.list_hosts)
                     print self.list_hosts
@@ -95,10 +95,31 @@ class Logic:
             print self.wallet_balance
 
         elif mode == 'item':
+
+            dif_countries = raw_input('Quer mudar os country code do RECENT (n/y)? \n')
+            if dif_countries == 'y':
+                self.dif_countries = 'yes'
+                try:
+                    f_list_countries = open('util/list_countries.txt', 'r')
+                    self.list_countries = [line.rstrip('\n') for line in f_list_countries]
+                    print "ITEMS TO BUY file was opened ok"
+                    f_list_countries.close()
+                except IOError:
+                    print "Error opening the items to buy list file!"
+            else:
+                self.dif_countries = 'no'
+
+            try:
+                f_listings = open('util/active_listings.txt','r')
+                self.ids_active_listings = [line.rstrip('\n') for line in f_listings]
+                print "ACTIVE LISTINGS FILE WAS OPENED OK"
+            except IOError:
+                print 'Error opening active listings file!'
+
             self.wallet_balance = 0
             try:
                 f_wallet = open('util/wallet.txt', 'r')
-                f_hosts = open('util/hosts_us_.txt','r')
+                f_hosts = open('util/hosts_'+ind_hosts+'.txt','r')
             except IOError:
                 print "Error opening the list file"
             print "file was opened ok"

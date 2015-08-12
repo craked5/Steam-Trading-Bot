@@ -12,6 +12,7 @@ import time
 import sys
 import os
 import signal
+import random
 
 list_median_prices = {}
 print 'HAI WELCOME TO THIS SHITTY BOT!!!!!!!!!!!!!! :D'
@@ -19,6 +20,10 @@ http_interval = raw_input('What time interval do you want the queries to be on R
 http_interval = float(http_interval)
 http_interval_item = raw_input('And on an individual item: \n')
 http_interval_item = float(http_interval_item)
+ind_item_hosts = raw_input('Do you want to change the hosts for ind item? (y/n) \n')
+if ind_item_hosts == 'y':
+    ind_item_hosts_list = raw_input('What hosts do you want to use in ind item? (us1/us2/eu/asia/world) \n')
+
 print '\n'
 print "OK now time one of the following commands: srt ,buy ,sell , showlist, add, delete, login\n"
 http = SteamBotHttp()
@@ -36,53 +41,79 @@ commands = ['bii','howmanyprocs','showlistprocs','killproc','add','login',
 '''
 
 def startbuyinditem(item_buy,proc_name):
-    jsind = SteamJsonItem(item_buy)
+    jsind = SteamJsonItem(item_buy,ind_item_hosts_list)
     i = 0
     sleep_time_down = 165
     while True:
         #start = time.time()
-        item = jsind.urlqueryspecificitemind(item_buy)
-        if item == False:
+        item_json = jsind.urlqueryspecificitemind(item_buy)
+        if item_json == False:
             jsind.setdownstate(1)
             if jsind.getdownstate() == 1:
                 sleep_time_down += 15
-                print "CONN REFUSED" + ' on item ' + item_buy + ' at try ' + str(i)+ ', sleeping for ' + \
+                print "CONN REFUSED" + ' on item_json ' + item_buy + ' at try ' + str(i)+ ', sleeping for ' + \
                       str(sleep_time_down)
                 time.sleep(sleep_time_down)
             pass
-        elif type(item) == dict:
+        elif type(item_json) == dict:
+
             jsind.setdownstate(0)
             sleep_time_down = 165
-            jsind.getitemtotalready(item)
+
+            jsind.getitemtotalready(item_json)
+
             jsind.getfinalitem()
-            resp = jsind.seeifbuyinggood()
+
+            resp = jsind.buyingroutinesingleitem(list_median_prices[item_buy])
             if resp[0] is True:
-                price_sell = command_input[1]
-                price_sell = float(price_sell*0.90)
-                price_sell = "{0:.2f}".format(price_sell)
-                print "OK SELLING ITEM"
-                temp_one = jsind.getpositiononeiteminv()
-                sell_response = jsind.sellitem(temp_one,command_input[1])
+
+                id_item_pos_one = jsind.getpositiononeiteminv()
+
+                lowest_price = jsind.getlowestprice(resp[2])
+
+                if ((float(lowest_price)+(0.02*float(lowest_price)))/float(resp[3])) >= 1.07:
+                    price_sell = float(lowest_price)
+                    price_sell_str = "{0:.2f}".format(price_sell)
+                    print price_sell
+                else:
+                    price_sell = float(resp[1] * 0.95)
+                    price_sell_str = "{0:.2f}".format(price_sell)
+                    print price_sell
+
+                price_sell_without_fee = price_sell/1.15
+                print price_sell_without_fee
+
+                sell_response = jsind.sellitem(id_item_pos_one,float(price_sell_without_fee))
+
                 if sell_response[0] == 200:
-                    jsind.writetowalletadd(price_sell)
-                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalancefromvar(),0)
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell_str,0)
+
                 elif sell_response[0] == 502:
-                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell,jst.getwalletbalancefromvar(),0)
+                    jsind.writetosellfile(sell_response[0],sell_response[1],resp[2],price_sell_str,0)
+
+            i += 1
             if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
-            i += 1
+            elif i % 250 == 0:
+                if jsind.seeifanyitemsold():
+                    jsind.parsewalletbalanceandwrite()
+                print "CHEGUEI AS " + str(i) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                time.sleep(random.randint(10,20))
+
             time.sleep(http_interval_item)
-            #elapsed = time.time()
-            #elapsed = elapsed - start
-            #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
+
         else:
+            i += 1
             if i % 10 == 0:
                 print proc_name + ' is still kicking ass, let me work please! ty<3'
-            i += 1
+
+            elif i % 250 == 0:
+                if jsind.seeifanyitemsold():
+                    jsind.parsewalletbalanceandwrite()
+                print "CHEGUEI AS " + str(i) + ' SLEEPING NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+                time.sleep(random.randint(10,20))
+
             time.sleep(http_interval_item)
-            #elapsed = time.time()
-            #elapsed = elapsed - start
-            #print 'O TEMPO DO '+ proc_name + ' FOI DE ' + str(elapsed)
 
 
 try:

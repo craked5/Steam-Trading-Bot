@@ -8,11 +8,12 @@ import decimal
 import random
 from logic import Logic
 from http import SteamBotHttp
+from bs4 import BeautifulSoup
 
 
 class SteamJsonItem:
 
-    def __init__(self,item):
+    def __init__(self,item,ind_hosts):
         self.recent_parsing_list = [u'results_html',u'hovers',u'app_data',u'currency',
                                     u'success',u'start',u'pagesize',u'total_count',u'assets']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
@@ -34,7 +35,7 @@ class SteamJsonItem:
         self.final_item = {}
         self.float100 = float(100)
         self.http = SteamBotHttp()
-        self.log = Logic('item')
+        self.log = Logic('item',ind_hosts)
         self.host_counter = 0
         self.contaSim = 0
         self.contaNao = 0
@@ -164,7 +165,7 @@ class SteamJsonItem:
         else:
             return False
 
-    def seeifbuyinggood(self,median_price):
+    def buyingroutinesingleitem(self,median_price):
         temp_resp = []
         #print 'ESTOU NO BUYGOOD 1'
         try:
@@ -177,36 +178,64 @@ class SteamJsonItem:
             temp_converted_price_math = float(decimal.Decimal(self.final_item[id]['converted_price']) / 100)
             temp_converted_fee_math = float(decimal.Decimal(self.final_item[id]['converted_fee'])/100)
             #print 'ESTOU NO BUYGOOD 4'
-            if float(float("{0:.2f}".format(median_price)) -
+            if float(float(median_price) -
                     float((temp_converted_price_math+temp_converted_fee_math))) >= \
-                    (28.5*(temp_converted_price_math+temp_converted_fee_math)/100):
+                    (0.275*float(median_price)):
                 #print 'ESTOU NO BUYGOOD 5'
                 if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
                     #print 'ESTOU NO BUYGOOD 6'
                     if int(self.final_item[id]['converted_currencyid']) == 2003:
-                        temp = self.http.buyitem(self.final_item[id]['listingid'],
-                                                 self.final_item[id]['converted_price'],
-                                                 self.final_item[id]['converted_fee'],
-                                                 self.final_item[id]['converted_currencyid'])
-                        self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
-                                                self.http.httputil.data_buy['fee'],
-                                             self.http.httputil.data_buy,
-                                                self.final_item[id]['listingid'],self.item,temp[0],temp[1],0)
-                        if temp[0] == 200:
-                            if temp[1]['wallet_info'].has_key('wallet_balance'):
-                                if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
-                                    print "Ok COMPREI A: " + self.item + " ao preco: " + \
-                                          str(self.final_item[id]['converted_price'] +
-                                              self.final_item[id]['converted_fee'])
-                                    temp_resp.append(True)
-                                    temp_resp.append(median_price)
-                                    temp_resp.append(self.item)
+                        if self.final_item['listingid'] != self.last_listing_buy:
+
+                            self.last_listing_buy = self.final_item['listingid']
+
+                            try:
+                                if (float(median_price) - float(self.getlowestprice(self.item))) \
+                                        >= (0.15*float(median_price)):
+                                    print "O PRECO LOWEST E MT MAIS BAIXO QUE O MEDIO, NAO VOU COMPRAR"
+                                    temp_resp.append(False)
                                     return temp_resp
+                            except KeyError:
+                                temp_resp.append(False)
+                                return temp_resp
+
+
+                            temp = self.http.buyitem(self.final_item[id]['listingid'],
+                                                     self.final_item[id]['converted_price'],
+                                                     self.final_item[id]['converted_fee'],
+                                                     self.final_item[id]['converted_currencyid'])
+
+                            self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
+                                                    self.http.httputil.data_buy['fee'],
+                                                 self.http.httputil.data_buy,
+                                                    self.final_item[id]['listingid'],self.item,temp[0],temp[1],0)
+
+                            if temp[0] == 200:
+                                if temp[1]['wallet_info'].has_key('wallet_balance'):
+                                    if self.log.writetowallet(temp[1]['wallet_info']['wallet_balance']) == True:
+                                        print "Ok COMPREI A: " + self.item + " ao preco: " + \
+                                              str(self.final_item[id]['converted_price'] +
+                                                  self.final_item[id]['converted_fee'])
+                                        temp_resp.append(True)
+                                        temp_resp.append(median_price)
+                                        temp_resp.append(self.item)
+                                        temp_resp.append(temp_converted_fee_math+temp_converted_price_math)
+                                        return temp_resp
+                            else:
+                                print "Nao pude comprar item " + self.item
+                                print "erro ao comprar item"
+                                temp_resp.append(False)
+                                return temp_resp
                         else:
-                            print "Nao pude comprar item " + self.item
-                            print "erro ao comprar item"
+                            temp_resp.append(False)
+                            return temp_resp
                 else:
                     print "Nao pude comprar: " + self.item +" porque nao tenho fundos"
+            else:
+                print "THREAD " + str(0) + " nao pode comprar " + self.item + \
+                        " porque margens nao sao suficientes. " \
+                        "Preco medio: " + str(median_price) +\
+                        ' Preco do item: ' + str(temp_converted_fee_math+temp_converted_price_math)
         except ValueError, KeyError:
             print "float not valid"
             temp_resp.append(False)
@@ -264,6 +293,89 @@ class SteamJsonItem:
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
         return self.log.writetobuyfile(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
+
+    def getlowestprice(self,item):
+        temp_item_priceover = self.http.querypriceoverview(item)
+        if type(temp_item_priceover) == int:
+            print "Erro ao obter preco mais baixo actualmente de " + item
+            print "Status code da querie: " + str(temp_item_priceover)
+            return False
+
+        if type(temp_item_priceover) == bool:
+            return False
+
+        elif temp_item_priceover.has_key('lowest_price'):
+            temp_lowest_price = temp_item_priceover['lowest_price']
+            if isinstance(temp_lowest_price, basestring):
+                temp_lowest_price = temp_lowest_price.replace('&#8364; ','').replace(',','.').replace('-','0')
+                temp_lowest_price = "{0:.2f}".format(float(temp_lowest_price))
+                print temp_lowest_price
+                return temp_lowest_price
+
+    #Vai buscar o valor o balance da minha carteira ao Steam diretamente
+    #e se encontrar, atualiza a var wallet_balance
+    def parsewalletbalanceandwrite(self):
+
+        soup = BeautifulSoup(self.http.getsteamwalletsite(),'html.parser')
+        balance_soup = soup.find('span',{'id':'marketWalletBalanceAmount'})
+
+        if balance_soup != None:
+            balance_soup = balance_soup.get_text()
+            balance_str = balance_soup.encode('ascii','ignore').replace(',','.')
+
+            self.log.writetowallet(float(balance_str)*100)
+
+            return float(balance_str)
+        else:
+            print "ERROR GETTING WALLET BALANCE, MAYBE FAZER LOGIN RESOLVE ESTE PROBLEMA"
+            return False
+
+    #faz uma querie para ver as active listings que a conta tem
+    #retorna as active_listings actuais ou false
+    def getactivelistingsparsed(self):
+        active_listings = self.http.getmyactivelistingsraw()
+        active_listings_list = []
+
+        if type(active_listings) == dict:
+            if active_listings.has_key('assets'):
+                if type(active_listings['assets']) == dict:
+                    if active_listings['assets'].has_key('730'):
+                        active_listings = active_listings['assets']['730']['2']
+
+                        for id in active_listings:
+                            active_listings_list.append(id)
+
+                        print type(active_listings_list)
+                        return active_listings_list
+                else:
+                    return False
+        else:
+            return False
+
+    #returns new active listings list or False
+    def updateactivelistings(self):
+        temp = self.getactivelistingsparsed()
+        if temp != False:
+            if type(self.log.writenewactivelistings(temp)) == list:
+                print "NEW ACTIVE LISTINGS: \n"
+                return self.log.ids_active_listings
+        else:
+            return False
+
+    #ver se algum item nas active_listings vendeu
+    #retorna uma nova active listings se sim
+    #return a active listings se nao
+    def seeifanyitemsold(self):
+
+        active_listings = self.getactivelistingsparsed()
+        if active_listings != False:
+            if self.log.ids_active_listings != active_listings:
+                self.log.writenewactivelistings(active_listings)
+                print 'VENDI ITEMS!'
+                return True
+        else:
+            print "ERROR"
+            return False
 
     def sellitemtest(self,assetid,price):
         return self.http.sellitem(assetid,price)
