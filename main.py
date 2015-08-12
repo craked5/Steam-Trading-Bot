@@ -129,6 +129,8 @@ try:
                     #pids = (os.getpid(), newpid)
                     #print "parent: %d, child: %d" % pids
 
+            elif command_input[0] == 'newsessionidtest':
+                jst.http.httputil.sessionid = raw_input('Enter the new session id: \n')
 
             elif command_input[0] == 'srt':
                 n_threads = raw_input('How many threads do you wish to run? \n')
