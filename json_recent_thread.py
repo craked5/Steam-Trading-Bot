@@ -226,7 +226,7 @@ class SteamJsonRecentThreading:
                                                 self.buy_lock.release()
                                                 temp_resp.append(False)
                                                 return temp_resp
-                                        except:
+                                        except KeyError:
                                             self.buy_lock.release()
                                             temp_resp.append(False)
                                             return temp_resp
@@ -345,8 +345,9 @@ class SteamJsonRecentThreading:
         if type(temp_item_priceover) == int:
             print "Erro ao obter preco mais baixo actualmente de " + item
             print "Status code da querie: " + str(temp_item_priceover)
+            return False
 
-        if type(temp_item_priceover) != bool:
+        if type(temp_item_priceover) == bool:
             return False
 
         elif temp_item_priceover.has_key('lowest_price'):
@@ -354,6 +355,7 @@ class SteamJsonRecentThreading:
             if isinstance(temp_lowest_price, basestring):
                 temp_lowest_price = temp_lowest_price.replace('&#8364; ','').replace(',','.').replace('-','0')
                 temp_lowest_price = "{0:.2f}".format(float(temp_lowest_price))
+                print temp_lowest_price
                 return temp_lowest_price
 
     def buyitemtest(self,listing,subtotal,fee,currency,host):
