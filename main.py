@@ -23,7 +23,7 @@ http_interval_item = float(http_interval_item)
 ind_item_hosts = raw_input('Do you want to change the hosts for ind item? (y/n) \n')
 if ind_item_hosts == 'y':
     ind_item_hosts_list = raw_input('What hosts do you want to use in ind item? (us1/us2/eu/asia/world) \n')
-dif_countries = raw_input('Quer mudar os country code do RECENT (n/y)? \n')
+dif_countries = raw_input('Quer mudar os country code do modo ind item (n/y)? \n')
 print '\n'
 print "OK now time one of the following commands: srt ,buy ,sell , showlist, add, delete, login\n"
 http = SteamBotHttp()
@@ -41,7 +41,7 @@ commands = ['bii','howmanyprocs','showlistprocs','killproc','add','login',
 '''
 
 def startbuyinditem(item_buy,proc_name):
-    jsind = SteamJsonItem(item_buy,ind_item_hosts_list)
+    jsind = SteamJsonItem(item_buy,ind_item_hosts_list,dif_countries)
     i = 0
     sleep_time_down = 165
     while True:

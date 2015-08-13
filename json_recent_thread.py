@@ -38,7 +38,7 @@ class SteamJsonRecentThreading:
         self.http = SteamBotHttp()
         #logic mode recent
         #logic mode item
-        self.log = Logic('recent',0)
+        self.log = Logic('recent',0,0)
         self.last_listing_buy = ''
         self.dif_countries = self.log.dif_countries
         self.dif_hosts = self.log.dif_hosts_recent

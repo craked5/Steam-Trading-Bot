@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 
 class SteamJsonItem:
 
-    def __init__(self,item,ind_hosts):
+    def __init__(self,item,ind_hosts,dif_countries):
         self.recent_parsing_list = [u'results_html',u'hovers',u'app_data',u'currency',
                                     u'success',u'start',u'pagesize',u'total_count',u'assets']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
@@ -35,7 +35,7 @@ class SteamJsonItem:
         self.final_item = {}
         self.float100 = float(100)
         self.http = SteamBotHttp()
-        self.log = Logic('item',ind_hosts)
+        self.log = Logic('item',ind_hosts,dif_countries)
         self.host_counter = 0
         self.contaSim = 0
         self.contaNao = 0

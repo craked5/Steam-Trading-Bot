@@ -10,7 +10,7 @@ import time
 from random import shuffle
 class Logic:
 
-    def __init__(self,mode,ind_hosts):
+    def __init__(self,mode,ind_hosts,dif_countries):
         self.list_hosts = []
         self.ids_active_listings = []
         if mode == 'recent':
@@ -96,7 +96,7 @@ class Logic:
 
         elif mode == 'item':
 
-            if ind_hosts == 'y':
+            if dif_countries == 'y':
                 try:
                     f_list_countries = open('util/list_countries.txt', 'r')
                     self.list_countries = [line.rstrip('\n') for line in f_list_countries]
