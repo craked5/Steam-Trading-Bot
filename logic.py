@@ -96,14 +96,14 @@ class Logic:
 
         elif mode == 'item':
 
-
-            try:
-                f_list_countries = open('util/list_countries.txt', 'r')
-                self.list_countries = [line.rstrip('\n') for line in f_list_countries]
-                print "ITEMS TO BUY file was opened ok"
-                f_list_countries.close()
-            except IOError:
-                print "Error opening the items to buy list file!"
+            if ind_hosts == 'y':
+                try:
+                    f_list_countries = open('util/list_countries.txt', 'r')
+                    self.list_countries = [line.rstrip('\n') for line in f_list_countries]
+                    print "COuntry list file was opened ok"
+                    f_list_countries.close()
+                except IOError:
+                    print "Error opening the items to buy list file!"
 
             try:
                 f_listings = open('util/active_listings.txt','r')
@@ -118,7 +118,7 @@ class Logic:
                 f_hosts = open('util/hosts_'+ind_hosts+'.txt','r')
             except IOError:
                 print "Error opening the list file"
-            print "file was opened ok"
+            print "wallet and hosts files was opened ok"
             self.list_hosts = [line.rstrip('\n') for line in f_hosts]
             print len(self.list_hosts)
             shuffle(self.list_hosts)
