@@ -96,18 +96,14 @@ class Logic:
 
         elif mode == 'item':
 
-            dif_countries = raw_input('Quer mudar os country code do RECENT (n/y)? \n')
-            if dif_countries == 'y':
-                self.dif_countries = 'yes'
-                try:
-                    f_list_countries = open('util/list_countries.txt', 'r')
-                    self.list_countries = [line.rstrip('\n') for line in f_list_countries]
-                    print "ITEMS TO BUY file was opened ok"
-                    f_list_countries.close()
-                except IOError:
-                    print "Error opening the items to buy list file!"
-            else:
-                self.dif_countries = 'no'
+
+            try:
+                f_list_countries = open('util/list_countries.txt', 'r')
+                self.list_countries = [line.rstrip('\n') for line in f_list_countries]
+                print "ITEMS TO BUY file was opened ok"
+                f_list_countries.close()
+            except IOError:
+                print "Error opening the items to buy list file!"
 
             try:
                 f_listings = open('util/active_listings.txt','r')
