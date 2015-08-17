@@ -271,7 +271,7 @@ try:
 
                 try:
                     cookies_json_file = open('cookies.json', 'w')
-                    ujson.dump(cookies_json)
+                    ujson.dump(cookies_json, cookies_json_file)
                     cookies_json_file.close()
                 except IOError:
                     print "Error opening cookie.json file"
@@ -287,7 +287,7 @@ try:
 
                 try:
                     password_json_file = open('password.json', 'w')
-                    ujson.dump(password_json)
+                    ujson.dump(password_json, password_json_file)
                     password_json_file.close()
                 except IOError:
                     print "Error opening password.json file"
