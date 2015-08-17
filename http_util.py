@@ -4,6 +4,11 @@ class Httpheaders:
 
     def __init__(self):
         self.sessionid = "701e95194399b26e87b16329"
+        self.steamLogin = ""
+        self.steamLoginSecure = ""
+        self.webTradeEligibility = ""
+        self.steamMachineAuth = ""
+        self.password = ""
 
         self.headers_wallet = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -18,11 +23,9 @@ class Httpheaders:
                      'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
-                     'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
+                     'steamLogin='+self.steamLogin+'; '
                      'timezoneOffset=3600,0; '
-                     'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days'
-                     '%22%3A15%2C%22sales_this_year%22%3A133%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A'
-                     '0%2C%22new_device_cooldown_days%22%3A7%7D; '
+                     'webTradeEligibility='+self.webTradeEligibility+'; '
                      'tsTradeOffersLastRead=1435052082',
             'DNT':1,
             'Host':'steamcommunity.com',
@@ -44,12 +47,9 @@ class Httpheaders:
                      'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
-                     'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
+                     'steamLogin='+self.steamLogin+'; '
                      'timezoneOffset=3600,0; '
-                     'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days'
-                     '%22%3A15%2C%22sales_this_year%22%3A133%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A'
-                     '0%2C%22new_device_cooldown_days%22%3A7%7D; '
-                     'tsTradeOffersLastRead=1435052082',
+                     'webTradeEligibility='+self.webTradeEligibility,
             'DNT':1,
             'Host':'steamcommunity.com',
             'Referer':'http://steamcommunity.com/market/',
@@ -72,12 +72,9 @@ class Httpheaders:
                      'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
-                     'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
+                     'steamLogin='+self.steamLogin+'; '
                      'timezoneOffset=3600,0; '
-                     'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days'
-                     '%22%3A15%2C%22sales_this_year%22%3A133%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A'
-                     '0%2C%22new_device_cooldown_days%22%3A7%7D; '
-                     'tsTradeOffersLastRead=1435052082',
+                     'webTradeEligibility='+self.webTradeEligibility,
             'DNT':1,
             'Host':'steamcommunity.com',
             'Upgrade-Insecure-Requests':1,
@@ -99,12 +96,9 @@ class Httpheaders:
                      'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
-                     'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
+                     'steamLogin='+self.steamLogin+'; '
                      'timezoneOffset=3600,0; '
-                     'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days'
-                     '%22%3A15%2C%22sales_this_year%22%3A133%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A'
-                     '0%2C%22new_device_cooldown_days%22%3A7%7D; '
-                     'tsTradeOffersLastRead=1435052082',
+                     'webTradeEligibility='+self.webTradeEligibility,
             'DNT':1,
             'Host':'steamcommunity.com',
             'If-Modified-Since':'Sat, 18 Jul 2015 22:48:42 GMT',
@@ -127,12 +121,9 @@ class Httpheaders:
                      'sessionid='+self.sessionid+';'
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'strInventoryLastContext=730_2; '
-                     'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
+                     'steamLogin='+self.steamLogin+'; '
                      'timezoneOffset=3600,0; '
-                     'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_days'
-                     '%22%3A15%2C%22sales_this_year%22%3A133%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%3A'
-                     '0%2C%22new_device_cooldown_days%22%3A7%7D; '
-                     'tsTradeOffersLastRead=1435052082',
+                     'webTradeEligibility='+self.webTradeEligibility,
             'DNT':1,
             'Host':'steamcommunity.com',
             'Upgrade-Insecure-Requests':1,
@@ -153,12 +144,9 @@ class Httpheaders:
                       'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                       'sessionid='+self.sessionid+';'
-                      'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_day'
-                      's%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%'
-                      '3A0%2C%22new_device_cooldown_days%22%3A7%7D; '
-                      'steamCountry=PT%7C90d987902b02ceec924245352748dc71; '
-                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
-                      'steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; '
+                      'webTradeEligibility='+self.webTradeEligibility+'; '
+                      'steamLogin='+self.steamLogin+'; '
+                      'steamLoginSecure='+self.steamLoginSecure+'; '
                       'strInventoryLastContext=730_2; '
                       'tsTradeOffersLastRead=1434610877; '
                       'timezoneOffset=3600,0',
@@ -184,12 +172,9 @@ class Httpheaders:
                       'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                       'sessionid='+self.sessionid+';'
-                      'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_day'
-                      's%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%'
-                      '3A0%2C%22new_device_cooldown_days%22%3A7%7D; '
-                      'steamCountry=PT%7C90d987902b02ceec924245352748dc71; '
-                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
-                      'steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; '
+                      'webTradeEligibility='+self.webTradeEligibility+'; '
+                      'steamLogin='+self.steamLogin+'; '
+                      'steamLoginSecure='+self.steamLoginSecure+'; '
                       'strInventoryLastContext=730_2; '
                       'tsTradeOffersLastRead=1434610877; '
                       'timezoneOffset=3600,0',
@@ -252,8 +237,8 @@ class Httpheaders:
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
                      'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
                      'dp_user_sessionid=8b4e6fb7c1b244f4330561fa7d87ca7d; '
-                     'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
-                     'steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170',
+                     'steamLogin='+self.steamLogin+'; '
+                     'steamLoginSecure='+self.steamLoginSecure+'; ',
             'DNT':1,
             'Host':'steamcommunity.com',
             'Origin':'https://steamcommunity.com',
@@ -277,12 +262,9 @@ class Httpheaders:
                       '730_17workshopQueueTime=1432014476; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                       'sessionid='+self.sessionid+';'
-                      'webTradeEligibility=%7B%22allowed%22%3A1%2C%22allowed_at_time%22%3A0%2C%22steamguard_required_day'
-                      's%22%3A15%2C%22sales_this_year%22%3A101%2C%22max_sales_per_year%22%3A200%2C%22forms_requested%22%'
-                      '3A0%2C%22new_device_cooldown_days%22%3A7%7D; '
-                      'steamCountry=PT%7C90d987902b02ceec924245352748dc71; '
-                      'steamLogin=76561197979199766%7C%7C9E4F945373E086AE0ABD1A71CEEC718241E2E2B2; '
-                      'steamLoginSecure=76561197979199766%7C%7CEEF7B52C4A0259FBA5D09A596F0CE2484EAE7170; '
+                      'webTradeEligibility='+self.webTradeEligibility+'; '
+                      'steamLogin='+self.steamLogin+'; '
+                      'steamLoginSecure='+self.steamLoginSecure+'; '
                       'strInventoryLastContext=730_2; '
                       'tsTradeOffersLastRead=1434610877; '
                       'timezoneOffset=3600,0',
@@ -320,7 +302,6 @@ class Httpheaders:
             'total': 0,
             'quantity': 1
         }
-        self.password = 'Steamgresso1234567@'
 
         self.rsa_data = {
             'username': 'freeman777',

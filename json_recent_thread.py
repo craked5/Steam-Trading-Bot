@@ -3,7 +3,6 @@
 
 __author__ = 'nunosilva, github.com/craked5'
 
-
 import time
 import threading
 import ujson
@@ -19,7 +18,7 @@ from http import SteamBotHttp
 #todo REIMPLEMENT ALL THE RECENT FEATURES (get walletbalance from the web, active listings and more) ON TEH IND ITEM
 class SteamJsonRecentThreading:
 
-    def __init__(self):
+    def __init__(self,items_list):
         self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
                                     u'success',u'more',u'purchaseinfo']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
@@ -38,7 +37,7 @@ class SteamJsonRecentThreading:
         self.http = SteamBotHttp()
         #logic mode recent
         #logic mode item
-        self.log = Logic('recent',0,0)
+        self.log = Logic('recent',0,0,items_list)
         self.last_listing_buy = ''
         self.dif_countries = self.log.dif_countries
         self.dif_hosts = self.log.dif_hosts_recent
@@ -302,11 +301,14 @@ class SteamJsonRecentThreading:
     def sellitem(self,assetid,price):
         return self.http.sellitem(assetid,price)
 
-    def exportJsonToFile(self,json):
-        with open('util/median_prices.json', 'w') as outfile:
-            ujson.dump(json, outfile)
-        outfile.close()
-        return json
+    def exportJsonToFile(self,json,file):
+        try:
+            with open('util/'+file+'.json', 'w') as outfile:
+                ujson.dump(json, outfile)
+            outfile.close()
+        except ValueError:
+            return False
+        return True
 
     def writeInItemsTxt(self,item):
         return self.log.writeInItemsTxt(item)
@@ -321,9 +323,13 @@ class SteamJsonRecentThreading:
         return float(self.log.wallet_balance)
 
     def loadmedianpricesfromfile(self):
-        file = open('util/median_prices.json','r')
-        self.list_median_prices = ujson.load(file)
-        file.close()
+        try:
+            file = open('util/median_prices.json','r')
+            self.list_median_prices = ujson.load(file)
+            file.close()
+        except ValueError:
+            return False
+
         return self.list_median_prices
 
     def writetosellfile(self,status,content,item,price,balance,thread_n):
@@ -496,25 +502,16 @@ class SteamJsonRecentThreading:
         times = []
         while True:
             time.sleep(http_interval)
-            #start = time.tim
 
             if self.dif_hosts == 'yes':
                 if self.dif_countries == 'yes':
                     recent = self.queryrecentdifhostsdifcountries(name)
-                    #if type(recent) == list:
-                    #self.timestamp_lock.acquire()
-                    #self.timestamp = recent[0]
-                    #self.timestamp_lock.release(
                 else:
                     recent = self.queryrecentdifhosts(name)
 
             elif self.dif_hosts == 'no':
                 if self.dif_countries == 'yes':
                     recent = self.queryrecentdifcountries(name)
-                #if type(recent) == list:
-                    #self.timestamp_lock.acquire()
-                    #self.timestamp = recent[0]
-                    #self.timestamp_lock.release()
                 else:
                     recent = self.queryrecent(name)
 

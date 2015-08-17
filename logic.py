@@ -10,17 +10,18 @@ import time
 from random import shuffle
 class Logic:
 
-    def __init__(self,mode,ind_hosts,dif_countries):
+    def __init__(self,mode,ind_hosts,dif_countries,items_list):
         self.list_hosts = []
         self.ids_active_listings = []
+
         if mode == 'recent':
 
             self.wallet_balance = 0
-            host_mode = raw_input('Quer mudar as hosts de cada querie no RECENT (n/y)? \n')
+            host_mode = raw_input('Quer mudar as hosts de cada querie no modo RECENT LISTINGS (n/y)? \n')
 
             if host_mode == 'y':
                 self.dif_hosts_recent='yes'
-                what_hosts = raw_input('Qual as hosts que pretende (eu/us/world)? \n')
+                what_hosts = raw_input('Qual as hosts que pretende (eu/us1/us2/asia/world)? \n')
 
                 if what_hosts == 'eu':
                     f_hosts = open('util/hosts_eu.txt','r')
@@ -69,7 +70,7 @@ class Logic:
                 self.dif_countries = 'no'
 
             try:
-                f_items_pobre = open('util/items_pobre50.txt', 'r')
+                f_items_pobre = open('util/'+items_list+'.txt', 'r')
                 self.list_items_to_buy = [line.rstrip('\n') for line in f_items_pobre]
                 print "ITEMS TO BUY file was opened ok"
                 f_items_pobre.close()

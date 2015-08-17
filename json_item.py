@@ -35,7 +35,7 @@ class SteamJsonItem:
         self.final_item = {}
         self.float100 = float(100)
         self.http = SteamBotHttp()
-        self.log = Logic('item',ind_hosts,dif_countries)
+        self.log = Logic('item',ind_hosts,dif_countries,0)
         self.host_counter = 0
         self.contaSim = 0
         self.contaNao = 0
@@ -156,7 +156,6 @@ class SteamJsonItem:
             for k in self.listinginfo_list:
                 if k == min_price_key:
                     self.final_item[k] = self.listinginfo_list[k]
-        #print self.final_item
         return self.final_item
 
     def seeifindividualiteminlistbuy(self,item):
@@ -167,23 +166,18 @@ class SteamJsonItem:
 
     def buyingroutinesingleitem(self,median_price):
         temp_resp = []
-        #print 'ESTOU NO BUYGOOD 1'
         try:
             id = self.final_item.keys()[0]
         except:
             temp_resp.append(False)
             return temp_resp
         try:
-            #print 'ESTOU NO BUYGOOD 3'
             temp_converted_price_math = float(decimal.Decimal(self.final_item[id]['converted_price']) / 100)
             temp_converted_fee_math = float(decimal.Decimal(self.final_item[id]['converted_fee'])/100)
-            #print 'ESTOU NO BUYGOOD 4'
             if float(float(median_price) -
                     float((temp_converted_price_math+temp_converted_fee_math))) >= \
                     (0.275*float(median_price)):
-                #print 'ESTOU NO BUYGOOD 5'
                 if (temp_converted_price_math+temp_converted_fee_math) <= (80*self.getwalletbalance()):
-                    #print 'ESTOU NO BUYGOOD 6'
                     if int(self.final_item[id]['converted_currencyid']) == 2003:
                         if self.final_item['listingid'] != self.last_listing_buy:
 
@@ -288,8 +282,8 @@ class SteamJsonItem:
     def getwalletbalance(self):
         return float(self.log.wallet_balance)
 
-    def writetosellfile(self,status,content,item,price,balance,thread_n):
-        return self.log.writetosellfile(status,content,item,price,balance,thread_n)
+    def writetosellfile(self,status,content,item,price,thread_n):
+        return self.log.writetosellfile(status,content,item,price,thread_n)
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
         return self.log.writetobuyfile(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
