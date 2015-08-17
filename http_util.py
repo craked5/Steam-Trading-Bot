@@ -3,21 +3,20 @@ __author__ = 'nunosilva, github.com/craked5'
 class Httpheaders:
 
     def __init__(self):
-        self.sessionid = "701e95194399b26e87b16329"
-        self.steamLogin = ""
-        self.steamLoginSecure = ""
-        self.webTradeEligibility = ""
-        self.steamMachineAuth = ""
-        self.password = ""
+        self.sessionid = ''
+        self.steamLogin = ''
+        self.steamLoginSecure = ''
+        self.webTradeEligibility = ''
+        self.steamMachineAuth = ''
+        self.password = ''
+        self.steamRememberLogin = ''
 
         self.headers_wallet = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             'Connection':'keep-alive',
-            'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                     '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
-                     'Steam_Language=english; '
+            'Cookie':'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                      'sessionid='+self.sessionid+';'
@@ -39,9 +38,7 @@ class Httpheaders:
             "Accept-Encoding": "gzip,deflate,sdch",
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             'Connection':'keep-alive',
-            'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                     '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
-                     'Steam_Language=english; '
+            'Cookie':'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                      'sessionid='+self.sessionid+';'
@@ -64,9 +61,7 @@ class Httpheaders:
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             'Cache-Control':'no-cache',
             'Connection':'keep-alive',
-            'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                     '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
-                     'Steam_Language=english; '
+            'Cookie':'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                      'sessionid='+self.sessionid+';'
@@ -88,9 +83,7 @@ class Httpheaders:
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             'Connection':'keep-alive',
             'Cache-Control':'max-age=0',
-            'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                     '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
-                     'Steam_Language=english; '
+            'Cookie':'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                      'sessionid='+self.sessionid+';'
@@ -113,9 +106,7 @@ class Httpheaders:
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             'Cache-Control':'no-cache',
             'Connection':'keep-alive',
-            'Cookie':'__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                     '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
-                     'Steam_Language=english; '
+            'Cookie':'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                      'sessionid='+self.sessionid+';'
@@ -136,9 +127,7 @@ class Httpheaders:
             "Accept-Encoding": "gzip,deflate,sdch",
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             "Host": "steamcommunity.com",
-            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; '
-                      '__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                      '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
+            'Cookie': self.steamMachineAuth+'; '
                       'Steam_Language=english; '
                       '730_17workshopQueueTime=1432014476; '
                       'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
@@ -164,9 +153,7 @@ class Httpheaders:
             'Connection': 'keep-alive',
             'Content-Length': '83',
             'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
-            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; '
-                      '__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                      '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
+            'Cookie': self.steamMachineAuth+'; '
                       'Steam_Language=english; '
                       '730_17workshopQueueTime=1432014476; '
                       'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
@@ -194,9 +181,7 @@ class Httpheaders:
             'Connection':'keep-alive',
             'Content-Length':44,
             'Content-type':'application/x-www-form-urlencoded; charset=UTF-8',
-            'Cookie':'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; '
-                     '__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                     '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
+            'Cookie': self.steamMachineAuth+'; '
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
@@ -224,9 +209,7 @@ class Httpheaders:
             'Content-Length':184,
             'Content-Type':'application/x-www-form-urlencoded',
             'Cookie':'browserid=740048883567382728; '
-                     'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; '
-                     '__utma=128748750.2096343856.1422402525.1426615286.1426972563.6; '
-                     '__utmz=128748750.1426972563.6.5.utmcsr=etterstudio.com|utmccn=(referral)|utmcmd=referral|utmcct=/en/pnp.php; '
+                     +self.steamMachineAuth+'; '
                      'dp_user_userid=10011565; '
                      'dp_user_password=aEjiUkC3; '
                      'lastagecheckage=1-January-1981; '
@@ -255,9 +238,7 @@ class Httpheaders:
             'Connection': 'keep-alive',
             'Content-Length': '34',
             'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
-            'Cookie': 'steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385; '
-                      '__utma=268881843.1944006538.1426348260.1426845397.1427022271.24; '
-                      '__utmz=268881843.1427022271.24.22.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); '
+            'Cookie': self.steamMachineAuth+'; '
                       'Steam_Language=english; '
                       '730_17workshopQueueTime=1432014476; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '

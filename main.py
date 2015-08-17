@@ -33,20 +33,21 @@ cookies_json = {}
 password_json = {}
 
 try:
-    cookies_json_file = open('cookies.json', 'r')
+    cookies_json_file = open('util/cookies.json', 'r')
     cookies_json = ujson.load(cookies_json_file)
     jst.http.httputil.webTradeEligibility = cookies_json['webTradeEligibility']
     jst.http.httputil.steamMachineAuth = cookies_json['steamMachineAuth']
     jst.http.httputil.sessionid = cookies_json['sessionid']
     jst.http.httputil.steamLoginSecure = cookies_json['steamSecureLogin']
     jst.http.httputil.steamLogin = cookies_json['steamLogin']
+    jst.http.httputil.steamRememberLogin = cookies_json['steamRememberLogin']
 except IOError:
     print 'NO COOKIES AND PASSWORD DETECTED \n'
     print 'PLEASE PLEASE SET YOUR COOKIES BEFORE DOING ANYTHING, YOU CAN DO THAT BY ' \
           'TYPING setcookies \n'
 
 try:
-    password_json_file = open('password.json', 'r')
+    password_json_file = open('util/password.json', 'r')
     password_json = ujson.load(password_json_file)
     jst.http.httputil.password = password_json['password']
 except IOError:
@@ -256,21 +257,24 @@ try:
                 steamLogin = raw_input("Please input your steamLogin cookie: \n")
                 steamLoginSecure = raw_input("Please input your steamLoginSecure cookie: \n")
                 sma = raw_input("Please input your steamMachineAuth cookie (name+value together): \n")
+                steamRememberLogin = raw_input("Please input your steamRememberLogin cookie: \n")
 
                 jst.http.httputil.webTradeEligibility = wte
                 jst.http.httputil.steamLogin = steamLogin
                 jst.http.httputil.steamLoginSecure = steamLoginSecure
                 jst.http.httputil.sessionid = sessionid
                 jst.http.httputil.steamMachineAuth = sma
+                jst.http.httputil.steamRememberLogin = steamRememberLogin
 
-                cookies_json['webTradeEligibility'] = wte
-                cookies_json['sessionid'] = sessionid
-                cookies_json['steamLogin'] = steamLogin
-                cookies_json['steamLoginSecure'] = steamLoginSecure
-                cookies_json['steamMachineAuth'] = sma
+                cookies_json['webTradeEligibility'] = jst.http.httputil.webTradeEligibility
+                cookies_json['sessionid'] = jst.http.httputil.sessionid
+                cookies_json['steamLogin'] = jst.http.httputil.steamLogin
+                cookies_json['steamLoginSecure'] = jst.http.httputil.steamLoginSecure
+                cookies_json['steamMachineAuth'] = jst.http.httputil.steamMachineAuth
+                cookies_json['steamRememberLogin'] = jst.http.httputil.steamRememberLogin
 
                 try:
-                    cookies_json_file = open('cookies.json', 'w')
+                    cookies_json_file = open('util/cookies.json', 'w')
                     ujson.dump(cookies_json, cookies_json_file)
                     cookies_json_file.close()
                 except IOError:
@@ -286,7 +290,7 @@ try:
                 password_json['password'] = password
 
                 try:
-                    password_json_file = open('password.json', 'w')
+                    password_json_file = open('util/password.json', 'w')
                     ujson.dump(password_json, password_json_file)
                     password_json_file.close()
                 except IOError:
