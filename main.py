@@ -35,21 +35,44 @@ password_json = {}
 try:
     cookies_json_file = open('util/cookies.json', 'r')
     cookies_json = ujson.load(cookies_json_file)
-    jst.http.httputil.webTradeEligibility = cookies_json['webTradeEligibility']
-    jst.http.httputil.steamMachineAuth = cookies_json['steamMachineAuth']
-    jst.http.httputil.sessionid = cookies_json['sessionid']
-    jst.http.httputil.steamLoginSecure = cookies_json['steamSecureLogin']
-    jst.http.httputil.steamLogin = cookies_json['steamLogin']
-    jst.http.httputil.steamRememberLogin = cookies_json['steamRememberLogin']
+    print cookies_json
+    jst.http.httputil.webTradeEligibility = cookies_json.get('webTradeEligibility').encode('ascii','ignore')
+    print type(jst.http.httputil.webTradeEligibility)
+    print jst.http.httputil.webTradeEligibility
+    jst.http.httputil.steamMachineAuth = cookies_json.get('steamMachineAuth').encode('ascii','ignore')
+    print type(jst.http.httputil.steamMachineAuth)
+    print jst.http.httputil.steamMachineAuth
+    jst.http.httputil.sessionid = cookies_json.get('sessionid').encode('ascii','ignore')
+    print type(jst.http.httputil.sessionid)
+    print jst.http.httputil.sessionid
+    jst.http.httputil.steamLoginSecure = cookies_json.get('steamLoginSecure').encode('ascii','ignore')
+    print type(jst.http.httputil.steamLoginSecure)
+    print jst.http.httputil.steamLoginSecure
+    jst.http.httputil.steamLogin = cookies_json.get('steamLogin').encode('ascii','ignore')
+    print type(jst.http.httputil.steamLogin)
+    print jst.http.httputil.steamLogin
+    jst.http.httputil.steamRememberLogin = cookies_json.get('steamRememberLogin').encode('ascii','ignore')
+    print type(jst.http.httputil.steamRememberLogin)
+    print jst.http.httputil.steamRememberLogin
+    jst.http.httputil.steamMachineAuth2 = cookies_json.get('steamMachineAuth2').encode('ascii','ignore')
+    print type(jst.http.httputil.steamMachineAuth2)
+    print jst.http.httputil.steamMachineAuth2
 except IOError:
     print 'NO COOKIES AND PASSWORD DETECTED \n'
     print 'PLEASE PLEASE SET YOUR COOKIES BEFORE DOING ANYTHING, YOU CAN DO THAT BY ' \
           'TYPING setcookies \n'
+except ValueError:
+    print 'NO COOKIES AND PASSWORD DETECTED \n'
+    print 'PLEASE PLEASE SET YOUR COOKIES BEFORE DOING ANYTHING, YOU CAN DO THAT BY ' \
+          'TYPING setcookies \n'
+
 
 try:
     password_json_file = open('util/password.json', 'r')
     password_json = ujson.load(password_json_file)
-    jst.http.httputil.password = password_json['password']
+    jst.http.httputil.password = password_json.get('password').encode('ascii','ignore')
+    print type(jst.http.httputil.password)
+    print jst.http.httputil.password
 except IOError:
     print "PASSWORD NOT DETECTED, PLEASE TYPE setpassword TO SET YOUR PASSWORD"
 except ValueError:
@@ -257,6 +280,7 @@ try:
                 steamLogin = raw_input("Please input your steamLogin cookie: \n")
                 steamLoginSecure = raw_input("Please input your steamLoginSecure cookie: \n")
                 sma = raw_input("Please input your steamMachineAuth cookie (name+value together): \n")
+                sma2 = raw_input("Please input your steamMachineAuth2 cookie (name=value together) \n")
                 steamRememberLogin = raw_input("Please input your steamRememberLogin cookie: \n")
 
                 jst.http.httputil.webTradeEligibility = wte
@@ -264,14 +288,16 @@ try:
                 jst.http.httputil.steamLoginSecure = steamLoginSecure
                 jst.http.httputil.sessionid = sessionid
                 jst.http.httputil.steamMachineAuth = sma
+                jst.http.httputil.steamMachineAuth2 = sma2
                 jst.http.httputil.steamRememberLogin = steamRememberLogin
 
-                cookies_json['webTradeEligibility'] = jst.http.httputil.webTradeEligibility
-                cookies_json['sessionid'] = jst.http.httputil.sessionid
-                cookies_json['steamLogin'] = jst.http.httputil.steamLogin
-                cookies_json['steamLoginSecure'] = jst.http.httputil.steamLoginSecure
-                cookies_json['steamMachineAuth'] = jst.http.httputil.steamMachineAuth
-                cookies_json['steamRememberLogin'] = jst.http.httputil.steamRememberLogin
+                cookies_json['webTradeEligibility'] = wte
+                cookies_json['sessionid'] = sessionid
+                cookies_json['steamLogin'] = steamLogin
+                cookies_json['steamLoginSecure'] = steamLoginSecure
+                cookies_json['steamMachineAuth'] = sma
+                cookies_json['steamRememberLogin'] = steamRememberLogin
+                cookies_json['steamMachineAuth2'] = sma2
 
                 try:
                     cookies_json_file = open('util/cookies.json', 'w')
