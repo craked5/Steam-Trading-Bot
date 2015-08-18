@@ -60,7 +60,6 @@ def setCookies():
     steamLogin = raw_input("Please input your steamLogin cookie: \n")
     steamLoginSecure = raw_input("Please input your steamLoginSecure cookie: \n")
     sma = raw_input("Please input your steamMachineAuth cookie (name+value together): \n")
-    sma2 = raw_input("Please input your steamMachineAuth2 cookie (name=value together) \n")
     steamRememberLogin = raw_input("Please input your steamRememberLogin cookie: \n")
 
     cookies_json['webTradeEligibility'] = wte
@@ -69,7 +68,6 @@ def setCookies():
     cookies_json['steamLoginSecure'] = steamLoginSecure
     cookies_json['steamMachineAuth'] = sma
     cookies_json['steamRememberLogin'] = steamRememberLogin
-    cookies_json['steamMachineAuth2'] = sma2
 
     try:
         cookies_json_file = open('util/cookies.json', 'w')
@@ -86,7 +84,6 @@ def setCookies():
 try:
     cookies_json_file = open('util/cookies.json', 'r')
     cookies_json = ujson.load(cookies_json_file)
-    print cookies_json
 
     wte = cookies_json.get('webTradeEligibility').encode('ascii','ignore')
     sma = cookies_json.get('steamMachineAuth').encode('ascii','ignore')
@@ -94,7 +91,6 @@ try:
     slc = cookies_json.get('steamLoginSecure').encode('ascii','ignore')
     sl = cookies_json.get('steamLogin').encode('ascii','ignore')
     srl= cookies_json.get('steamRememberLogin').encode('ascii','ignore')
-    sma2 = cookies_json.get('steamMachineAuth2').encode('ascii','ignore')
     setup_cookies = True
 except IOError:
     print 'NO COOKIES AND PASSWORD DETECTED \n'
@@ -129,7 +125,7 @@ else:
 #-----------------------------------------------------------------------------------------------------------------------
 
 def startbuyinditem(item_buy, proc_name):
-    jsind = SteamJsonItem(item_buy, ind_item_hosts_list, dif_countries)
+    jsind = SteamJsonItem(item_buy, ind_item_hosts_list, dif_countries,wte,sma,sessionid,slc,sl,srl,password)
     i = 0
     sleep_time_down = 165
     while True:

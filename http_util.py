@@ -313,13 +313,3 @@ class Httpdata:
             'token_secure':''
         }
 
-    def test(self):
-        print self.sessionid
-        print self.steamLogin
-        print self.steamLoginSecure
-        print self.webTradeEligibility
-        print self.steamMachineAuth
-        print self.steamMachineAuth2
-        print self.password
-        print self.steamRememberLogin
-
