@@ -16,8 +16,8 @@ from http_util import Httpdata
 
 class SteamBotHttp:
 
-    def __init__(self,wte,sma,sessionid,sls,sl,srl,password):
-        self.httputil = Httpdata(wte,sma,sessionid,sls,sl,srl,password)
+    def __init__(self,wte,sma,sessionid,sls,sl,srl,password,username):
+        self.httputil = Httpdata(wte,sma,sessionid,sls,sl,srl,password,username)
         self.down_state = 0
         self.host = 'steamcommunity.com'
         self.pre_host_normal = 'http://'

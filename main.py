@@ -37,9 +37,11 @@ setup_password = False
 #----------------------------FUNCTIONS TO SET COOKIES AND PASSWORD TO FILE (Has to restart afet)------------------------
 def setPassword():
 
+    username = raw_input('Please type your username: \n')
     password = raw_input('Please type your password: \n')
 
     password_json['password'] = password
+    password_json['username'] = username
 
     try:
         password_json_file = open('util/password.json', 'w')
@@ -105,6 +107,7 @@ try:
     password_json_file = open('util/password.json', 'r')
     password_json = ujson.load(password_json_file)
     password = password_json.get('password').encode('ascii','ignore')
+    username = password_json.get('username').encode('ascii','ignore')
     setup_password = True
 except IOError:
     print "PASSWORD NOT DETECTED, PLEASE TYPE setpassword TO SET YOUR PASSWORD"
@@ -112,7 +115,7 @@ except ValueError:
     print "error opening the password.json file, please try to set your password manually by tying setpassword"
 
 if setup_password and setup_cookies:
-    jst = SteamJsonRecentThreading(items_list,wte,sma,sessionid,slc,sl,srl,password)
+    jst = SteamJsonRecentThreading(items_list,wte,sma,sessionid,slc,sl,srl,password,username)
 else:
     print "Error regarding the cookies or the password, maybe they haven't been setup"
     print "Do you want to set them up now? (y/n) \n"
@@ -125,7 +128,7 @@ else:
 #-----------------------------------------------------------------------------------------------------------------------
 
 def startbuyinditem(item_buy, proc_name):
-    jsind = SteamJsonItem(item_buy, ind_item_hosts_list, dif_countries,wte,sma,sessionid,slc,sl,srl,password)
+    jsind = SteamJsonItem(item_buy, ind_item_hosts_list, dif_countries,wte,sma,sessionid,slc,sl,srl,password,username)
     i = 0
     sleep_time_down = 165
     while True:

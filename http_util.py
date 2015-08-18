@@ -4,7 +4,7 @@ _author__ = 'nunosilva, github.com/craked5'
 
 class Httpdata:
 
-    def __init__(self,wte,sma,sessionid,sls,sl,srl,password):
+    def __init__(self,wte,sma,sessionid,sls,sl,srl,password,username):
         self.sessionid = sessionid
         self.steamLogin = sl
         self.steamLoginSecure = sls
@@ -12,6 +12,7 @@ class Httpdata:
         self.steamMachineAuth = sma
         self.password = password
         self.steamRememberLogin = srl
+        self.username = username
 
         self.headers_wallet = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -287,13 +288,13 @@ class Httpdata:
         }
 
         self.rsa_data = {
-            'username': 'freeman777',
+            'username': self.username,
             'donotcache': 0
         }
 
         self.login_data = {
             'password': '',
-            'username':'freeman777',
+            'username': self.username,
             'twofactorcode':'',
             'emailauth':'',
             'loginfriendlyname':'',
