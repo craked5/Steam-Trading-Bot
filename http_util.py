@@ -2,17 +2,16 @@
 # -*- coding: utf-8 -*-
 _author__ = 'nunosilva, github.com/craked5'
 
-class Httpheaders:
+class Httpdata:
 
-    def __init__(self):
-        self.sessionid = ''
-        self.steamLogin = ''
-        self.steamLoginSecure = ''
-        self.webTradeEligibility = ''
-        self.steamMachineAuth = ''
-        self.steamMachineAuth2 = ''
-        self.password = ''
-        self.steamRememberLogin = ''
+    def __init__(self,wte,sma,sessionid,sls,sl,srl,password):
+        self.sessionid = sessionid
+        self.steamLogin = sl
+        self.steamLoginSecure = sls
+        self.webTradeEligibility = wte
+        self.steamMachineAuth = sma
+        self.password = password
+        self.steamRememberLogin = srl
 
         self.headers_wallet = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -131,10 +130,9 @@ class Httpheaders:
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
             "Host": "steamcommunity.com",
             'Cookie': self.steamMachineAuth+'; '
-                      +self.steamMachineAuth2+'; '
                       'Steam_Language=english; '
                       '730_17workshopQueueTime=1432014476; '
-                      'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
+                      'steamRememberLogin='+self.steamRememberLogin+'; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                       'sessionid='+self.sessionid+';'
                       'webTradeEligibility='+self.webTradeEligibility+'; '
@@ -158,10 +156,9 @@ class Httpheaders:
             'Content-Length': '83',
             'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
             'Cookie': self.steamMachineAuth+'; '
-                      +self.steamMachineAuth2+'; '
                       'Steam_Language=english; '
                       '730_17workshopQueueTime=1432014476; '
-                      'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
+                      'steamRememberLogin='+self.steamRememberLogin+'; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
                       'sessionid='+self.sessionid+';'
                       'webTradeEligibility='+self.webTradeEligibility+'; '
@@ -187,7 +184,6 @@ class Httpheaders:
             'Content-Length':44,
             'Content-type':'application/x-www-form-urlencoded; charset=UTF-8',
             'Cookie': self.steamMachineAuth+'; '
-                      +self.steamMachineAuth2+'; '
                      'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
                      'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
@@ -216,7 +212,6 @@ class Httpheaders:
             'Content-Type':'application/x-www-form-urlencoded',
             'Cookie':'browserid=740048883567382728; '
                      +self.steamMachineAuth+'; '
-                     +self.steamMachineAuth2+'; '
                      'dp_user_userid=10011565; '
                      'dp_user_password=aEjiUkC3; '
                      'lastagecheckage=1-January-1981; '
@@ -225,7 +220,7 @@ class Httpheaders:
                      'A1424562332%2C%22239140%22%3A1422402521%7D; '
                      'timezoneOffset=3600,0; '
                      'steamCountry=PT%7Ceadce223f9093afc9f086e613abc8402; '
-                     #'steamRememberLogin=76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba; '
+                     'steamRememberLogin='+self.steamRememberLogin+'; '
                      #'dp_user_sessionid=8b4e6fb7c1b244f4330561fa7d87ca7d; '
                      'steamLogin='+self.steamLogin+'; '
                      'steamLoginSecure='+self.steamLoginSecure+'; ',
@@ -246,7 +241,6 @@ class Httpheaders:
             'Content-Length': '34',
             'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
             'Cookie': self.steamMachineAuth+'; '
-                      +self.steamMachineAuth2+'; '
                       'Steam_Language=english; '
                       '730_17workshopQueueTime=1432014476; '
                       'recentlyVisitedAppHubs=220%2C316950%2C440%2C72850%2C295110%2C730; '
@@ -298,7 +292,7 @@ class Httpheaders:
         }
 
         self.login_data = {
-            'password':'',
+            'password': '',
             'username':'freeman777',
             'twofactorcode':'',
             'emailauth':'',
@@ -318,4 +312,14 @@ class Httpheaders:
             'remember_login':'',
             'token_secure':''
         }
+
+    def test(self):
+        print self.sessionid
+        print self.steamLogin
+        print self.steamLoginSecure
+        print self.webTradeEligibility
+        print self.steamMachineAuth
+        print self.steamMachineAuth2
+        print self.password
+        print self.steamRememberLogin
 

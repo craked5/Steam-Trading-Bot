@@ -5,3 +5,12 @@ steamMachineAuth76561197979199766=5682D02C36EBD479EC086107B2EC135E267C9385
 steamMachineAuth76561198242160156=C9E36E5E1894AB0B50CE945F8912887A72095363
 steamRememberlogin = 76561197979199766%7C%7Cdf433a77e3eee7d7e472716c8ce2dfba
 sessionid = c33b2a05072382b5c24c8fca
+
+
+jst.http.httputil.webTradeEligibility = wte
+                jst.http.httputil.steamLogin = steamLogin
+                jst.http.httputil.steamLoginSecure = steamLoginSecure
+                jst.http.httputil.sessionid = sessionid
+                jst.http.httputil.steamMachineAuth = sma
+                jst.http.httputil.steamMachineAuth2 = sma2
+                jst.http.httputil.steamRememberLogin = steamRememberLogin

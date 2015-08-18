@@ -26,37 +26,76 @@ dif_countries = raw_input('Quer mudar os country code do modo ind item (n/y)? \n
 items_list = raw_input('What is the item list that you want to load for the Recent Listings Mode? (defaults are: '
                        'items_pobre, items_pobre50, items) \n')
 
-jst = SteamJsonRecentThreading(items_list)
 list_median_prices = {}
 fork_list = []
 cookies_json = {}
 password_json = {}
+setup_cookies = False
+setup_password = False
 
+
+#----------------------------FUNCTIONS TO SET COOKIES AND PASSWORD TO FILE (Has to restart afet)------------------------
+def setPassword():
+
+    password = raw_input('Please type your password: \n')
+
+    password_json['password'] = password
+
+    try:
+        password_json_file = open('util/password.json', 'w')
+        ujson.dump(password_json, password_json_file)
+        password_json_file.close()
+    except IOError:
+        print "Error opening password.json file"
+        return False
+    except ValueError:
+        print "Error dumping data to password.json file"
+        return False
+
+    print "Done, please restart the program or it wont work! \n"
+
+def setCookies():
+    wte = raw_input("Please input your webTradeEligibility cookie: \n")
+    sessionid = raw_input("Please input your sessionid cookie: \n")
+    steamLogin = raw_input("Please input your steamLogin cookie: \n")
+    steamLoginSecure = raw_input("Please input your steamLoginSecure cookie: \n")
+    sma = raw_input("Please input your steamMachineAuth cookie (name+value together): \n")
+    sma2 = raw_input("Please input your steamMachineAuth2 cookie (name=value together) \n")
+    steamRememberLogin = raw_input("Please input your steamRememberLogin cookie: \n")
+
+    cookies_json['webTradeEligibility'] = wte
+    cookies_json['sessionid'] = sessionid
+    cookies_json['steamLogin'] = steamLogin
+    cookies_json['steamLoginSecure'] = steamLoginSecure
+    cookies_json['steamMachineAuth'] = sma
+    cookies_json['steamRememberLogin'] = steamRememberLogin
+    cookies_json['steamMachineAuth2'] = sma2
+
+    try:
+        cookies_json_file = open('util/cookies.json', 'w')
+        ujson.dump(cookies_json, cookies_json_file)
+        cookies_json_file.close()
+    except IOError:
+        print "Error opening cookie.json file"
+        return False
+    except ValueError:
+        print "Error dumping data to cookie.json file"
+        return False
+#-----------------------------------------------------------------------------------------------------------------------
+#------------------------------------INITIALIZE AN INSTANCE OF THE RECENT LISTINGS MODE---------------------------------
 try:
     cookies_json_file = open('util/cookies.json', 'r')
     cookies_json = ujson.load(cookies_json_file)
     print cookies_json
-    jst.http.httputil.webTradeEligibility = cookies_json.get('webTradeEligibility').encode('ascii','ignore')
-    print type(jst.http.httputil.webTradeEligibility)
-    print jst.http.httputil.webTradeEligibility
-    jst.http.httputil.steamMachineAuth = cookies_json.get('steamMachineAuth').encode('ascii','ignore')
-    print type(jst.http.httputil.steamMachineAuth)
-    print jst.http.httputil.steamMachineAuth
-    jst.http.httputil.sessionid = cookies_json.get('sessionid').encode('ascii','ignore')
-    print type(jst.http.httputil.sessionid)
-    print jst.http.httputil.sessionid
-    jst.http.httputil.steamLoginSecure = cookies_json.get('steamLoginSecure').encode('ascii','ignore')
-    print type(jst.http.httputil.steamLoginSecure)
-    print jst.http.httputil.steamLoginSecure
-    jst.http.httputil.steamLogin = cookies_json.get('steamLogin').encode('ascii','ignore')
-    print type(jst.http.httputil.steamLogin)
-    print jst.http.httputil.steamLogin
-    jst.http.httputil.steamRememberLogin = cookies_json.get('steamRememberLogin').encode('ascii','ignore')
-    print type(jst.http.httputil.steamRememberLogin)
-    print jst.http.httputil.steamRememberLogin
-    jst.http.httputil.steamMachineAuth2 = cookies_json.get('steamMachineAuth2').encode('ascii','ignore')
-    print type(jst.http.httputil.steamMachineAuth2)
-    print jst.http.httputil.steamMachineAuth2
+
+    wte = cookies_json.get('webTradeEligibility').encode('ascii','ignore')
+    sma = cookies_json.get('steamMachineAuth').encode('ascii','ignore')
+    sessionid = cookies_json.get('sessionid').encode('ascii','ignore')
+    slc = cookies_json.get('steamLoginSecure').encode('ascii','ignore')
+    sl = cookies_json.get('steamLogin').encode('ascii','ignore')
+    srl= cookies_json.get('steamRememberLogin').encode('ascii','ignore')
+    sma2 = cookies_json.get('steamMachineAuth2').encode('ascii','ignore')
+    setup_cookies = True
 except IOError:
     print 'NO COOKIES AND PASSWORD DETECTED \n'
     print 'PLEASE PLEASE SET YOUR COOKIES BEFORE DOING ANYTHING, YOU CAN DO THAT BY ' \
@@ -66,18 +105,28 @@ except ValueError:
     print 'PLEASE PLEASE SET YOUR COOKIES BEFORE DOING ANYTHING, YOU CAN DO THAT BY ' \
           'TYPING setcookies \n'
 
-
 try:
     password_json_file = open('util/password.json', 'r')
     password_json = ujson.load(password_json_file)
-    jst.http.httputil.password = password_json.get('password').encode('ascii','ignore')
-    print type(jst.http.httputil.password)
-    print jst.http.httputil.password
+    password = password_json.get('password').encode('ascii','ignore')
+    setup_password = True
 except IOError:
     print "PASSWORD NOT DETECTED, PLEASE TYPE setpassword TO SET YOUR PASSWORD"
 except ValueError:
     print "error opening the password.json file, please try to set your password manually by tying setpassword"
 
+if setup_password and setup_cookies:
+    jst = SteamJsonRecentThreading(items_list,wte,sma,sessionid,slc,sl,srl,password)
+else:
+    print "Error regarding the cookies or the password, maybe they haven't been setup"
+    print "Do you want to set them up now? (y/n) \n"
+    if raw_input() == 'y':
+        setCookies()
+        setPassword()
+    else:
+        print "Please check your cookies and password file, maybe it's path is wrong"
+        sys.exit()
+#-----------------------------------------------------------------------------------------------------------------------
 
 def startbuyinditem(item_buy, proc_name):
     jsind = SteamJsonItem(item_buy, ind_item_hosts_list, dif_countries)
@@ -169,8 +218,9 @@ try:
                 jst.http.logout()
 
             elif command_input[0] == 'commands':
-                print 'setcookies - sets your cookies to begin using all this shit'
-                print 'setpassword - sets your password'
+                print '\n'
+                print 'setcookies - sets your cookies to begin using all this shit \n'
+                print 'setpassword - sets your password\n'
                 print 'login - logs the user on Steam (please set your cookies and password fisrt) \n'
                 print 'logout - logs the user out of Steam \n'
                 print 'getmedianprices - gets the median price (defined by Steam) for the items on the users lists' \
@@ -190,7 +240,7 @@ try:
                 print 'howmanyprocs - prints how many individual item mode processes are active \n'
                 print 'killproc - kills and individual item mode process by the name (if you dont know the name type' \
                       'procs) \n'
-                print 'quit - quits the program (you can also ctrl-c to quit a process)'
+                print 'quit - quits the program (you can also ctrl-c to quit a process) \n'
 
             elif command_input[0] == 'stuffnow':
                 list_median_prices50 = {}
@@ -208,10 +258,7 @@ try:
                 print list_median_prices
 
             elif command_input[0] == 'dump':
-                jst.exportJsonToFile(jst.list_median_prices)
-
-            elif command_input[0] == 'newsessionidtest':
-                jst.http.httputil.sessionid = raw_input('Enter the new session id: \n')
+                jst.exportJsonToFile(jst.list_median_prices,'median_prices')
 
             elif command_input[0] == 'srt':
                 n_threads = raw_input('How many threads do you wish to run? \n')
@@ -275,54 +322,16 @@ try:
                 print fork_list
 
             elif command_input[0] == 'setcookies':
-                wte = raw_input("Please input your webTradeEligibility cookie: \n")
-                sessionid = raw_input("Please input your sessionid cookie: \n")
-                steamLogin = raw_input("Please input your steamLogin cookie: \n")
-                steamLoginSecure = raw_input("Please input your steamLoginSecure cookie: \n")
-                sma = raw_input("Please input your steamMachineAuth cookie (name+value together): \n")
-                sma2 = raw_input("Please input your steamMachineAuth2 cookie (name=value together) \n")
-                steamRememberLogin = raw_input("Please input your steamRememberLogin cookie: \n")
 
-                jst.http.httputil.webTradeEligibility = wte
-                jst.http.httputil.steamLogin = steamLogin
-                jst.http.httputil.steamLoginSecure = steamLoginSecure
-                jst.http.httputil.sessionid = sessionid
-                jst.http.httputil.steamMachineAuth = sma
-                jst.http.httputil.steamMachineAuth2 = sma2
-                jst.http.httputil.steamRememberLogin = steamRememberLogin
-
-                cookies_json['webTradeEligibility'] = wte
-                cookies_json['sessionid'] = sessionid
-                cookies_json['steamLogin'] = steamLogin
-                cookies_json['steamLoginSecure'] = steamLoginSecure
-                cookies_json['steamMachineAuth'] = sma
-                cookies_json['steamRememberLogin'] = steamRememberLogin
-                cookies_json['steamMachineAuth2'] = sma2
-
-                try:
-                    cookies_json_file = open('util/cookies.json', 'w')
-                    ujson.dump(cookies_json, cookies_json_file)
-                    cookies_json_file.close()
-                except IOError:
-                    print "Error opening cookie.json file"
-                except ValueError:
-                    print "Error dumping data to cookie.json file"
+                if setCookies() == False:
+                    print "Error setting your cookies, please restart and try again!"
+                print "Done, please restart the program or it wont work! \n"
 
             elif command_input[0] == 'setpassword':
-                password = raw_input('Please type your password: \n')
 
-                jst.http.httputil.password = password
-
-                password_json['password'] = password
-
-                try:
-                    password_json_file = open('util/password.json', 'w')
-                    ujson.dump(password_json, password_json_file)
-                    password_json_file.close()
-                except IOError:
-                    print "Error opening password.json file"
-                except ValueError:
-                    print "Error dumping data to password.json file"
+                if setPassword() == False:
+                    print "Error setting your password, please restart and try again!"
+                print "Done, please restart the program or it wont work! \n"
 
             elif command_input[0] == 'killproc':
                 proctokill = raw_input('Insira o nome do processo para matar (faca showlistproc se nao souber): ')

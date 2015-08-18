@@ -12,12 +12,12 @@ import time
 import base64
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
-from http_util import Httpheaders
+from http_util import Httpdata
 
 class SteamBotHttp:
 
-    def __init__(self):
-        self.httputil = Httpheaders()
+    def __init__(self,wte,sma,sessionid,sls,sl,srl,password):
+        self.httputil = Httpdata(wte,sma,sessionid,sls,sl,srl,password)
         self.down_state = 0
         self.host = 'steamcommunity.com'
         self.pre_host_normal = 'http://'

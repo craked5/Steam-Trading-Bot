@@ -18,7 +18,7 @@ from http import SteamBotHttp
 #todo REIMPLEMENT ALL THE RECENT FEATURES (get walletbalance from the web, active listings and more) ON TEH IND ITEM
 class SteamJsonRecentThreading:
 
-    def __init__(self,items_list):
+    def __init__(self,items_list,wte,sma,sessionid,sls,sl,srl,password):
         self.recent_parsing_list = [u'results_html',u'hovers',u'last_listing',u'last_time',u'app_data',u'currency',
                                     u'success',u'more',u'purchaseinfo']
         self.asset_parsing_list = ['currency','contextid','classid','instanceid','amount',
@@ -34,7 +34,7 @@ class SteamJsonRecentThreading:
                                          'publisher_fee_app','converted_steam_fee_per_unit']
         self.listinginfo_asset_parsing_list = ['currency','contextid','amount','market_actions','appid']
         self.float100 = float(100)
-        self.http = SteamBotHttp()
+        self.http = SteamBotHttp(wte,sma,sessionid,sls,sl,srl,password)
         #logic mode recent
         #logic mode item
         self.log = Logic('recent',0,0,items_list)
