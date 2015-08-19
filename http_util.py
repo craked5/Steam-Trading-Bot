@@ -107,7 +107,7 @@ class Httpdata:
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip,deflate,sdch",
             "Accept-Language": "pt-PT,pt;q=0.8,en-US;q=0.6,en;q=0.4,fr;q=0.2,es;q=0.2",
-            'Cache-Control':'no-cache',
+            'Cache-Control':'max-age=0',
             'Connection':'keep-alive',
             'Cookie':'Steam_Language=english; '
                      '730_17workshopQueueTime=1432014476; '
@@ -120,6 +120,7 @@ class Httpdata:
                      'webTradeEligibility='+self.webTradeEligibility,
             'DNT':1,
             'Host':'steamcommunity.com',
+            'If-Modified-Since':'Sat, 18 Jul 2015 22:48:42 GMT',
             'Upgrade-Insecure-Requests':1,
             'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/43.0.2357.130 Safari/537.36'

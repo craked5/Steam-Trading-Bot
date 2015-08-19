@@ -168,7 +168,9 @@ class SteamBotHttp:
             steam_response = req.get(self.render_item_url_first_part.replace(self.host,host)+item+
                                      self.render_item_url_sencond_part,
                                      headers = self.httputil.headers_item_list_ind)
-            print steam_response.url
+            timestamp = time.time()
+            time_temp = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(timestamp))
+            self.httputil.headers_item_list_ind['If-Modified-Since'] = time_temp
         except req.ConnectionError:
             return False
 

@@ -115,6 +115,7 @@ except ValueError:
     print "error opening the password.json file, please try to set your password manually by tying setpassword"
 
 if setup_password and setup_cookies:
+    print "YOU ARE LOGGED WITH THE USERNAME: " + username
     jst = SteamJsonRecentThreading(items_list,wte,sma,sessionid,slc,sl,srl,password,username)
 else:
     print "Error regarding the cookies or the password, maybe they haven't been setup"
