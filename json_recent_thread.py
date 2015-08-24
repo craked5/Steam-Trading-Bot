@@ -197,7 +197,6 @@ class SteamJsonRecentThreading:
                 if key in self.log.list_items_to_buy:
                     print key
                     if self.list_median_prices.has_key(key):
-                        #try:
                         temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
                         temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
                         if float(float(self.list_median_prices[key]) -
@@ -224,6 +223,10 @@ class SteamJsonRecentThreading:
                                                 self.buy_lock.release()
                                                 temp_resp.append(False)
                                                 return temp_resp
+                                        except TypeError:
+                                            self.buy_lock.release()
+                                            temp_resp.append(False)
+                                            return temp_resp
                                         except KeyError:
                                             self.buy_lock.release()
                                             temp_resp.append(False)
@@ -272,6 +275,8 @@ class SteamJsonRecentThreading:
                                   " porque margens nao sao suficientes. " \
                                   "Preco medio: " + str(self.list_median_prices[key]) +\
                                   ' Preco do item: ' + str(temp_converted_fee_math+temp_converted_price_math)
+                            temp_resp.append(False)
+                            return temp_resp
                     else:
                         temp_resp.append(False)
                         return temp_resp
@@ -332,8 +337,8 @@ class SteamJsonRecentThreading:
 
         return self.list_median_prices
 
-    def writetosellfile(self,status,content,item,price,balance,thread_n):
-        return self.log.writetosellfile(status,content,item,price,balance,thread_n)
+    def writetosellfile(self,status,content,item,price,thread_n,price_no_fee):
+        return self.log.writetosellfile(status,content,item,price,thread_n,price_no_fee)
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
         return self.log.writetobuyfile(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
@@ -542,7 +547,7 @@ class SteamJsonRecentThreading:
                         price_sell_str = "{0:.2f}".format(price_sell)
                         print price_sell
                     else:
-                        price_sell = float(buygoodresp[1] * 0.95)
+                        price_sell = float(buygoodresp[1] * 0.94)
                         price_sell_str = "{0:.2f}".format(price_sell)
                         print price_sell
 
@@ -556,10 +561,10 @@ class SteamJsonRecentThreading:
 
                     if sell_response[0] == 200:
                         self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],
-                                                 price_sell_str,name)
+                                                 price_sell_str,name,price_sell_without_fee)
                     elif sell_response[0] == 502:
                         self.log.writetosellfile(sell_response[0],sell_response[1],buygoodresp[2],
-                                                 price_sell_str,name)
+                                                 price_sell_str,name,price_sell_without_fee)
 
                     self.sell_lock.release()
                     print 'sai do lock dos sells ON THREAD ' + str(name)

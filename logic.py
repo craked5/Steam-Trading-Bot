@@ -308,13 +308,13 @@ class Logic:
         #f_sold = open()
 
 
-    def writetosellfile(self,status,content,item,price,thread_n):
+    def writetosellfile(self,status,content,item,price,thread_n,price_no_fee):
 
         tempfile = open('util/sells.txt','a')
 
         if status == 502:
             temp_string = 'A thread ' + str(thread_n) + 'Tentou vender a ' + item + ' ao preco ' + str(price) + \
-                          ' mas o codigo foi ' + str(status)
+                          ' e eu ia receber '+ str(price_no_fee) + ' mas o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
             tempfile.write(temp_string+'\n')
@@ -327,7 +327,7 @@ class Logic:
 
         elif status == 200:
             temp_string = 'A thread ' + str(thread_n) + ' Vendeu a ' + item + ' ao preco ' + str(price) + \
-                          ' e o codigo foi ' + str(status)
+                          ' e vou receber '+ str(price_no_fee) + ' e o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
             tempfile.write(temp_string+'\n')

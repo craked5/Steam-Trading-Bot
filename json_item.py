@@ -192,7 +192,9 @@ class SteamJsonItem:
                             except KeyError:
                                 temp_resp.append(False)
                                 return temp_resp
-
+                            except TypeError:
+                                temp_resp.append(False)
+                                return temp_resp
 
                             temp = self.http.buyitem(self.final_item[id]['listingid'],
                                                      self.final_item[id]['converted_price'],
@@ -225,11 +227,15 @@ class SteamJsonItem:
                             return temp_resp
                 else:
                     print "Nao pude comprar: " + self.item +" porque nao tenho fundos"
+                    temp_resp.append(False)
+                    return temp_resp
             else:
                 print "THREAD " + str(0) + " nao pode comprar " + self.item + \
                         " porque margens nao sao suficientes. " \
                         "Preco medio: " + str(median_price) +\
                         ' Preco do item: ' + str(temp_converted_fee_math+temp_converted_price_math)
+                temp_resp.append(False)
+                return temp_resp
         except ValueError, KeyError:
             print "float not valid"
             temp_resp.append(False)
@@ -282,8 +288,8 @@ class SteamJsonItem:
     def getwalletbalance(self):
         return float(self.log.wallet_balance)
 
-    def writetosellfile(self,status,content,item,price,thread_n):
-        return self.log.writetosellfile(status,content,item,price,thread_n)
+    def writetosellfile(self, status, content, item, price, thread_n, price_no_fee):
+        return self.log.writetosellfile(status, content, item, price, thread_n, price_no_fee)
 
     def writetobuyfile(self,subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n):
         return self.log.writetobuyfile(subtotal,fee,data_buy,listingid,key,responsecode,responsedict,thread_n)
