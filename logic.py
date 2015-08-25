@@ -21,37 +21,12 @@ class Logic:
 
             if host_mode == 'y':
                 self.dif_hosts_recent='yes'
-                what_hosts = raw_input('Qual as hosts que pretende (eu/us1/us2/asia/world)? \n')
+                what_hosts = raw_input('Qual as hosts que pretende (eu/us1/us2/useu/asia/world)? \n')
 
-                if what_hosts == 'eu':
-                    f_hosts = open('util/hosts_eu.txt','r')
-                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
-                    shuffle(self.list_hosts)
-                    print self.list_hosts
-
-                elif what_hosts == 'us1':
-                    f_hosts = open('util/hosts_us1.txt','r')
-                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
-                    shuffle(self.list_hosts)
-                    print self.list_hosts
-
-                elif what_hosts == 'world':
-                    f_hosts = open('util/hosts_world.txt','r')
-                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
-                    shuffle(self.list_hosts)
-                    print self.list_hosts
-
-                elif what_hosts == 'us2':
-                    f_hosts = open('util/hosts_us2.txt','r')
-                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
-                    shuffle(self.list_hosts)
-                    print self.list_hosts
-
-                elif what_hosts == 'asia':
-                    f_hosts = open('util/hosts_asia.txt','r')
-                    self.list_hosts = [line.rstrip('\n') for line in f_hosts]
-                    shuffle(self.list_hosts)
-                    print self.list_hosts
+                f_hosts = open('util/hosts_'+what_hosts+'.txt','r')
+                self.list_hosts = [line.rstrip('\n') for line in f_hosts]
+                shuffle(self.list_hosts)
+                print self.list_hosts
 
             elif host_mode == 'n':
                 self.dif_hosts_recent = 'no'
