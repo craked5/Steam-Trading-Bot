@@ -49,9 +49,7 @@ M4A1-S | Atomic Alloy (Field-Tested)
 M4A1-S | Atomic Alloy (Well-Worn)
 M4A1-S | Guardian (Minimal Wear)
 M4A1-S | Guardian (Factory New)
-M4A1-S | Guardian (Battle-Scarred)
 M4A1-S | Guardian (Field-Tested)
-M4A1-S | Guardian (Well-Worn)
 M4A1-S | Bright Water (Minimal Wear)
 M4A1-S | Bright Water (Field-Tested)
 M4A1-S | Dark Water (Field-Tested)
@@ -108,3 +106,48 @@ P90 | Trigon (Well-Worn)
 P90 | Trigon (Minimal Wear)
 P90 | Trigon (Battle-Scarred)
 P90 | Trigon (Field-Tested)
+Falchion Case Key
+Chroma 2 Case Key
+Operation Phoenix Case Key
+Chroma Case Key
+Operation Breakout Case Key
+Autograph Capsule | Group B (Foil) | Cologne 2015
+ESL One Cologne 2015 Dust II Souvenir Package
+ESL One Cologne 2015 Cache Souvenir Package
+ESL One Cologne 2015 Inferno Souvenir Package
+ESL One Cologne 2015 Mirage Souvenir Package
+ESL One Cologne 2015 Cobblestone Souvenir Package
+ESL One Cologne 2015 Train Souvenir Package
+ESL One Cologne 2015 Overpass Souvenir Package
+Operation Bravo Case
+★ Gut Knife | Doppler (Factory New)
+★ Flip Knife | Doppler (Factory New)
+★ Bayonet | Doppler (Factory New)
+★ M9 Bayonet | Doppler (Factory New)
+★ Flip Knife | Marble Fade (Factory New)
+★ Flip Knife | Safari Mesh
+★ Butterfly Knife | Fade (Factory New)
+★ Huntsman Knife | Crimson Web (Field-Tested)
+★ Huntsman Knife | Fade (Factory New)
+★ Butterfly Knife | Crimson Web (Field-Tested)
+★ Gut Knife | Fade (Factory New)
+ESL One Cologne 2015 Challengers (Foil)
+CS:GO Weapon Case
+Winter Offensive Weapon Case
+Autograph Capsule | Group D (Foil) | Cologne 2015
+Autograph Capsule | Group C (Foil) | Cologne 2015
+CS:GO Case Key
+Autograph Capsule | Group A (Foil) | Cologne 2015
+ESL One Cologne 2015 Legends (Foil)
+eSports Key
+Winter Offensive Case Key
+Sticker | pashaBiceps (Foil) | Cologne 2015
+Sticker | Team Kinguin (Foil) | Cologne 2015
+Sticker | mousesports (Foil) | Cologne 2015
+Sticker | f0rest (Foil) | Cologne 2015
+Sticker | GeT_RiGhT (Foil) | Cologne 2015
+Sticker | Ninjas in Pyjamas (Foil) | Cologne 2015
+Sticker | olofmeister (Foil) | Cologne 2015
+Sticker | kennyS | Cologne 2015
+Sticker | kennyS (Foil) | Cologne 2015
+Sticker | pashaBiceps | Cologne 2015

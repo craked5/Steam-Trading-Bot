@@ -321,7 +321,7 @@ class SteamJsonItem:
 
         if balance_soup != None:
             balance_soup = balance_soup.get_text()
-            balance_str = balance_soup.encode('ascii','ignore').replace(',','.')
+            balance_str = balance_soup.encode('ascii','ignore').replace(',','.').replace('-','0')
 
             self.log.writetowallet(float(balance_str)*100)
 
