@@ -14,8 +14,6 @@ from logic import Logic
 from http import SteamBotHttp
 
 
-#todo REIMPLEMENT THE BUYING FUCNTION ON IND ITEM
-#todo REIMPLEMENT ALL THE RECENT FEATURES (get walletbalance from the web, active listings and more) ON TEH IND ITEM
 class SteamJsonRecentThreading:
 
     def __init__(self,items_list,wte,sma,sessionid,sls,sl,srl,password,username):
@@ -185,7 +183,10 @@ class SteamJsonRecentThreading:
         for temp in self.log.list_items_to_buy:
             if item == temp:
                 return True
-
+    #This function analizes if an item found on a RECENT_LISTING response from Steam belongs in the item list that the
+    #user defined and if so it analizes if its worth buying
+    #
+    #Returns False if anything goes wrong
     def buyingroutine(self,final_list,t_name):
         temp_resp = []
         if final_list == False:
@@ -195,6 +196,7 @@ class SteamJsonRecentThreading:
             final_list_this = final_list
             for key in final_list_this:
                 if key in self.log.list_items_to_buy:
+                    print type(key)
                     print key
                     if self.list_median_prices.has_key(key):
                         temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
@@ -324,9 +326,12 @@ class SteamJsonRecentThreading:
     def getlistbuyitems(self):
         return self.log.list_items_to_buy
 
+    #Returns the balance from the VAR in log.wallet_balance
     def getwalletbalancefromvar(self):
         return float(self.log.wallet_balance)
 
+    #Loads the median prices from the file median_prices.json
+    #Return false in case of error
     def loadmedianpricesfromfile(self):
         try:
             file = open('util/median_prices.json','r')
@@ -346,11 +351,15 @@ class SteamJsonRecentThreading:
     def sellitemtest(self,assetid,price):
         return self.http.sellitem(assetid,price)
 
+    #Writes to the wallet file the balance that is currently stored in the var Walletbalance
+    #IT DOES NOT RETURN OR WRITE THE BALANCE DIRECTLY FROM STEAM
     def writetowalletadd(self,amount_add):
         temp = float(amount_add) + float(self.getwalletbalancefromvar())
         temp = temp*100
         return self.log.writetowallet(int(temp))
 
+    #Returns the lowest price for the item directly from Steam
+    #In case of error returns False
     def getlowestprice(self,item):
         temp_item_priceover = self.http.querypriceoverview(item)
         if type(temp_item_priceover) == int:
@@ -374,7 +383,8 @@ class SteamJsonRecentThreading:
         print str(temp[0]) + '\n'
         print temp[1]
 
-
+    #returns the median price for every item on the list that the user chooses at the start of the program
+    #In case of error for any item, you will not get that item median price
     def getmedianitemlist(self):
 
         self.list_median_prices = {}
@@ -414,7 +424,7 @@ class SteamJsonRecentThreading:
 
             return float(balance_str)
         else:
-            print "ERROR GETTING WALLET BALANCE, MAYBE FAZER LOGIN RESOLVE ESTE PROBLEMA"
+            print "ERROR GETTING WALLET BALANCE, TRY TO LOGIN AGAIN!"
             return False
 
 
@@ -483,11 +493,19 @@ class SteamJsonRecentThreading:
             print "ERROR"
             return False
 
+    #todo
+    def selltestfirst(self,item_name,id,price):
+        sell_response = self.http.sellitem(id,price)
+        if sell_response[0] is 200:
+            while True:
+                host = random.choice(self.log.list_hosts)
+                recent_response = self.http.urlqueryrecentwithcountry(host,'US',0)
+                item_response = self.http.urlqueryspecificitemind(host,item_name)
 
-    def testinditemhtml(self,item):
-        item_html = self.http.queryitemtest(item)
-
-
+                if type(recent_response) is dict:
+                    pass
+                if type(item_response) is dict:
+                    pass
 
 #----------------------------------------------THREADING-----------------------------------------------------------
 
@@ -502,7 +520,8 @@ class SteamJsonRecentThreading:
         temp_final = self.getfinalrecentlist(temp2_assets,temp4_listings)
         return temp_final
 
-    def onerecentthread(self,http_interval,name):
+    #This function is basicly a thread
+    def recentthread(self,http_interval,name):
         counter = 0
         times = []
         while True:
@@ -602,7 +621,7 @@ class SteamJsonRecentThreading:
 
         for i in range(1,int(n_threads)+1):
             name = i
-            t = threading.Thread(target=self.onerecentthread, args=(http_interval,name))
+            t = threading.Thread(target=self.recentthread, args=(http_interval,name))
             t.start()
             list_threads.append(t)
 

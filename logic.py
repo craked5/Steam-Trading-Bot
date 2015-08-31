@@ -255,10 +255,7 @@ class Logic:
         if responsecode == 502:
             temp_string = 'A thread ' + str(thread_n) + ' tentou comprar ' + key + ' com a listingid ' + \
                           str(listingid) + ' ao preco de ' + str(subtotal+fee)
-            tempfile.write(temp_string+'\n')
-            tempfile.write(temp_string2+'\n')
-            tempfile.write(temp_string3+'\n')
-            tempfile.write(temp_string4+'\n\n\n')
+            tempfile.write(temp_string+'\n'+temp_string2+'\n'+temp_string3+'\n'+temp_string4+'\n\n\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
@@ -267,10 +264,7 @@ class Logic:
         elif responsecode == 200:
             temp_string = 'A thread ' + str(thread_n) + ' comprou a ' + key + ' com a listingid ' + \
                           str(listingid) + ' ao preco de ' + str(subtotal+fee)
-            tempfile.write(temp_string+'\n')
-            tempfile.write(temp_string2+'\n')
-            tempfile.write(temp_string3+'\n')
-            tempfile.write(temp_string4+'\n\n\n')
+            tempfile.write(temp_string+'\n'+temp_string2+'\n'+temp_string3+'\n'+temp_string4+'\n\n\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
@@ -278,10 +272,6 @@ class Logic:
 
         else:
             return False
-
-    #def writetosold(self,balance):
-        #f_sold = open()
-
 
     def writetosellfile(self,status,content,item,price,thread_n,price_no_fee):
 
@@ -292,9 +282,7 @@ class Logic:
                           ' e eu ia receber '+ str(price_no_fee) + ' mas o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
-            tempfile.write(temp_string+'\n')
-            tempfile.write(temp_string2+'\n')
-            tempfile.write(temp_string3+'\n\n\n')
+            tempfile.write(temp_string+'\n'+temp_string2+'\n'+temp_string3+'\n\n\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
@@ -305,9 +293,7 @@ class Logic:
                           ' e vou receber '+ str(price_no_fee) + ' e o codigo foi ' + str(status)
             temp_string2 = 'O content foi: ' + content
             temp_string3 = 'HORA: ' + time.strftime("%H:%M:%S") + ' e DATA: ' + time.strftime("%d/%m/%Y")
-            tempfile.write(temp_string+'\n')
-            tempfile.write(temp_string2+'\n')
-            tempfile.write(temp_string3+'\n\n\n')
+            tempfile.write(temp_string+'\n'+temp_string2+'\n'+temp_string3+'\n\n\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
@@ -318,3 +304,19 @@ class Logic:
 
         else:
             return False
+
+
+
+    def writetofileip(self,ip,thread):
+
+        try:
+            tempfile = open('util/fail_ip.txt', 'a')
+            tempfile.write('A thread ' + thread +' falhou no ip '+ ip +'\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
+        except IOError:
+            print "Erro ao escrever no ficheiro"
+            return False
+
+        return True
