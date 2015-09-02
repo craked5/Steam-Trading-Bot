@@ -155,10 +155,25 @@ class SteamBotHttp:
                 return -1
 
         except req.ConnectionError:
+            tempfile = open('util/fail_ip.txt', 'a')
+            tempfile.write('A thread ' + thread +' falhou no ip '+ host +'\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
             return False
         except req.Timeout:
+            tempfile = open('util/fail_ip.txt', 'a')
+            tempfile.write('A thread ' + thread +' falhou no ip '+ host +'\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
             return -2
         except socket.timeout:
+            tempfile = open('util/fail_ip.txt', 'a')
+            tempfile.write('A thread ' + thread +' falhou no ip '+ host +'\n')
+            tempfile.flush()
+            os.fsync(tempfile.fileno())
+            tempfile.close()
             return -2
 
         return False
