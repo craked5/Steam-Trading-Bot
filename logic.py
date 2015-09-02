@@ -237,9 +237,9 @@ class Logic:
                 f_listings.write(id+'\n')
                 f_listings.flush()
                 os.fsync(f_listings.fileno())
-                f_listings.close()
         except IOError:
             return False
+        f_listings.close()
         self.ids_active_listings = list
         return self.ids_active_listings
 
