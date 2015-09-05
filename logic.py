@@ -50,6 +50,10 @@ class Logic:
                 self.list_items_to_buy_unicode = []
                 for key in self.list_items_to_buy:
                     self.list_items_to_buy_unicode.append(key.decode('utf-8'))
+                print self.list_items_to_buy
+                print '\n\n\n'
+                print self.list_items_to_buy_unicode
+                print '\n\n\n'
                 print "ITEMS TO BUY file was opened ok"
                 f_items_pobre.close()
             except IOError:

@@ -393,15 +393,17 @@ class SteamJsonRecentThreading:
 
         self.list_median_prices = {}
 
-        for key in self.log.list_items_to_buy:
+        for key in self.log.list_items_to_buy_unicode:
             temp_item_priceover = {}
-            temp_item_priceover = self.http.querypriceoverview(key)
+            print key
+            print key.encode('utf-8')
+            temp_item_priceover = self.http.querypriceoverview(key.encode('utf-8'))
             if type(temp_item_priceover) == int:
-                print "Erro ao obter preco medio de " + self.log.list_items_to_buy[key]
+                print "Erro ao obter preco medio de " + key
                 print "Status code da querie: " + str(temp_item_priceover)
 
             elif type(temp_item_priceover) == bool:
-                print "Erro ao obter preco medio de " + self.log.list_items_to_buy[key]
+                print "Erro ao obter preco medio de " + key
                 print "Status code da querie: " + str(temp_item_priceover)
 
             elif temp_item_priceover.has_key('median_price'):
@@ -410,10 +412,10 @@ class SteamJsonRecentThreading:
                     temp_median_price = temp_median_price.decode('unicode_escape').encode('ascii','ignore')
                     temp_median_price = temp_median_price.replace(',','.').replace('-','0')
                     temp_median_price = "{0:.2f}".format(float(temp_median_price))
-                self.list_median_prices[self.log.list_items_to_buy[key]] = float(temp_median_price)
+                self.list_median_prices[key] = float(temp_median_price)
 
-            if self.list_median_prices.has_key(self.log.list_items_to_buy[key]):
-                print 'O preco medio de ' + self.log.list_items_to_buy[key] + ' e: ' + str(self.list_median_prices[key])
+            if self.list_median_prices.has_key(key):
+                print 'O preco medio de ' + key + ' e: ' + str(self.list_median_prices[key])
 
         return self.list_median_prices
 
