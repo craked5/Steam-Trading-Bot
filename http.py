@@ -3,6 +3,7 @@
 
 __author__ = 'nunosilva, github.com/craked5'
 
+import os
 import socket
 import random
 import requests as req
@@ -156,21 +157,21 @@ class SteamBotHttp:
 
         except req.ConnectionError:
             tempfile = open('util/fail_ip.txt', 'a')
-            tempfile.write('A thread ' + thread +' falhou no ip '+ host +'\n')
+            tempfile.write('A thread ' + str(thread) +' falhou no ip '+ str(host) +'\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
             return False
         except req.Timeout:
             tempfile = open('util/fail_ip.txt', 'a')
-            tempfile.write('A thread ' + thread +' falhou no ip '+ host +'\n')
+            tempfile.write('A thread ' + str(thread) +' falhou no ip '+ str(host) +'\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()
             return -2
         except socket.timeout:
             tempfile = open('util/fail_ip.txt', 'a')
-            tempfile.write('A thread ' + thread +' falhou no ip '+ host +'\n')
+            tempfile.write('A thread ' + str(thread) +' falhou no ip '+ str(host) +'\n')
             tempfile.flush()
             os.fsync(tempfile.fileno())
             tempfile.close()

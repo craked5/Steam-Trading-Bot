@@ -291,6 +291,12 @@ try:
                 item_add = raw_input('Item to add to the list: ')
                 jst.writeInItemsTxt(item_add)
 
+            elif command_input[0] == 'searchkenny':
+                if raw_input('Do you want to search for KennyS cobblestone cases? (y/n)') == 'y':
+                    jst.search_for_kenny_cobble = True
+                else:
+                    print "You did not activate the KennyS cobble search mode!"
+
             elif command_input[0] == 'sell':
                 jst.sellitemtest(command_input[1], float(command_input[2]))
 

@@ -68,7 +68,7 @@ def beattradebot():
                     median_price = median_price.replace(',','.').replace('-','0')
 
                     list_to_dump.append("O " + item + " tem preco medio " + str(median_price) + ' e preco baixo ' + str(lowest_price) + '\n')
-                except KeyError:
+                except (ValueError,KeyError):
                     print "key error no item " + item
             else:
                 print "erro no item " + item

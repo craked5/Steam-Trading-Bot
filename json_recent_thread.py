@@ -48,9 +48,14 @@ class SteamJsonRecentThreading:
         self.last_listing_buy_lock = threading.Lock()
         self.write_active_listings_lock = threading.Lock()
         self.timestamp = ''
+        self.search_for_kenny_cobble = False
 
     def getRecentTotalReady(self, recent_full):
         self.recent_parsed = {}
+
+        if self.search_for_kenny_cobble is True:
+            self.searchkenny(recent_full)
+
         if type(recent_full) == dict:
             for key in self.recent_parsing_list:
                 if recent_full.has_key(key):
@@ -183,6 +188,7 @@ class SteamJsonRecentThreading:
         for temp in self.log.list_items_to_buy:
             if item == temp:
                 return True
+
     #This function analizes if an item found on a RECENT_LISTING response from Steam belongs in the item list that the
     #user defined and if so it analizes if its worth buying
     #
@@ -195,9 +201,7 @@ class SteamJsonRecentThreading:
         else:
             final_list_this = final_list
             for key in final_list_this:
-                if key in self.log.list_items_to_buy:
-                    print type(key)
-                    print key
+                if key in self.log.list_items_to_buy_unicode:
                     if self.list_median_prices.has_key(key):
                         temp_converted_price_math = float(decimal.Decimal(final_list_this[key]['converted_price'])/100)
                         temp_converted_fee_math = float(decimal.Decimal(final_list_this[key]['converted_fee'])/100)
@@ -406,7 +410,7 @@ class SteamJsonRecentThreading:
                     temp_median_price = temp_median_price.decode('unicode_escape').encode('ascii','ignore')
                     temp_median_price = temp_median_price.replace(',','.').replace('-','0')
                     temp_median_price = "{0:.2f}".format(float(temp_median_price))
-                self.list_median_prices[key] = float(temp_median_price)
+                self.list_median_prices[key.decode('utf-8')] = float(temp_median_price)
 
             if self.list_median_prices.has_key(key):
                 print 'O preco medio de ' + key + ' e: ' + str(self.list_median_prices[key])
@@ -506,6 +510,58 @@ class SteamJsonRecentThreading:
                     pass
                 if type(item_response) is dict:
                     pass
+
+
+    def searchkenny(self,recent):
+        try:
+            if recent.has_key('assets'):
+                if recent['assets'].has_key('730'):
+
+                    for item_id in recent['assets']['730']['2']:
+                        if recent['assets']['730']['2'][item_id]['market_hash_name'] \
+                                == 'ESL One Cologne 2015 Cobblestone Souvenir Package':
+
+                            if 'Kenny' in recent['assets']['730']['2'][item_id]['descriptions']['2']['value']:
+
+                                for listing_id in recent['listinginfo']:
+                                    if recent['listinginfo'][listing_id]['asset']['id'] == item_id:
+
+                                        if int(recent['listinginfo'][listing_id]['converted_currencyid']) == 2003:
+
+                                            if int(recent['listinginfo'][listing_id]['converted_fee']) + \
+                                                int(recent['listinginfo'][listing_id]['converted_price']) <= 70000:
+
+                                                if recent['listinginfo'][listing_id]['listingid'] != self.last_listing_buy:
+
+                                                    self.last_listing_buy_lock.acquire()
+                                                    self.last_listing_buy = recent['listinginfo'][listing_id]['listingid']
+                                                    self.last_listing_buy_lock.release()
+
+                                                    print 'Estou prestes a entrar no acquire dos buys ON THREAD ' + str(0)
+                                                    self.buy_lock.acquire()
+                                                    try:
+                                                        print 'Entrei no acquire dos buys ON THREAD '  + str(0)
+
+                                                        temp = self.http.buyitem(recent['listinginfo'][listing_id]['listingid'],
+                                                                                 recent['listinginfo'][listing_id]['converted_price'],
+                                                                                 recent['listinginfo'][listing_id]['converted_fee'],
+                                                                                 recent['listinginfo'][listing_id]['converted_currencyid'])
+
+                                                        self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
+                                                                                self.http.httputil.data_buy['fee'],
+                                                                                self.http.httputil.data_buy,
+                                                                                recent['listinginfo'][listing_id]['listingid'],
+                                                                                recent['assets']['730']['2']
+                                                                                [item_id]['market_hash_name']
+                                                                                ,temp[0],temp[1],0)
+                                                        self.buy_lock.release()
+                                                        print 'sai do lock dos buys ON THREAD ' + str(0)
+                                                    except:
+                                                        print "something went wrong buying a kennys case, fuck me!"
+                                                        self.buy_lock.release()
+        except (ValueError,KeyError):
+            print "Error in kennyS function!"
+
 
 #----------------------------------------------THREADING-----------------------------------------------------------
 
