@@ -232,6 +232,7 @@ try:
                 print 'bii - starts an individual item process that checks that item page (you can start multiple ' \
                       'processes) \n'
                 print 'del - deletes an item from the list of items chosen by the user \n'
+                print 'searchkenny = When using the recent mode it also searches for kennys specific cobble cases! \n'
                 print 'add - adds an item to the list of items chosen by the user \n'
                 print 'showlist - prints the list of items chosen by the user \n'
                 print 'getbalance - gets the balance from your steam wallet (please login first) \n'

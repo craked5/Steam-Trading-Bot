@@ -36,7 +36,6 @@ class SteamBotHttp:
         self.complete_url_item = self.pre_host_normal+self.host+self.market+self.item_price_viewer
         self.complete_url_recent = self.pre_host_normal+self.host+self.market+self.recent_listed
         self.sell_item_url = self.pre_host_https+self.host+self.market+'/sellitem/'
-        self.buy_item_url_without_listingid = self.pre_host_https+self.host+self.market+'/buylisting/'
         self.render_item_url_first_part = self.pre_host_normal+self.host+self.market+'/listings/730/'
         self.render_item_url_sencond_part = '/render/?currency=3'
         self.recent_compare = {}
@@ -235,7 +234,7 @@ class SteamBotHttp:
 
         return list_return
 
-    def buyitem(self,listing,subtotal,fee,currency):
+    def buyitem(self,listing,subtotal,fee,currency,host):
 
         temp_tuple = []
 
@@ -244,10 +243,10 @@ class SteamBotHttp:
         self.httputil.data_buy['fee'] = int(fee)
         self.httputil.data_buy['total'] = int(self.httputil.data_buy['subtotal'] + self.httputil.data_buy['fee'])
         try:
-            temp = req.post(self.buy_item_url_without_listingid+listing, data=self.httputil.data_buy,
-                            headers=self.httputil.headers_buy)
+            temp = req.post(self.pre_host_https+host+self.market+'/buylisting/'+listing, data=self.httputil.data_buy,
+                            headers=self.httputil.headers_buy, verify=False)
         except req.ConnectionError:
-            pass
+            temp_tuple.append(False)
 
         temp_tuple.append(int(temp.status_code))
         try:
@@ -268,7 +267,7 @@ class SteamBotHttp:
         urll = 'https://'+str(host)+'/market/buylisting/'+listing
         print urll
         temp = req.post(urll, data=self.httputil.data_buy,
-                        headers=self.httputil.headers_buy)
+                        headers=self.httputil.headers_buy,verify=False)
 
         temp_tuple.append(int(temp.status_code))
         temp_tuple.append(ast.literal_eval(temp.content))

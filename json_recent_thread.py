@@ -193,7 +193,7 @@ class SteamJsonRecentThreading:
     #user defined and if so it analizes if its worth buying
     #
     #Returns False if anything goes wrong
-    def buyingroutine(self,final_list,t_name):
+    def buyingroutine(self,final_list,t_name,host):
         temp_resp = []
         if final_list == False:
             temp_resp.append(False)
@@ -229,11 +229,7 @@ class SteamJsonRecentThreading:
                                                 self.buy_lock.release()
                                                 temp_resp.append(False)
                                                 return temp_resp
-                                        except TypeError:
-                                            self.buy_lock.release()
-                                            temp_resp.append(False)
-                                            return temp_resp
-                                        except KeyError:
+                                        except (TypeError,KeyError):
                                             self.buy_lock.release()
                                             temp_resp.append(False)
                                             return temp_resp
@@ -241,7 +237,7 @@ class SteamJsonRecentThreading:
                                         temp = self.http.buyitem(final_list_this[key]['listingid'],
                                                                  final_list_this[key]['converted_price'],
                                                                  final_list_this[key]['converted_fee'],
-                                                                 final_list_this[key]['converted_currencyid'])
+                                                                 final_list_this[key]['converted_currencyid'],host)
 
                                         self.log.writetobuyfile(self.http.httputil.data_buy['subtotal'],
                                                                 self.http.httputil.data_buy['fee'],
@@ -290,22 +286,39 @@ class SteamJsonRecentThreading:
         return temp_resp
 
 #----------------------------------------------AUX FUNCTIONS-----------------------------------------------------------
+    #Calls the querie recent function on the HTTP class
     def queryrecent(self,thread):
-        return self.http.queryrecent('steamcommunity.com',thread)
+        lista = []
+        lista.append(self.http.queryrecent('steamcommunity.com',thread))
+        lista.append('steamcommunity.com')
+        return lista
 
+    #Calls the querie recent function on the HTTP class with diferent country codes!
     def queryrecentdifcountries(self,thread):
         country = random.choice(self.log.list_countries)
-        return self.http.urlqueryrecentwithcountry('steamcommunity.com',country,thread)
+        lista = []
+        lista.append(self.http.urlqueryrecentwithcountry('steamcommunity.com',country,thread))
+        lista.append('steamcommunity.com')
+        return lista
 
+    #Calls the querie recent function on the HTTP class with diferent hosts
     def queryrecentdifhosts(self,thread):
         host = random.choice(self.log.list_hosts)
-        return self.http.queryrecent(host,thread)
+        lista = []
+        lista.append(self.http.queryrecent(host,thread))
+        lista.append(host)
+        return lista
 
+    #Calls the querie recent function on the HTTP class with diferent hosts and country codes
     def queryrecentdifhostsdifcountries(self,thread):
         host = random.choice(self.log.list_hosts)
         country = random.choice(self.log.list_countries)
-        return self.http.urlqueryrecentwithcountry(host,country,thread)
+        lista = []
+        lista.append(self.http.urlqueryrecentwithcountry(host,country,thread))
+        lista.append(host)
+        return lista
 
+    #Returns the id of the item with the number 1 position on your inventory or False if anything goes wrong
     def getpositiononeiteminv(self):
         return self.http.getpositiononeiteminv()
 
@@ -395,8 +408,6 @@ class SteamJsonRecentThreading:
 
         for key in self.log.list_items_to_buy_unicode:
             temp_item_priceover = {}
-            print key
-            print key.encode('utf-8')
             temp_item_priceover = self.http.querypriceoverview(key.encode('utf-8'))
             if type(temp_item_priceover) == int:
                 print "Erro ao obter preco medio de " + key
@@ -513,7 +524,8 @@ class SteamJsonRecentThreading:
                 if type(item_response) is dict:
                     pass
 
-
+    #Searches for kennyS cooblestone cases on the newly listed
+    #If it finds one it trys to buy it if not nothing happens
     def searchkenny(self,recent):
         try:
             if recent.has_key('assets'):
@@ -562,11 +574,12 @@ class SteamJsonRecentThreading:
                                                         print "something went wrong buying a kennys case, fuck me!"
                                                         self.buy_lock.release()
         except (ValueError,KeyError):
-            print "Error in kennyS function!"
+            print "Error in the kennyS function!"
 
 
 #----------------------------------------------THREADING-----------------------------------------------------------
 
+    #Gets the retrieved JSON all ready for the buying routine
     def getfinallistfromrecent(self,recent_full):
         temp_full = self.getRecentTotalReady(recent_full)
         temp1_assets = self.getCleanAssetList(temp_full)
@@ -578,7 +591,7 @@ class SteamJsonRecentThreading:
         temp_final = self.getfinalrecentlist(temp2_assets,temp4_listings)
         return temp_final
 
-    #This function is basicly a thread
+    #This function is a thread
     def recentthread(self,http_interval,name):
         counter = 0
         times = []
@@ -597,21 +610,21 @@ class SteamJsonRecentThreading:
                 else:
                     recent = self.queryrecent(name)
 
-            if recent == False:
+            if recent[0] == False:
                 print "CONN REFUSED ON THREAD " + str(name) +", sleeping..."
                 time.sleep(30)
                 pass
 
-            elif recent == -1:
+            elif recent[0] == -1:
                     time.sleep(http_interval)
 
-            elif recent == -2:
+            elif recent[0] == -2:
                     sleepe = random.randint(16,31)
                     print 'TIMEOUT NA THREAD ' + str(name) + ' SLEEPING FOR ' + str(sleepe) + ' SECS'
                     time.sleep(sleepe)
 
-            elif type(recent) == dict:
-                buygoodresp = self.buyingroutine(self.getfinallistfromrecent(recent),name)
+            elif type(recent[0]) == dict:
+                buygoodresp = self.buyingroutine(self.getfinallistfromrecent(recent[0]),name,recent[1])
 
                 if buygoodresp[0] is True:
 

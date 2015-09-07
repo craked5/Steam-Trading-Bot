@@ -41,6 +41,7 @@ def trystuff():
             time.sleep(0.2)
 '''
 
+'''
 def beattradebot():
     list_to_dump = []
     f_items_pobre = open('/Users/nunosilva/util/items_pobre50.txt', 'r')
@@ -78,3 +79,5 @@ def beattradebot():
         file1.write(item)
 
 beattradebot()
+'''
+
