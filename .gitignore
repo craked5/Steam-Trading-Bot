@@ -15,6 +15,7 @@
 # .idea/dataSources.ids
 # .idea/dataSources.xml
 # .idea/sqlDataSources.xml
+/json_recent.py
 # .idea/dynamic.xml
 # .idea/uiDesigner.xml
 
