@@ -280,6 +280,13 @@ try:
                     pids = (os.getpid(), newpid)
                     print "parent: %d, child: %d" % pids
 
+            elif command_input[0] == 'finditem':
+                trys = raw_input('Trys:')
+                item_name = raw_input('item name?')
+                id = raw_input('id?')
+                price = raw_input('price?')
+                jst.selltestfirst(id,item_name,price,trys)
+
             elif command_input[0] == 'showlist':
                 print 'This is the item list: '
                 print jst.getlistbuyitems()

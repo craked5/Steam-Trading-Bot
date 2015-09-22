@@ -511,18 +511,34 @@ class SteamJsonRecentThreading:
             return False
 
     #todo
-    def selltestfirst(self,item_name,id,price):
+    def selltestfirst(self,item_name,id,price,trys):
+        print 'selling item ' + item_name + ' with id ' + str(id)
         sell_response = self.http.sellitem(id,price)
         if sell_response[0] is 200:
-            while True:
+            print 'sold item'
+            i = 0
+            while i < trys:
                 host = random.choice(self.log.list_hosts)
                 recent_response = self.http.urlqueryrecentwithcountry(host,'US',0)
                 item_response = self.http.urlqueryspecificitemind(host,item_name)
 
                 if type(recent_response) is dict:
-                    pass
+                    try:
+                        for ids in recent_response['assets']['730']['2']:
+                            if id == ids:
+                                print "ENCONTREI O MEU ITEM NO RECENT COM O ID" + str(ids)
+                    except (KeyError,ValueError):
+                        print 'Error in finding the item on recent!'
                 if type(item_response) is dict:
-                    pass
+                    try:
+                        for ids in recent_response['assets']['730']['2']:
+                            if id == ids:
+                                print "ENCONTREI O MEU ITEM NO ITEM MODE COM O ID" + str(ids)
+                    except (KeyError,ValueError):
+                        print 'Error in finding the item on item mode!'
+                i += 1
+        else:
+            print 'failed to sell item!'
 
     #Searches for kennyS cooblestone cases on the newly listed
     #If it finds one it trys to buy it if not nothing happens
