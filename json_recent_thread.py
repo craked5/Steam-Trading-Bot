@@ -513,7 +513,7 @@ class SteamJsonRecentThreading:
     #todo
     def selltestfirst(self,item_name,id,price,trys):
         print 'selling item ' + item_name + ' with id ' + str(id)
-        sell_response = self.http.sellitem(id,price)
+        sell_response = self.http.sellitem(id,float(price))
         if sell_response[0] is 200:
             print 'sold item'
             i = 0
@@ -539,6 +539,9 @@ class SteamJsonRecentThreading:
                 i += 1
         else:
             print 'failed to sell item!'
+            print sell_response[0]
+            print '\n'
+            print sell_response[1]
 
     #Searches for kennyS cooblestone cases on the newly listed
     #If it finds one it trys to buy it if not nothing happens

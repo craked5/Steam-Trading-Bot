@@ -285,7 +285,7 @@ try:
                 item_name = raw_input('item name?')
                 id = raw_input('id?')
                 price = raw_input('price?')
-                jst.selltestfirst(id,item_name,price,trys)
+                jst.selltestfirst(item_name,id,price,trys)
 
             elif command_input[0] == 'showlist':
                 print 'This is the item list: '
