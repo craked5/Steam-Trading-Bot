@@ -513,6 +513,8 @@ class SteamJsonRecentThreading:
     #todo
     def selltestfirst(self,item_name,id,price,trys):
         print 'selling item ' + item_name + ' with id ' + str(id)
+        file_languages = open('util/languages.txt','r')
+        languages = [line.rstrip('\n') for line in file_languages]
         sell_response = self.http.sellitem(id,float(price))
         if sell_response[0] is 200:
             print 'sold item'
@@ -520,7 +522,8 @@ class SteamJsonRecentThreading:
             while i < trys:
                 host = random.choice(self.log.list_hosts)
                 recent_response = self.http.urlqueryrecentwithcountry(host,'US',0)
-                item_response = self.http.urlqueryspecificitemind(host,item_name)
+                language = random.choice(languages)
+                item_response = self.http.urlqueryspecificitemind(host,item_name,language)
 
                 if type(recent_response) is dict:
                     try:

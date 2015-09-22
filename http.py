@@ -177,11 +177,11 @@ class SteamBotHttp:
             return -2
 
         return False
-    def urlqueryspecificitemind(self,host,item):
+    def urlqueryspecificitemind(self,host,item,language):
 
         try:
             steam_response = req.get(self.render_item_url_first_part.replace(self.host,host)+item+
-                                     self.render_item_url_sencond_part,
+                                     self.render_item_url_sencond_part+'&language='+language,
                                      headers = self.httputil.headers_item_list_ind)
             timestamp = time.time()
             time_temp = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(timestamp))
@@ -194,13 +194,14 @@ class SteamBotHttp:
             return False
 
         if steam_response.status_code == 429:
+            print 'GOT 429 on host ' + str(host)
             return False
         else:
             try:
                 recent_temp = ujson.loads(steam_response.text)
             except ValueError:
                 return False
-
+        print str(host)
         return recent_temp
 
     def getpositiononeiteminv(self):
