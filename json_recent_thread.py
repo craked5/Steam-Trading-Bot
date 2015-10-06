@@ -532,6 +532,7 @@ class SteamJsonRecentThreading:
                                 print "ENCONTREI O MEU ITEM NO RECENT COM O ID" + str(ids)
                     except (KeyError,ValueError):
                         print 'Error in finding the item on recent!'
+                print
                 if type(item_response) is dict:
                     try:
                         for ids in recent_response['assets']['730']['2']:
