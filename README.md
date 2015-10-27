@@ -6,7 +6,7 @@ You have to have Python 2 installed with the dependecies specified in the requir
 
 The bot has two primary modes of operation: the recent listing mode and the specific item mode.
 
-Note that the specific item mode only works on OSX and Linux, now on Windows. I dont recommend using this mode since it's the least worked on.
+Note that the specific item mode only works on OSX and Linux, not on Windows. I dont recommend using this mode since it's the least worked on.
 
 The recent listing mode is just that, it checks the recent listings on the Steam market and whenever and item that you want pops up it sees if its worth buying and buys it if it's the case.
 It will sell that item automatically for a profit of atleast 10%.
