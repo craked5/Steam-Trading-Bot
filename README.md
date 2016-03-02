@@ -1,3 +1,7 @@
+***************THIS IS NOW DEPRECATED******************
+This wont work anymore since now you need steam mobile auth to login and i cant be bothered to do that!
+And Valve also introduced buy orders in the market so this bot is kind of pointless.
+
 Hey guys, this is a Steam Market Bot written in Python 2.
 
 I made this because well i wanted to understand the Steam market and make a quick buck, now im sharing it.
